@@ -212,7 +212,14 @@ html.has-custom-cursor textarea {
     color: #ffffff !important;
   }
 
-  .group:hover .group-hover\:text-black {
+  .group:hover .group-hover\:text-black,
+  .group\/cmd:hover .group-hover\/cmd\:text-black,
+  .group\/spec:hover .group-hover\/spec\:text-black,
+  .group\/src:hover .group-hover\/src\:text-black,
+  .group\/btn:hover .group-hover\/btn\:text-black,
+  .group\/git:hover .group-hover\/git\:text-black,
+  .copy-run-cmd-btn:hover .text-accent,
+  .copy-run-cmd-btn.text-black .text-accent {
     color: #000000 !important;
   }
 

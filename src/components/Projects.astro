@@ -141,7 +141,7 @@ const categories = ["ALL", "MACHINE LEARNING", "SYSTEMS & DATA", "PLATFORM & WEB
                   title={`Copy command: ${proj.runCommand}`}
                   aria-label={`Copy run command for ${proj.title}`}
                 >
-                  <span class="text-accent group-hover/cmd:text-black font-bold">$</span>
+                  <span class="text-accent group-hover/cmd:text-black font-bold transition-colors duration-200">$</span>
                   <span class="cmd-label">RUN</span>
                 </button>
 
@@ -168,7 +168,7 @@ const categories = ["ALL", "MACHINE LEARNING", "SYSTEMS & DATA", "PLATFORM & WEB
                   aria-label={`Quick spec sheet for ${proj.title}`}
                 >
                   <span>SPEC</span>
-                  <span class="text-accent group-hover/spec:text-black font-bold text-xs transition-transform duration-200 group-hover/spec:translate-x-0.5 group-hover/spec:-translate-y-0.5">↗</span>
+                  <span class="font-bold text-xs transition-all duration-200 group-hover/spec:text-black group-hover/spec:translate-x-0.5 group-hover/spec:-translate-y-0.5">↗</span>
                 </button>
 
                 <!-- Direct GitHub link -->
