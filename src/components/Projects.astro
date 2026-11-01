@@ -1,0 +1,169 @@
+---
+// Projects.astro
+const projects = [
+  {
+    title: "LeakGuard-ML",
+    subtitle: "Zero-Leakage Feature Store & Split Validator",
+    summary:
+      "A high-throughput feature verification engine that cryptographically guarantees zero data leakage across cross-validation folds and temporal training windows.",
+    architecture:
+      "Engineered with strict temporal partition boundaries, tombstone guards, and point-in-time joins. Enforces that no future signals, target contamination, or out-of-fold statistics bleed into evaluation sets.",
+    techStack: ["Python", "PyTorch", "FastAPI", "Pydantic V2", "Docker", "Pytest"],
+    metrics: [
+      { label: "Leak Guarantee", value: "0.00% by Design" },
+      { label: "Split Generation", value: "12x Throughput" },
+      { label: "State Verification", value: "Deterministic Seeds" },
+    ],
+    githubUrl: "https://github.com/reshandytaftazani",
+  },
+  {
+    title: "AxiomServe",
+    subtitle: "Low-Latency Supervised Inference Runtime",
+    summary:
+      "High-reliability asynchronous machine learning serving runtime designed with defensive child process supervision and zero-hang shutdown guarantees.",
+    architecture:
+      "Decoupled asynchronous worker architecture isolating ONNX/PyTorch model evaluation from HTTP ingest. Features POSIX signal interception (SIGINT/SIGTERM), automatic socket draining, and strict Pydantic V2 schema validation.",
+    techStack: ["FastAPI", "C++", "ONNX Runtime", "Python", "Linux POSIX", "Docker"],
+    metrics: [
+      { label: "Inference Latency", value: "p99 < 3.8ms" },
+      { label: "Fault Resilience", value: "Zero Zombie Procs" },
+      { label: "Type Safety", value: "100% Strict Schemas" },
+    ],
+    githubUrl: "https://github.com/reshandytaftazani",
+  },
+  {
+    title: "SynthDist-Engine",
+    subtitle: "Degenerate Distribution & TDD Chaos Harness",
+    summary:
+      "Property-based testing and synthetic anomaly generator specifically built to verify machine learning models against extreme distribution shifts and malformed inputs.",
+    architecture:
+      "Generates pathological edge-case inputs—including zero-variance tensors, degenerate covariance matrices, and poisoned feature distributions—within isolated sub-processes to audit pipeline recovery.",
+    techStack: ["Python", "NumPy", "scikit-learn", "Pytest", "Hypothesis", "GitHub CI"],
+    metrics: [
+      { label: "Fuzz Throughput", value: "10,000+ Cases/s" },
+      { label: "Failure Surface", value: "OS Sandboxed" },
+      { label: "Coverage", value: "Deterministic TDD" },
+    ],
+    githubUrl: "https://github.com/reshandytaftazani",
+  },
+  {
+    title: "HexaML Core",
+    subtitle: "Clean Architecture Engine for ML Systems",
+    summary:
+      "Production-ready Hexagonal (Ports & Adapters) architecture template isolating core ML domain algorithms from transport protocols and persistence engines.",
+    architecture:
+      "Enforces strict dependency inversion where ML models adhere to abstract domain ports. Enables instantaneous local test suites with zero cloud dependencies and complete immunity to framework migrations.",
+    techStack: ["Python", "Clean Architecture", "Pydantic V2", "FastAPI", "SQLAlchemy", "Docker"],
+    metrics: [
+      { label: "Domain Decoupling", value: "Zero Framework Deps" },
+      { label: "Validation Time", value: "< 0.4ms Contract Check" },
+      { label: "Test Strategy", value: "100% Mockable Ports" },
+    ],
+    githubUrl: "https://github.com/reshandytaftazani",
+  },
+];
+---
+
+<section id="projects" class="py-20 border-t border-slate-800/80 relative">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14">
+      <div class="space-y-3">
+        <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
+          <span>// Technical Portfolio</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-100">
+          Featured Engineering Projects
+        </h2>
+        <p class="text-slate-400 max-w-2xl text-base sm:text-lg leading-relaxed">
+          Production-grade systems, leak-free ML pipelines, and local-first runtimes built with clean architecture, verifiable test coverage, and strict contracts.
+        </p>
+      </div>
+
+      <a
+        href="https://github.com/reshandytaftazani"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-emerald-400 transition-colors shrink-0"
+      >
+        <span>View all repositories on GitHub</span>
+        <span>→</span>
+      </a>
+    </div>
+
+    <!-- Project Cards Grid (2x2) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {projects.map((proj) => (
+        <article class="group flex flex-col justify-between rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-900/85 hover:border-emerald-500/40 p-6 sm:p-7 transition-all duration-200">
+          <div class="space-y-4">
+            
+            <!-- Header & GitHub Link -->
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-xl font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
+                  {proj.title}
+                </h3>
+                <p class="text-xs font-mono text-emerald-400/90 mt-0.5">
+                  {proj.subtitle}
+                </p>
+              </div>
+
+              <a
+                href={proj.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-2 text-slate-400 hover:text-emerald-300 hover:bg-slate-800/80 rounded-md border border-slate-800 transition-colors"
+                aria-label={`View ${proj.title} source code on GitHub`}
+              >
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Problem / Summary -->
+            <p class="text-sm text-slate-300 leading-relaxed">
+              {proj.summary}
+            </p>
+
+            <!-- Architecture Details -->
+            <div class="rounded bg-[#0B0F19]/80 p-3 border border-slate-800/80">
+              <span class="text-[11px] font-mono text-slate-500 uppercase tracking-wider block mb-1">
+                Architecture &amp; Implementation:
+              </span>
+              <p class="text-xs text-slate-400 leading-relaxed font-sans">
+                {proj.architecture}
+              </p>
+            </div>
+
+            <!-- Tech Stack Pills -->
+            <div class="flex flex-wrap gap-1.5 pt-2">
+              {proj.techStack.map((tech) => (
+                <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800/80 border border-slate-700/60 text-slate-300">
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+          </div>
+
+          <!-- Metrics Footer Bar -->
+          <div class="mt-6 pt-4 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center">
+            {proj.metrics.map((metric) => (
+              <div class="rounded bg-slate-950/60 p-2 border border-slate-800/60">
+                <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider truncate">
+                  {metric.label}
+                </div>
+                <div class="text-xs font-mono font-semibold text-emerald-400 mt-0.5 truncate">
+                  {metric.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>

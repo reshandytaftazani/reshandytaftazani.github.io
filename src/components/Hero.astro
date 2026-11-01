@@ -1,0 +1,160 @@
+---
+// Hero.astro
+---
+
+<section id="about" class="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      
+      <!-- Left Column: Copy & Actions -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <!-- Animated Availability Badge -->
+        <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span>Available for MLE & Systems Engineering Roles</span>
+        </div>
+
+        <!-- Name & Headline -->
+        <div class="space-y-3">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-100">
+            Reshandy Taftazani Aulya
+          </h1>
+          <p class="text-xl sm:text-2xl font-mono text-emerald-400 font-medium tracking-tight">
+            Machine Learning &amp; Software Systems Engineer
+          </p>
+        </div>
+
+        <!-- Bio / Context -->
+        <p class="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
+          Undergraduate in Computer Science at <a href="https://cs.ui.ac.id/" target="_blank" rel="noopener noreferrer" class="text-slate-100 font-medium underline underline-offset-4 decoration-emerald-500/60 hover:text-emerald-400 transition-colors">Universitas Indonesia</a>. 
+          Architecting reproducible, leak-free machine learning pipelines and local-first software systems with defensive engineering, strict type contracts, and verifiable evaluation protocols.
+        </p>
+
+        <!-- Focus Pills -->
+        <div class="flex flex-wrap gap-2 pt-1 font-mono text-xs">
+          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
+            Zero Data Leakage
+          </span>
+          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
+            Clean Architecture &amp; TDD
+          </span>
+          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
+            Pydantic &amp; Type Safety
+          </span>
+          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
+            High-Performance Compute
+          </span>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap items-center gap-3 pt-3">
+          <!-- Primary CTA: Explore Projects -->
+          <a
+            href="#projects"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-emerald-500 text-emerald-950 font-mono font-bold text-sm hover:bg-emerald-400 active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+          >
+            <span>Explore Projects</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </a>
+
+          <!-- GitHub CTA -->
+          <a
+            href="https://github.com/reshandytaftazani"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-emerald-300 hover:border-emerald-500/50 font-mono text-sm active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            <span>View GitHub</span>
+            <span class="text-slate-500">↗</span>
+          </a>
+
+          <!-- LinkedIn CTA -->
+          <a
+            href="https://linkedin.com/in/reshandy-taftazani-aulya"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-emerald-300 hover:border-emerald-500/50 font-mono text-sm active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+            </svg>
+            <span>Connect on LinkedIn</span>
+            <span class="text-slate-500">↗</span>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Engineering Terminal Showcase -->
+      <div class="lg:col-span-5">
+        <div class="relative rounded-lg border border-slate-800 bg-slate-900/70 backdrop-blur-sm shadow-2xl overflow-hidden font-mono text-xs">
+          <!-- Window Title Bar -->
+          <div class="flex items-center justify-between px-4 py-2.5 bg-slate-900/90 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+            </div>
+            <span class="text-slate-400 text-[11px]">verification-runner --strict</span>
+            <span class="text-[10px] text-slate-500">v2.4.0</span>
+          </div>
+
+          <!-- Terminal Content -->
+          <div class="p-4 space-y-2.5 text-slate-300 select-text leading-relaxed">
+            <div class="flex items-center gap-2 text-slate-400">
+              <span class="text-emerald-400">$</span>
+              <span>mlesys verify --target production-pipeline</span>
+            </div>
+            
+            <div class="space-y-1.5 pt-1 text-[11.5px]">
+              <div class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">[PASS]</span>
+                <span class="text-slate-200">partition_boundary:</span>
+                <span class="text-emerald-300">0.00% cross-fold leakage</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">[PASS]</span>
+                <span class="text-slate-200">tombstone_guards:</span>
+                <span class="text-slate-400">temporal point-in-time verified</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">[PASS]</span>
+                <span class="text-slate-200">contracts:</span>
+                <span class="text-slate-400">Pydantic v2 strict schema validation</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">[PASS]</span>
+                <span class="text-slate-200">process_defense:</span>
+                <span class="text-slate-400">graceful SIGTERM/SIGINT teardown</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">[PASS]</span>
+                <span class="text-slate-200">runtime_metrics:</span>
+                <span class="text-emerald-300">p99 = 3.8ms | seed = 42 (determ.)</span>
+              </div>
+            </div>
+
+            <!-- Pipeline status summary bar -->
+            <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+              <div class="flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span class="text-emerald-400 font-medium">All 48 checks passing</span>
+              </div>
+              <span class="text-slate-500">100% deterministic</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

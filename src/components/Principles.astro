@@ -1,0 +1,122 @@
+---
+// Principles.astro
+const principles = [
+  {
+    title: "Zero Data Leakage by Design",
+    tagline: "Evaluation Integrity & Temporal Boundaries",
+    description:
+      "Cross-validation leakage and lookahead bias are catastrophic because they yield deceptively optimistic metrics that fail silently in production. We architect strict partition boundaries before computing any feature transformations.",
+    bullets: [
+      "Strict temporal point-in-time joins preventing target and future signal contamination.",
+      "Deterministic cryptographic entity hashing for leak-free train/validation/test splits.",
+      "Automated tombstone guards and pipeline assertions that fail loudly on boundary violations.",
+    ],
+    codeSnippet: `// Tombstone guard enforcement
+assert partition.max_timestamp < eval_window.min_timestamp, \\
+    "LeakageDetected: lookahead contamination in split"`,
+  },
+  {
+    title: "Rigorous Verification & TDD",
+    tagline: "Defensive Engineering & Process Boundaries",
+    description:
+      "Real-world machine learning systems operate in chaotic execution environments. Verification must go far beyond happy-path unit tests to enforce stability under OS signals, malformed inputs, and process interruption.",
+    bullets: [
+      "Property-based testing against degenerate distributions and extreme covariate shifts.",
+      "Child process supervision with idempotent cleanup on SIGINT and SIGTERM.",
+      "Strict defensive boundaries against unhandled tensor shapes and floating point exceptions.",
+    ],
+    codeSnippet: `// Chaos testing process boundary
+def test_worker_interrupt_leaves_no_zombies():
+    proc = spawn_worker(task=heavy_inference)
+    proc.send_signal(signal.SIGINT)
+    assert proc.wait(timeout=1.0) == 0`,
+  },
+  {
+    title: "Clean Architecture & Explicit Contracts",
+    tagline: "Decoupled Domain & Strict Type Boundaries",
+    description:
+      "Machine learning models are implementation details of the domain. By decoupling core business logic from framework-heavy libraries, the system remains modular, highly testable, and resilient to vendor lock-in.",
+    bullets: [
+      "Rigid schema contracts validated via Pydantic V2 and TypeScript at every system boundary.",
+      "Hexagonal architecture separating inference ports from HTTP transport and storage adapters.",
+      "Dependency inversion enabling fast, reproducible local test suites without cloud fixtures.",
+    ],
+    codeSnippet: `// Strict interface contract
+class InferenceRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    embeddings: Annotated[list[float], Field(min_length=128, max_length=128)]`,
+  },
+];
+---
+
+<section id="principles" class="py-20 border-t border-slate-800/80 bg-slate-950/40 relative">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="space-y-3 mb-14">
+      <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
+        <span>// Core Engineering Tenets</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-100">
+        Engineering Principles
+      </h2>
+      <p class="text-slate-400 max-w-2xl text-base sm:text-lg leading-relaxed">
+        High signal, low noise. Foundational systems principles governing data integrity, fault boundaries, and architectural isolation.
+      </p>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {principles.map((item, index) => (
+        <div class="group flex flex-col justify-between rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-900/80 hover:border-emerald-500/40 p-6 transition-all duration-200">
+          <div class="space-y-4">
+            <!-- Header with Index Tag -->
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                P-0{index + 1}
+              </span>
+              <span class="text-[11px] font-mono text-slate-500">
+                SYSTEM_SAFETY
+              </span>
+            </div>
+
+            <!-- Title & Tagline -->
+            <div>
+              <h3 class="text-lg font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
+                {item.title}
+              </h3>
+              <p class="text-xs font-mono text-slate-400 mt-1">
+                {item.tagline}
+              </p>
+            </div>
+
+            <!-- Description -->
+            <p class="text-sm text-slate-300 leading-relaxed">
+              {item.description}
+            </p>
+
+            <!-- Bullets -->
+            <ul class="space-y-2 pt-2 border-t border-slate-800/60">
+              {item.bullets.map((bullet) => (
+                <li class="flex items-start gap-2 text-xs text-slate-300">
+                  <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span class="leading-normal">{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Code Snippet Box -->
+          <div class="mt-6 pt-4 border-t border-slate-800/80">
+            <div class="rounded bg-[#0B0F19] p-2.5 font-mono text-[11px] text-slate-400 border border-slate-800/80 overflow-x-auto">
+              <pre class="leading-tight"><code>{item.codeSnippet}</code></pre>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>

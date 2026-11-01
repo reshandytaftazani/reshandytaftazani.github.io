@@ -1,0 +1,108 @@
+---
+// Skills.astro
+const skillGroups = [
+  {
+    category: "Languages",
+    description: "Core languages for systems, pipelines, and type-safe computation.",
+    skills: [
+      { name: "Python", detail: "AsyncIO, Typing, C-Extensions, Metaclasses" },
+      { name: "C / C++", detail: "Memory safety, Systems tooling, High-perf routines" },
+      { name: "TypeScript", detail: "Strict compiler, Generics, End-to-end schemas" },
+      { name: "SQL", detail: "PostgreSQL, Window functions, Index optimization" },
+      { name: "Bash / POSIX", detail: "Process automation, Pipe composition, OS tooling" },
+    ],
+  },
+  {
+    category: "ML & Data Systems",
+    description: "Leak-free feature pipelines and reproducible model execution.",
+    skills: [
+      { name: "PyTorch", detail: "Custom architectures, Autograd hooks, Tensor compute" },
+      { name: "scikit-learn", detail: "Leak-free pipelines, Estimators, CV protocols" },
+      { name: "NumPy & Pandas", detail: "Vectorized compute, Memory layout, Array optimization" },
+      { name: "Pipeline Design", detail: "Tombstone guards, Point-in-time temporal joins" },
+      { name: "ONNX Runtime", detail: "Graph optimization, Quantization, Local inference" },
+    ],
+  },
+  {
+    category: "Systems & Architecture",
+    description: "Decoupled domain cores, explicit contracts, and container runtimes.",
+    skills: [
+      { name: "FastAPI", detail: "Asynchronous I/O, Lifespan hooks, High throughput" },
+      { name: "Clean Architecture", detail: "Hexagonal / Ports & Adapters, Domain isolation" },
+      { name: "Pydantic V2", detail: "Strict mode, Rust core validator, JSON Schema" },
+      { name: "Linux / OS", detail: "Signals (SIGINT/TERM), IPC, File descriptors, Procfs" },
+      { name: "Docker", detail: "Multi-stage builds, Distroless images, Minimal footprints" },
+    ],
+  },
+  {
+    category: "Testing & DevOps",
+    description: "Defensive verification, deterministic tests, and automated releases.",
+    skills: [
+      { name: "Pytest & TDD", detail: "Fixtures, Parametrization, Strict test isolation" },
+      { name: "Verification Suites", detail: "Process interruption tests, Degenerate distributions" },
+      { name: "Git", detail: "Trunk-based workflow, Atomic commits, Cryptographic history" },
+      { name: "CI/CD Actions", detail: "Automated linting, Test matrices, GitHub Pages deployment" },
+      { name: "Defensive Programming", detail: "Invariant enforcement, Assertion guards, Crash safety" },
+    ],
+  },
+];
+---
+
+<section id="skills" class="py-20 border-t border-slate-800/80 bg-slate-950/40 relative">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="space-y-3 mb-14">
+      <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
+        <span>// Technical Competencies</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-100">
+        Skills &amp; Technology Stack
+      </h2>
+      <p class="text-slate-400 max-w-2xl text-base sm:text-lg leading-relaxed">
+        Focused on systems-level reliability, typed domain boundaries, and mathematically sound machine learning workflows.
+      </p>
+    </div>
+
+    <!-- 4-Column Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {skillGroups.map((group) => (
+        <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-5 flex flex-col justify-between hover:border-slate-700 transition-colors">
+          <div>
+            <!-- Group Header -->
+            <div class="pb-3 border-b border-slate-800/80 mb-4">
+              <h3 class="text-base font-bold text-slate-100 font-mono flex items-center justify-between">
+                <span>{group.category}</span>
+                <span class="text-emerald-400 text-xs">●</span>
+              </h3>
+              <p class="text-[11.5px] text-slate-400 mt-1 leading-snug">
+                {group.description}
+              </p>
+            </div>
+
+            <!-- Skill Items -->
+            <ul class="space-y-3">
+              {group.skills.map((skill) => (
+                <li class="space-y-0.5">
+                  <div class="text-xs font-mono font-semibold text-slate-200">
+                    {skill.name}
+                  </div>
+                  <div class="text-[11px] text-slate-400 font-sans leading-tight">
+                    {skill.detail}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Bottom Micro-Indicator -->
+          <div class="mt-6 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[10px] font-mono text-slate-500">
+            <span>VERIFIED_STACK</span>
+            <span class="text-emerald-400">READY</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
