@@ -12,12 +12,17 @@ const currentYear = 2026;
     <span>© {currentYear} ALL RIGHTS RESERVED</span>
   </div>
 
-  <!-- Right: Swiss Coordinates & Tactile [TOP ↑] Control -->
-  <div class="flex items-center gap-4 font-mono">
+  <!-- Right: Swiss Coordinates, Field Notes, RSS & Tactile [TOP ↑] Control -->
+  <div class="flex items-center gap-3 sm:gap-4 font-mono">
     <span class="hidden md:inline text-neutral-dark hover:text-neutral transition-colors">LAT -06.3627° | LON 106.8271°</span>
     <span class="hidden md:inline text-neutral-dark">•</span>
-    <span class="hidden sm:inline text-neutral-dark">ASTRO + TAILWIND</span>
-    <span class="hidden sm:inline text-neutral-dark">•</span>
+    <a href="/notes" class="text-neutral-dark hover:text-foreground transition-colors font-semibold" title="Technical Field Notes">NOTES</a>
+    <span class="text-neutral-dark">•</span>
+    <a href="/rss.xml" target="_blank" class="text-neutral-dark hover:text-accent transition-colors flex items-center gap-0.5" title="RSS Syndication Feed">
+      <span>RSS</span>
+      <span class="text-[10px]">↗</span>
+    </a>
+    <span class="text-neutral-dark">•</span>
     
     <!-- Tactile Swiss Top Button with Expanding Brackets & Rocket Leap -->
     <a 

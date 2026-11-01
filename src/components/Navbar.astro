@@ -1,11 +1,12 @@
 ---
 // Navbar.astro (Daniele Buser Swiss Responsive Header: Un-clipped flex layout, tactile mobile drawer, live clock & scrollspy)
 const navLinks = [
-  { id: "projects", name: "PROJECTS", href: "#projects", num: "01" },
-  { id: "experience", name: "TRACK", href: "#experience", num: "02" },
-  { id: "principles", name: "PRINCIPLES", href: "#principles", num: "03" },
-  { id: "skills", name: "STACK", href: "#skills", num: "04" },
-  { id: "contacts", name: "CONTACTS", href: "#contacts", num: "05" },
+  { id: "projects", name: "PROJECTS", href: "/#projects", num: "01" },
+  { id: "notes", name: "NOTES", href: "/notes", num: "02" },
+  { id: "experience", name: "TRACK", href: "/#experience", num: "03" },
+  { id: "principles", name: "PRINCIPLES", href: "/#principles", num: "04" },
+  { id: "skills", name: "STACK", href: "/#skills", num: "05" },
+  { id: "contacts", name: "CONTACTS", href: "/#contacts", num: "06" },
 ];
 ---
 
@@ -51,9 +52,9 @@ const navLinks = [
     <!-- Right: Desktop Navigation Links (Visible on lg and above) -->
     <div class="pointer-events-auto hidden lg:flex items-center">
       <nav aria-label="Main desktop navigation" class="select-none">
-        <ul class="flex items-center gap-4 xl:gap-7">
+        <ul class="flex items-center gap-3.5 xl:gap-6">
           {navLinks.map((item, idx) => (
-            <li class="reveal-init" style={`transition-delay: ${100 + idx * 50}ms;`}>
+            <li class="reveal-init" style={`transition-delay: ${100 + idx * 40}ms;`}>
               <a 
                 data-nav-link={item.id}
                 class="nav-link group relative -my-2 inline-flex items-center py-2 text-caption xl:text-body uppercase font-bold text-neutral hover:text-foreground transition-all duration-200" 
@@ -74,7 +75,7 @@ const navLinks = [
             </li>
           ))}
           <!-- CV Action Link (Printable Swiss Technical Resume) -->
-          <li class="reveal-init pl-1" style={`transition-delay: ${100 + navLinks.length * 50}ms;`}>
+          <li class="reveal-init pl-1" style={`transition-delay: ${100 + navLinks.length * 40}ms;`}>
             <a 
               href="/resume" 
               class="group relative inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-current/30 hover:border-accent bg-current/5 hover:bg-accent text-foreground hover:text-black font-mono font-bold text-caption transition-all duration-200 active:scale-95 select-none"
@@ -87,7 +88,7 @@ const navLinks = [
             </a>
           </li>
           <!-- Command Palette Trigger Button (Ctrl + K) -->
-          <li class="reveal-init pl-1" style={`transition-delay: ${100 + (navLinks.length + 1) * 50}ms;`}>
+          <li class="reveal-init pl-1" style={`transition-delay: ${100 + (navLinks.length + 1) * 40}ms;`}>
             <button 
               type="button"
               data-open-command-palette
@@ -152,9 +153,9 @@ const navLinks = [
 
   <!-- Drawer Nav Links (Giant Swiss Editorial Typography) -->
   <nav class="my-auto py-8">
-    <ul class="flex flex-col space-y-4 sm:space-y-6">
+    <ul class="flex flex-col space-y-4 sm:space-y-5">
       {navLinks.map((item) => (
-        <li class="border-b border-grid-line-dark/60 pb-3">
+        <li class="border-b border-grid-line-dark/60 pb-2.5">
           <a 
             href={item.href} 
             data-mobile-nav-link={item.id}
@@ -168,19 +169,19 @@ const navLinks = [
           </a>
         </li>
       ))}
-      <li class="border-b border-grid-line-dark/60 pb-3">
+      <li class="border-b border-grid-line-dark/60 pb-2.5">
         <a 
           href="/resume" 
           class="mobile-nav-link group flex items-baseline justify-between text-display-sm font-bold tracking-tight text-foreground hover:text-accent transition-all duration-200"
         >
           <div class="flex items-baseline gap-3">
-            <span class="text-caption font-mono text-accent">[06]</span>
+            <span class="text-caption font-mono text-accent">[07]</span>
             <span class="group-hover:translate-x-2 transition-transform duration-200">CURRICULUM VITAE</span>
           </div>
           <span class="text-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200 font-mono text-sm">↗</span>
         </a>
       </li>
-      <li class="border-b border-grid-line-dark/60 pb-3">
+      <li class="border-b border-grid-line-dark/60 pb-2.5">
         <button 
           type="button" 
           data-open-command-palette
@@ -205,6 +206,8 @@ const navLinks = [
     </div>
 
     <div class="flex items-center gap-3 sm:gap-4 text-xs font-semibold">
+      <a href="/notes" class="text-neutral hover:text-accent transition-colors font-mono font-bold">NOTES ↗</a>
+      <span>•</span>
       <a href="/resume" class="text-accent hover:underline font-mono font-bold">CV ↗</a>
       <span>•</span>
       <a href="https://github.com/reshandytaftazani" target="_blank" rel="noopener noreferrer" class="text-neutral hover:text-accent transition-colors">GITHUB ↗</a>
@@ -274,24 +277,48 @@ const navLinks = [
       }
     });
 
-    // 3. Real-time Scrollspy for Desktop Nav Links
-    const sections = ["projects", "experience", "principles", "skills", "contacts"];
-    const navLinks = document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]");
-
-    function onScroll() {
-      const scrollPos = window.scrollY + 200;
-
-      let currentSectionId = "";
-      sections.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            currentSectionId = id;
+    // Smooth-scroll interception for /#hash links on the home page
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="/#"]').forEach((anchor) => {
+      anchor.addEventListener("click", (e) => {
+        if (window.location.pathname === "/" || window.location.pathname === "") {
+          const hash = anchor.getAttribute("href")?.replace(/^\/#/, "#");
+          if (hash) {
+            const target = document.querySelector(hash);
+            if (target) {
+              e.preventDefault();
+              target.scrollIntoView({ behavior: "smooth" });
+              history.pushState(null, "", hash);
+            }
           }
         }
       });
+    });
+
+    // 3. Real-time Scrollspy & Active Page Highlighting
+    const sections = ["projects", "experience", "principles", "skills", "contacts"];
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]");
+
+    function updateActiveNav() {
+      const isHome = window.location.pathname === "/" || window.location.pathname === "";
+      const isNotes = window.location.pathname.startsWith("/notes");
+
+      let currentSectionId = "";
+
+      if (isNotes) {
+        currentSectionId = "notes";
+      } else if (isHome) {
+        const scrollPos = window.scrollY + 200;
+        sections.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            const top = el.offsetTop;
+            const height = el.offsetHeight;
+            if (scrollPos >= top && scrollPos < top + height) {
+              currentSectionId = id;
+            }
+          }
+        });
+      }
 
       navLinks.forEach((link) => {
         const targetId = link.getAttribute("data-nav-link");
@@ -321,14 +348,14 @@ const navLinks = [
       });
     }
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    window.addEventListener("scroll", updateActiveNav, { passive: true });
+    updateActiveNav();
 
     document.addEventListener(
       "astro:before-swap",
       () => {
         clearInterval(clockInterval);
-        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("scroll", updateActiveNav);
         document.body.style.overflow = "";
       },
       { once: true }

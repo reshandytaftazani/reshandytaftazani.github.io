@@ -71,7 +71,7 @@
   - SEO foundation (`@astrojs/sitemap`, `robots.txt`, dynamic schema.org JSON-LD & OpenGraph metadata).
   - Full data synchronization of `leakguard-ml` across `ProjectSpecModal.astro`.
 
-### Phase 3: Technical Field Notes & Engineering Journal (`/notes`) (Batch 2) [PLANNED SPECIFICATION & PROMPT]
+### Phase 3: Technical Field Notes & Engineering Journal (`/notes`) (Batch 2) [COMPLETED]
 - **Target Routes:** `/notes` (chronological directory) and `/notes/[slug]` (deep-read editorial view).
 - **RSS Route:** `/rss.xml` (automated Astro syndication feed).
 - **Content Collection Schema (`src/content.config.ts`):**
@@ -87,14 +87,11 @@
   1. `posix-signals-async-python.md`: *POSIX Signal Traps in Async Python Inference Runtimes (Handling SIGTERM, graceful batch draining, and avoiding zombie worker pools)*
   2. `eliminating-lookahead-bias.md`: *Eliminating Lookahead Bias in Rolling Splits (Strict temporal data boundaries and purge-embargo validation for financial time-series)*
   3. `hexagonal-architecture-feature-stores.md`: *Hexagonal Architecture for ML Feature Stores (Decoupling feature serving contracts from storage drivers)*
-- **Prompt Eksekusi Batch 2 untuk Sesi Berikutnya:**
-  ```text
-  Lanjutkan pengembangan portofolio (Reshandy Taftazani Aulya — CS @ Universitas Indonesia, MLE & Systems) sesuai SPEC.md Phase 3:
-  1. Konfigurasi Content Collection `notes` di `src/content.config.ts` sesuai skema Zod.
-  2. Buat 3 artikel teknis autentik di `src/content/notes/` dengan format markdown presisi, rumus/diagram ASCII, dan snippet kode JetBrains Mono.
-  3. Bangun halaman arsip `/notes` (src/pages/notes/index.astro) dengan live search, filter domain tag, dan kalkulasi reading time.
-  4. Bangun halaman pembaca `/notes/[slug]` (src/pages/notes/[slug].astro) dengan gaya Swiss editorial, reading progress indicator, TOC, dan inter-note navigation.
-  5. Konfigurasi feed RSS di `/rss.xml.ts` menggunakan `@astrojs/rss`.
-  6. Integrasikan tautan `/notes` ke Navbar, Command Palette, dan Footer.
-  ```
+- **Completed Deliverables:**
+  - Full Content Collection schema with Zod typing in `src/content.config.ts`.
+  - 3 high-density engineering write-ups with ASCII blueprints, formal equations, and JetBrains Mono snippets.
+  - Interactive archive `/notes` with live keyword search, domain filtering, and dynamic reading time calculation.
+  - Deep-read `/notes/[slug]` page with Swiss editorial styling, reading progress bar, sticky TOC with scrollspy, and inter-note navigation.
+  - RSS 2.0 feed at `/rss.xml` with auto-discovery tag in Layout.
+  - Cross-navigation integration across Navbar, Command Palette (`⌘K`), Footer, and Hero quick badges.
 

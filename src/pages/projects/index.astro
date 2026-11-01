@@ -54,6 +54,15 @@ const categories = ["ALL", ...new Set(allProjects.map((p) => p.data.category))];
           </div>
 
           <a 
+            href="/notes" 
+            class="group inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-[#333] hover:border-[#ff4500] bg-[#141414] hover:bg-[#ff4500] text-neutral-300 hover:text-black font-bold transition-all duration-200"
+            title="Browse Technical Field Notes & Journal"
+          >
+            <span>NOTES</span>
+            <span class="text-[#ff4500] group-hover:text-black text-xs">↗</span>
+          </a>
+
+          <a 
             href="/resume" 
             class="group inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-[#333] hover:border-[#ff4500] bg-[#141414] hover:bg-[#ff4500] text-neutral-300 hover:text-black font-bold transition-all duration-200"
             title="View Printable Swiss Technical CV"

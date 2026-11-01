@@ -156,6 +156,15 @@
         keywords: "projects directory archive systems catalog all",
       },
       {
+        id: "nav-notes",
+        label: "Open Technical Field Notes & Journal",
+        category: "NAVIGATION",
+        shortcut: "G N",
+        icon: "✎",
+        action: () => navigateWithCurtain("/notes"),
+        keywords: "notes field notes articles blog journal posix lookahead hexagonal feature store writing dispatches",
+      },
+      {
         id: "nav-resume",
         label: "View Printable Technical CV / Resume",
         category: "NAVIGATION",
@@ -266,6 +275,33 @@
         action: () => navigateWithCurtain("/projects/leakguard-ml"),
         keywords: "leakguard ml lookahead leakage feature store polars temporal join duckdb",
       },
+      {
+        id: "note-posix",
+        label: "Field Note: POSIX Signal Traps in Async Python",
+        category: "SYSTEMS",
+        shortcut: "NOTE",
+        icon: "✎",
+        action: () => navigateWithCurtain("/notes/posix-signals-async-python"),
+        keywords: "posix signals sigterm async python inference runtime uvicorn graceful drain cuda vram",
+      },
+      {
+        id: "note-lookahead",
+        label: "Field Note: Eliminating Lookahead Bias in Rolling Splits",
+        category: "SYSTEMS",
+        shortcut: "NOTE",
+        icon: "✎",
+        action: () => navigateWithCurtain("/notes/eliminating-lookahead-bias"),
+        keywords: "lookahead bias purge embargo rolling splits temporal time-series cross-validation polars financial",
+      },
+      {
+        id: "note-hexagonal",
+        label: "Field Note: Hexagonal Architecture for ML Feature Stores",
+        category: "SYSTEMS",
+        shortcut: "NOTE",
+        icon: "✎",
+        action: () => navigateWithCurtain("/notes/hexagonal-architecture-feature-stores"),
+        keywords: "hexagonal ports adapters feature stores redis duckdb contract pydantic v2 online serving",
+      },
 
       // System Actions
       {
@@ -313,6 +349,15 @@
           }
         },
         keywords: "print pdf save resume cv document",
+      },
+      {
+        id: "act-rss",
+        label: "Subscribe to RSS Feed (Technical Dispatches)",
+        category: "ACTIONS",
+        shortcut: "RSS",
+        icon: "📡",
+        action: () => window.open("/rss.xml", "_blank", "noopener,noreferrer"),
+        keywords: "rss feed xml atom subscribe field notes syndication dispatches",
       },
     ];
 

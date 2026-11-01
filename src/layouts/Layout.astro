@@ -32,6 +32,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="author" content="Reshandy Taftazani Aulya" />
     <link rel="canonical" href={canonicalURL} />
 
+    <!-- RSS Feed Auto-Discovery -->
+    <link rel="alternate" type="application/rss+xml" title="Reshandy Taftazani — Technical Notes RSS Feed" href="/rss.xml" />
+
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />

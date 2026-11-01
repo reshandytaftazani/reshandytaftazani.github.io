@@ -61,12 +61,21 @@ const { Content } = await render(project);
           <span class="text-neutral-300 truncate max-w-[200px]">{project.data.title}</span>
         </div>
 
-        <!-- Right: Status Ping & Clock -->
-        <div class="flex items-center gap-3 font-mono text-xs">
-          <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#141414] border border-[#222]">
+        <!-- Right: Status Ping & Actions -->
+        <div class="flex items-center gap-2.5 font-mono text-xs">
+          <div class="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#141414] border border-[#222]">
             <span class="h-1.5 w-1.5 rounded-full bg-[#ff4500] animate-pulse"></span>
             <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-semibold">{project.data.status}</span>
           </div>
+
+          <a 
+            href="/notes" 
+            class="group inline-flex items-center gap-1 px-2 py-1 rounded-xs border border-[#333] hover:border-[#ff4500] bg-[#141414] hover:bg-[#ff4500] text-neutral-300 hover:text-black font-bold transition-all duration-200"
+            title="Browse Technical Field Notes"
+          >
+            <span>NOTES</span>
+            <span class="text-[#ff4500] group-hover:text-black text-[10px]">↗</span>
+          </a>
         </div>
 
       </div>

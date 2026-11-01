@@ -1,0 +1,403 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allNotes = await getCollection('notes');
+
+// Dynamic reading time calculator helper
+function calculateReadingTime(body?: string, fallback: string = '6 MIN READ'): string {
+  if (!body) return fallback;
+  const wordCount = body.trim().split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(wordCount / 200));
+  return `${minutes} MIN READ`;
+}
+
+// Sort notes by publishedAt descending (newest first)
+const sortedNotes = [...allNotes].sort((a, b) => {
+  return new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime();
+});
+
+// Calculate categories and count
+const categories = [
+  "ALL",
+  "MACHINE LEARNING",
+  "SYSTEMS ARCHITECTURE",
+  "VERIFICATION & DATA",
+];
+---
+
+<Layout 
+  title="Technical Field Notes & Engineering Journal | Reshandy Taftazani"
+  description="Chronological engineering journal and technical dispatches on distributed inference runtimes, defensive temporal verification, zero-leakage feature stores, and software systems by Reshandy Taftazani."
+>
+  <main class="min-h-screen bg-[#0a0a0a] text-neutral-200 selection:bg-[#ff4500] selection:text-white font-sans relative">
+    
+    <!-- Topbar Navigation -->
+    <header class="sticky top-0 z-40 w-full border-b border-[#1f1f1f] bg-[#0a0a0a]/90 backdrop-blur-md">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        
+        <!-- Left: Back Navigation -->
+        <div class="flex items-center gap-3 font-mono text-xs font-semibold">
+          <a 
+            href="/#projects" 
+            id="back-home-link"
+            class="group inline-flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors"
+            title="Return to Selected Works on Home (or press ESC)"
+          >
+            <span class="text-[#ff4500] group-hover:-translate-x-1 transition-transform duration-200">←</span>
+            <span>HOME</span>
+            <span class="hidden sm:inline-block text-[10px] text-neutral-600 group-hover:text-neutral-400 font-mono border border-[#262626] px-1 py-0.2 rounded-xs">ESC</span>
+          </a>
+          <span class="text-neutral-700">/</span>
+          <a 
+            href="/projects" 
+            class="group inline-flex items-center gap-1.5 text-neutral-400 hover:text-[#ff4500] transition-colors"
+            title="Browse full engineering projects directory"
+          >
+            <span class="text-[#ff4500] text-[10px]">⊞</span>
+            <span>PROJECTS</span>
+          </a>
+        </div>
+
+        <!-- Center: Telemetry Indicator -->
+        <div class="hidden md:flex items-center gap-2 font-mono text-[11px] text-neutral-500 uppercase tracking-wider select-none">
+          <span>FIELD_NOTES</span>
+          <span class="text-[#333]">//</span>
+          <span class="text-[#ff4500] font-semibold">ENGINEERING_JOURNAL</span>
+          <span class="text-[#333]">//</span>
+          <span class="text-neutral-300">DISPATCHES</span>
+        </div>
+
+        <!-- Right: Telemetry Counter, RSS & CV Links -->
+        <div class="flex items-center gap-2.5 font-mono text-xs">
+          <div class="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#141414] border border-[#222]">
+            <span class="h-1.5 w-1.5 rounded-full bg-[#ff4500] animate-pulse"></span>
+            <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-semibold">{allNotes.length} DISPATCHES</span>
+          </div>
+
+          <a 
+            href="/rss.xml" 
+            target="_blank"
+            class="group inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-[#333] hover:border-[#ff4500] bg-[#141414] hover:bg-[#ff4500] text-neutral-300 hover:text-black font-bold transition-all duration-200"
+            title="Subscribe to RSS Feed"
+          >
+            <span class="text-[#ff4500] group-hover:text-black text-xs font-mono">📡</span>
+            <span>RSS</span>
+          </a>
+
+          <a 
+            href="/resume" 
+            class="group inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-[#333] hover:border-[#ff4500] bg-[#141414] hover:bg-[#ff4500] text-neutral-300 hover:text-black font-bold transition-all duration-200"
+            title="View Printable Swiss Technical CV"
+          >
+            <span>CV</span>
+            <span class="text-[#ff4500] group-hover:text-black text-xs">↗</span>
+          </a>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+      
+      <!-- HERO SECTION -->
+      <section class="border-b border-[#1f1f1f] pb-10 sm:pb-12">
+        <div class="flex items-center gap-2 font-mono text-xs text-[#ff4500] tracking-widest uppercase mb-3">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#ff4500] animate-pulse"></span>
+          <span>SYSTEMS ARCHIVE // TECHNICAL DISPATCHES</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.05]">
+          FIELD NOTES<span class="text-[#ff4500]">.</span>
+        </h1>
+        
+        <p class="mt-4 text-base sm:text-xl text-neutral-400 font-normal max-w-3xl leading-relaxed">
+          Chronological engineering write-ups on distributed GPU inference runtimes, defensive temporal verification, zero-leakage feature stores, and architectural invariants.
+        </p>
+
+        <!-- Search & Domain Filter Toolbar -->
+        <div class="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-xs">
+          
+          <!-- Category Filter Pills -->
+          <div class="flex flex-wrap items-center gap-2" role="tablist" aria-label="Filter notes by technical domain">
+            {categories.map((cat, idx) => {
+              const count = cat === "ALL" 
+                ? allNotes.length 
+                : allNotes.filter(n => n.data.category === cat).length;
+              return (
+                <button
+                  type="button"
+                  data-notes-filter={cat}
+                  class={`notes-filter-btn px-3 py-1.5 rounded-xs border transition-all duration-200 cursor-pointer select-none font-bold uppercase ${
+                    idx === 0 
+                      ? "active bg-white text-black border-white" 
+                      : "border-[#262626] text-neutral-400 hover:border-[#ff4500] hover:text-white bg-[#141414]"
+                  }`}
+                  role="tab"
+                  aria-selected={idx === 0 ? "true" : "false"}
+                >
+                  {cat === "ALL" ? `ALL [0${count}]` : `${cat} [0${count}]`}
+                </button>
+              );
+            })}
+          </div>
+
+          <!-- Live Search Input -->
+          <div class="relative w-full md:w-80 shrink-0">
+            <input 
+              type="text" 
+              id="notes-search-input"
+              placeholder="SEARCH DISPATCHES / INVARIANTS... (/)" 
+              class="w-full bg-[#111111] border border-[#262626] focus:border-[#ff4500] focus:outline-none px-3 py-1.5 pl-8 pr-12 rounded-xs text-xs text-white placeholder-neutral-600 font-mono transition-colors"
+              aria-label="Filter notes by title, keyword, or invariant"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-neutral-600 font-mono text-xs" aria-hidden="true">⌕</span>
+            <kbd class="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-neutral-600 border border-[#262626] px-1 py-0.2 rounded-xs select-none font-mono">/</kbd>
+          </div>
+
+        </div>
+
+        <!-- Telemetry Summary Bar -->
+        <div class="mt-4 flex items-center justify-between font-mono text-[11px] text-neutral-500 border-t border-[#171717] pt-3">
+          <div class="flex items-center gap-2">
+            <span>FILTER STATUS:</span>
+            <span id="active-filter-indicator" class="text-neutral-300 font-semibold">ALL</span>
+            <span class="text-neutral-700">//</span>
+            <span id="active-results-counter" class="text-[#ff4500] font-bold">SHOWING {allNotes.length} OF {allNotes.length}</span>
+          </div>
+          <span class="hidden sm:inline text-neutral-600">PRESS [/] TO SEARCH • [ESC] TO CLEAR</span>
+        </div>
+      </section>
+
+      <!-- NOTES LIST SECTION -->
+      <section class="mt-8 space-y-6" id="notes-container" aria-label="Technical Field Notes List">
+        {sortedNotes.map((note, index) => {
+          const readingTime = calculateReadingTime(note.body, note.data.readingTime);
+          const searchTerms = `${note.data.title} ${note.data.subtitle} ${note.data.abstract} ${note.data.category} ${note.data.invariants.join(' ')}`.toLowerCase();
+
+          return (
+            <article 
+              class="note-card group relative p-6 sm:p-8 bg-[#0d0d0d] hover:bg-[#121212] border border-[#1f1f1f] hover:border-[#ff4500] rounded-xs transition-all duration-200"
+              data-category={note.data.category}
+              data-search-terms={searchTerms}
+            >
+              <!-- Top Row: Telemetry Metadata -->
+              <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#1a1a1a] pb-4 font-mono text-xs">
+                <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                  <span class="text-[11px] text-[#ff4500] font-bold">
+                    DISPATCH #{String(sortedNotes.length - index).padStart(2, '0')}
+                  </span>
+                  <span class="text-neutral-700">•</span>
+                  <time datetime={note.data.publishedAt} class="text-neutral-400">
+                    {note.data.publishedAt}
+                  </time>
+                  <span class="text-neutral-700">•</span>
+                  <span class="px-2 py-0.5 rounded-xs bg-[#ff4500]/10 text-[#ff4500] border border-[#ff4500]/25 text-[10px] font-bold uppercase tracking-wider">
+                    {note.data.category}
+                  </span>
+                  {note.data.featured && (
+                    <span class="px-1.5 py-0.5 rounded-xs bg-white text-black font-bold text-[9px] uppercase tracking-wider">
+                      FEATURED
+                    </span>
+                  )}
+                </div>
+
+                <div class="flex items-center gap-2 text-neutral-500 text-[11px]">
+                  <span>⚡</span>
+                  <span class="text-neutral-300 font-semibold">{readingTime}</span>
+                </div>
+              </div>
+
+              <!-- Main Body: Title & Abstract -->
+              <div class="pt-5 pb-4">
+                <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight leading-snug group-hover:text-[#ff4500] transition-colors">
+                  <a href={`/notes/${note.id}`} class="focus:outline-none">
+                    {note.data.title}<span class="text-[#ff4500]">.</span>
+                  </a>
+                </h2>
+
+                <p class="mt-2 text-sm sm:text-base text-neutral-400 font-medium leading-relaxed font-sans">
+                  {note.data.subtitle}
+                </p>
+
+                <p class="mt-3 text-xs sm:text-sm text-neutral-500 leading-relaxed font-sans line-clamp-2">
+                  {note.data.abstract}
+                </p>
+              </div>
+
+              <!-- Defensive Invariants Pills -->
+              {note.data.invariants && note.data.invariants.length > 0 && (
+                <div class="pt-2 pb-5">
+                  <div class="flex items-center gap-1.5 font-mono text-[10px] text-neutral-500 uppercase tracking-wider mb-2">
+                    <span class="text-[#ff4500]">✓</span>
+                    <span>ARCHITECTURAL INVARIANTS:</span>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5">
+                    {note.data.invariants.map((inv) => (
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs bg-[#141414] border border-[#222] font-mono text-[10.5px] text-neutral-400 group-hover:border-[#2f2f2f] transition-colors">
+                        <span class="text-[#ff4500] font-bold text-[9px]">»</span>
+                        <span>{inv}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <!-- Bottom Action Bar -->
+              <div class="pt-4 border-t border-[#1a1a1a] flex items-center justify-between gap-4 font-mono text-xs">
+                <span class="text-neutral-600 text-[11px] hidden sm:inline">
+                  AUTHOR: RESHANDY TAFTAZANI (CS @ UI)
+                </span>
+
+                <a 
+                  href={`/notes/${note.id}`} 
+                  class="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xs bg-[#1a1a1a] hover:bg-[#ff4500] text-neutral-200 hover:text-black font-bold border border-[#2a2a2a] hover:border-[#ff4500] transition-all duration-200 cursor-pointer select-none group/btn"
+                >
+                  <span>READ DISPATCH</span>
+                  <span class="text-[#ff4500] group-hover/btn:text-black transition-transform duration-200 group-hover/btn:translate-x-1">→</span>
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+
+      <!-- Empty State -->
+      <div id="no-notes-found" class="hidden py-16 text-center font-mono border border-dashed border-[#222] rounded-xs mt-6 bg-[#0a0a0a]">
+        <div class="text-neutral-600 text-2xl mb-2">∅</div>
+        <p class="text-neutral-400 text-sm font-bold">NO DISPATCHES MATCH THE SPECIFIED CRITERIA.</p>
+        <p class="text-neutral-600 text-xs mt-1">Try modifying the search keyword or switching domain filter pills.</p>
+        <button 
+          type="button" 
+          id="reset-notes-filter-btn"
+          class="mt-4 px-3 py-1.5 rounded-xs bg-[#161616] border border-[#2a2a2a] hover:border-[#ff4500] text-[#ff4500] text-xs font-bold transition-colors cursor-pointer select-none"
+        >
+          [RESET ALL FILTERS]
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Interactive Notes Archive Script -->
+  <script>
+    function setupNotesArchive() {
+      // 1. Keyboard Navigation (ESC to exit/clear, / to focus search)
+      window.addEventListener("keydown", (e) => {
+        const searchInput = document.getElementById("notes-search-input") as HTMLInputElement | null;
+        
+        if (e.key === "/" && document.activeElement !== searchInput) {
+          e.preventDefault();
+          searchInput?.focus();
+        } else if (e.key === "Escape") {
+          if (searchInput && document.activeElement === searchInput) {
+            searchInput.blur();
+          } else {
+            window.location.href = "/#projects";
+          }
+        }
+      });
+
+      // 2. Real-time Search and Category Filtering Engine
+      const searchInput = document.getElementById("notes-search-input") as HTMLInputElement | null;
+      const filterBtns = document.querySelectorAll<HTMLButtonElement>(".notes-filter-btn");
+      const cards = document.querySelectorAll<HTMLElement>(".note-card");
+      const emptyState = document.getElementById("no-notes-found");
+      const resetBtn = document.getElementById("reset-notes-filter-btn");
+      const filterIndicator = document.getElementById("active-filter-indicator");
+      const counterIndicator = document.getElementById("active-results-counter");
+
+      const totalCount = cards.length;
+      let currentCategory = "ALL";
+      let searchQuery = "";
+
+      function applyFilter() {
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const category = card.getAttribute("data-category") || "";
+          const terms = card.getAttribute("data-search-terms") || "";
+
+          const matchesCategory = currentCategory === "ALL" || category === currentCategory;
+          const matchesSearch = !searchQuery || terms.includes(searchQuery);
+
+          if (matchesCategory && matchesSearch) {
+            card.style.display = "";
+            visibleCount++;
+          } else {
+            card.style.display = "none";
+          }
+        });
+
+        if (filterIndicator) {
+          filterIndicator.textContent = currentCategory;
+        }
+
+        if (counterIndicator) {
+          counterIndicator.textContent = `SHOWING ${visibleCount} OF ${totalCount}`;
+        }
+
+        if (emptyState) {
+          emptyState.style.display = visibleCount === 0 ? "block" : "none";
+        }
+      }
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentCategory = btn.getAttribute("data-notes-filter") || "ALL";
+
+          filterBtns.forEach((b) => {
+            b.classList.remove("active", "bg-white", "text-black", "border-white");
+            b.classList.add("border-[#262626]", "text-neutral-400", "bg-[#141414]");
+            b.setAttribute("aria-selected", "false");
+          });
+
+          btn.classList.add("active", "bg-white", "text-black", "border-white");
+          btn.classList.remove("border-[#262626]", "text-neutral-400", "bg-[#141414]");
+          btn.setAttribute("aria-selected", "true");
+
+          applyFilter();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+          searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+          applyFilter();
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          currentCategory = "ALL";
+          searchQuery = "";
+          if (searchInput) searchInput.value = "";
+          
+          filterBtns.forEach((b, idx) => {
+            if (idx === 0) {
+              b.classList.add("active", "bg-white", "text-black", "border-white");
+              b.classList.remove("border-[#262626]", "text-neutral-400", "bg-[#141414]");
+              b.setAttribute("aria-selected", "true");
+            } else {
+              b.classList.remove("active", "bg-white", "text-black", "border-white");
+              b.classList.add("border-[#262626]", "text-neutral-400", "bg-[#141414]");
+              b.setAttribute("aria-selected", "false");
+            }
+          });
+
+          applyFilter();
+        });
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setupNotesArchive);
+    } else {
+      setupNotesArchive();
+    }
+    document.addEventListener("astro:page-load", setupNotesArchive);
+  </script>
+</Layout>
