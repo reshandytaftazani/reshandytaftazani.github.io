@@ -58,8 +58,8 @@ html.has-custom-cursor * {
 }
 
 ::selection {
-  background-color: rgba(255, 69, 0, 0.3);
-  color: #fff;
+  background-color: #ff4500;
+  color: #ffffff;
 }
 
 /* Subtle scrollbar */

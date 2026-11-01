@@ -16,149 +16,112 @@ interface ProjectSpec {
 
 const projectSpecs: ProjectSpec[] = [
   {
-    id: "leakguard-ml",
-    title: "LeakGuard-ML",
-    subtitle: "Temporal Split Validator & Feature Store Guard",
-    status: "TEMPORAL_VERIFIED",
+    id: "modelarena",
+    title: "ModelArena",
+    subtitle: "Dynamic Resource Allocation & Multi-Agent Training Framework",
+    status: "ACTIVE_R&D_71.4%",
     problem:
-      "Cross-validation lookahead bias occurs when future data unintentionally leaks into training folds during feature transformations. LeakGuard-ML validates timestamp partition boundaries prior to computing any rolling feature transformations.",
+      "Conventional machine learning trains models in static isolation. ModelArena creates a competitive multi-agent ecosystem that dynamically shifts shared memory and compute quotas to models demonstrating superior learning trajectories.",
     architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
-│                    LEAKGUARD DOMAIN CORE                    │
-│  [TimeBoundaryValidator] ──> [DeterministicHasher (SHA-256)]│
+│                 GLOBAL RESOURCE CONTROLLER                  │
+│       [Dynamic VRAM Arbiter] ──> [Relative Trajectory Eval] │
 └──────────────────────────────┬──────────────────────────────┘
                                │
-       ┌───────────────────────┴───────────────────────┐
-       ▼                                               ▼
-┌──────────────┐                               ┌──────────────┐
-│  INPUT PORT  │                               │ OUTPUT PORT  │
-│ Stream Source│                               │ Split Guard  │
-└──────┬───────┘                               └──────┬───────┘
-       │                                               │
-       ▼                                               ▼
- [Parquet / Arrow]                             [Validation Report]`,
-    benchmarks: [
-      { label: "Temporal Boundary", value: "Verified", detail: "Strict point-in-time train/val isolation" },
-      { label: "Validation Time", value: "< 25ms", detail: "Fast streaming validation per fold" },
-      { label: "Memory Footprint", value: "O(1)", detail: "Zero-copy Arrow chunk streaming verification" },
-      { label: "Schema Safety", value: "Strict", detail: "Enforced via typed Pydantic v2 data models" },
-    ],
-    invariants: [
-      "No feature row with timestamp >= t_split shall exist in the training partition.",
-      "Deterministic seed derivation guarantees reproducible cross-validation splits.",
-      "Boundary violations trigger immediate assertions preventing model training on tainted data.",
-    ],
-    cliCommand: "mlesys verify --target production-pipeline --strict-temporal",
-    githubUrl: "https://github.com/reshandytaftazani",
-    techStack: ["Python", "PyTorch", "FastAPI", "Pydantic v2", "Docker", "Apache Arrow"],
-  },
-  {
-    id: "axiomserve",
-    title: "AxiomServe",
-    subtitle: "Low-Latency Supervised Inference Runtime",
-    status: "POSIX_SIGNAL_HARDENED",
-    problem:
-      "Unhandled OS termination signals and process lockups can spawn orphaned worker processes during server redeployments, consuming memory. AxiomServe introduces defensive supervision with POSIX handlers for graceful shutdown.",
-    architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
-│                 PARENT PROCESS SUPERVISOR                   │
-│      [POSIX Signal Handler] ──> [Worker Process Pool]       │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-      ┌────────────────────────┼────────────────────────┐
-      ▼                        ▼                        ▼
-┌────────────┐           ┌────────────┐           ┌────────────┐
-│  WORKER 01 │           │  WORKER 02 │           │  WORKER 03 │
-│  ONNX / C++│           │  ONNX / C++│           │  ONNX / C++│
-└────────────┘           └────────────┘           └────────────┘
-      │                        │                        │
-      └────────────────────────┼────────────────────────┘
+       ┌───────────────────────┼───────────────────────┐
+       ▼                       ▼                       ▼
+┌──────────────┐        ┌──────────────┐        ┌──────────────┐
+│   AGENT 01   │        │   AGENT 02   │        │   AGENT 03   │
+│  Transformer │        │  Transformer │        │  Transformer │
+│ (+40% Memory)│        │ (Stagnating) │        │ (Promising)  │
+└──────────────┘        └──────────────┘        └──────────────┘
+       │                       │                       │
+       └───────────────────────┼───────────────────────┘
                                ▼
-               [Unix Domain Sockets (Zero-Copy)]`,
+               [Shared Memory IPC Ring-Buffer]`,
     benchmarks: [
-      { label: "p99 Latency", value: "3.82ms", detail: "ONNX runtime benchmarks on 4-worker host" },
-      { label: "Throughput", value: "14.2k req/s", detail: "Fast asynchronous request dispatch" },
-      { label: "Process Cleanup", value: "Guaranteed", detail: "Clean child termination on SIGINT and SIGTERM" },
-      { label: "Warmup Time", value: "< 200ms", detail: "Fast worker initialization and model load" },
+      { label: "Tasks Done", value: "20 / 28", detail: "71.4% milestone completion across framework modules" },
+      { label: "Memory Reallocation", value: "Dynamic", detail: "Shared memory sliding pool across active agents" },
+      { label: "Agent Evaluation", value: "Relative ΔL", detail: "Contrast loss curvature gradient against population" },
+      { label: "Topology", value: "Heterogeneous", detail: "Supports simultaneous transformer variations" },
     ],
     invariants: [
-      "Supervisor guarantees all child processes terminate cleanly upon shutdown.",
-      "Isolated ONNX C++ runtime workers avoid Python GIL contention during inference.",
-      "Inter-process communication uses non-blocking sockets with explicit timeouts.",
+      "Loss trajectory evaluates across a rolling window before triggering resource reallocations.",
+      "Degenerate candidate culling occurs only after exceeding 3x patience thresholds.",
+      "Shared memory ring-buffer offsets maintain zero CUDA allocation fragmentation.",
     ],
-    cliCommand: "axiomserve --runtime onnx --workers 4",
-    githubUrl: "https://github.com/reshandytaftazani",
-    techStack: ["FastAPI", "C++", "ONNX Runtime", "Linux IPC", "Docker"],
+    cliCommand: "python main.py --arena --agents 4 --reallocate-interval 50",
+    githubUrl: "https://github.com/reshandytaftazani/modelarena",
+    techStack: ["PyTorch", "Transformers", "CUDA", "Multi-Agent Systems", "Python 3.12"],
   },
   {
-    id: "synthdist-engine",
-    title: "SynthDist-Engine",
-    subtitle: "Degenerate Distribution & TDD Chaos Harness",
-    status: "PROPERTY_BASED_TDD",
+    id: "finance-tracker",
+    title: "Finance Tracker",
+    subtitle: "Defensive Personal Accounting Engine & Transaction Ledger",
+    status: "STABLE_ACID_VERIFIED",
     problem:
-      "Standard unit tests frequently run on clean sample data, failing to expose crashes caused by unexpected real-world inputs like empty tensors, infinite floats, or collinear singular matrices. SynthDist-Engine tests model pipelines against synthetic degenerate distributions.",
+      "Personal finance software often suffers from silent balance drift due to IEEE 754 float approximations and non-atomic bulk imports. Finance Tracker guarantees double-entry integrity through strict fixed-point arithmetic and SQLite WAL transactions.",
     architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
-│                  SYNTHDIST CHAOS GENERATOR                  │
-│   [Hypothesis Strategies] ──> [Degenerate Tensor Synthesizer]│
+│                   INGESTION & VALIDATION                    │
+│    [Pydantic v2 Contract Gate] ──> [Fixed Decimal Parser]   │
 └──────────────────────────────┬──────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                  SANDBOXED INFERENCE PROBE                  │
-│     [NaN Trapper] ──> [Covariance Guard] ──> [Shape Check]  │
+│                 DOUBLE-ENTRY ATOMIC ENGINE                  │
+│        [Debit == Credit] ──> [Audit Assertion Gate]         │
 └──────────────────────────────┬──────────────────────────────┘
                                │
                                ▼
-               [Automated Failure Reproduction]`,
+            [SQLite WAL Journal (Atomic Commit)]`,
     benchmarks: [
-      { label: "Test Fuzzing", value: "10,000+/s", detail: "Vectorized synthetic tensor generation" },
-      { label: "Failure Shrink", value: "Automated", detail: "Minimizes failing inputs for easier debugging" },
-      { label: "Suite Execution", value: "4.15s", detail: "Comprehensive property-based test pass" },
-      { label: "Exception Guard", value: "Handled", detail: "Traps floating-point and dimension exceptions" },
+      { label: "Ledger Balance", value: "100.00%", detail: "Zero floating-point discrepancy across ledger history" },
+      { label: "Query Speed", value: "4.12ms", detail: "Fast analytical query response on 50,000 transactions" },
+      { label: "Batch Ingest", value: "0.28s", detail: "Atomic commit for 5,000 imported transaction rows" },
+      { label: "Transaction Safety", value: "ACID", detail: "Zero orphaned records during unexpected runtime aborts" },
     ],
     invariants: [
-      "All pipeline stages must gracefully handle empty or zero-variance inputs without unhandled crashes.",
-      "Covariance matrix inversions check condition numbers prior to factorization.",
-      "Failing inputs produce deterministic reproduction seeds for straightforward unit regression.",
+      "Debit and credit entries must balance precisely to zero difference on every transaction.",
+      "All monetary values are strictly represented as 4-place fixed Decimal instances.",
+      "Batch migrations execute within single atomic transactions with automatic rollback.",
     ],
-    cliCommand: "pytest tests/fuzz/ --distributions=degenerate",
-    githubUrl: "https://github.com/reshandytaftazani",
-    techStack: ["Python", "NumPy", "scikit-learn", "Pytest", "Hypothesis"],
+    cliCommand: "python -m ledger.cli sync --audit --verify-invariants",
+    githubUrl: "https://github.com/reshandytaftazani/finance-tracker",
+    techStack: ["Python", "FastAPI", "SQLite", "Pydantic v2", "Docker", "Pytest"],
   },
   {
-    id: "hexaml-core",
-    title: "HexaML Core",
-    subtitle: "Clean Architecture Blueprint for ML Systems",
-    status: "CLEAN_ARCHITECTURE",
+    id: "savebite",
+    title: "SaveBite",
+    subtitle: "Surplus Food Rescue & Distribution Platform",
+    status: "PBP_CS_UI_COMPLETED",
     problem:
-      "Coupling machine learning algorithms directly to specific web frameworks or cloud SDKs makes local testing difficult and ties business logic to third-party APIs. HexaML isolates domain algorithms inside an independent core.",
+      "Commercial food establishments routinely discard edible surplus meals due to lack of real-time coordination with beneficiaries. SaveBite provides an end-to-end platform for food donors, charities, and distribution couriers.",
     architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
-│                      PURE DOMAIN CORE                       │
-│    ModelInferenceContract │ FeatureTransform │ MetricAssert │
-│         (Zero 3rd-Party Framework Dependencies)             │
+│                    CLIENT PRESENTATION LAYER                │
+│    [Flutter Mobile Application] ──> [Web Management Portal] │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ (REST JSON + CSRF / Token)
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   DJANGO REST BACKEND CORE                  │
+│   [Auth & RBAC] ──> [Food Claim Gate] ──> [Deadline Check]  │
 └──────────────────────────────┬──────────────────────────────┘
                                │
-               ┌───────────────┴───────────────┐
-               ▼                               ▼
-       ┌───────────────┐               ┌───────────────┐
-       │ INFERENCE PORT│               │ PERSIST PORT  │
-       └───────┬───────┘               └───────┬───────┘
-               │                               │
-       ┌───────┴───────┐               ┌───────┴───────┐
-       ▼               ▼               ▼               ▼
- [FastAPI REST]  [gRPC Stream]    [S3 Storage]   [Local Disk]`,
+                               ▼
+            [PostgreSQL Database (Food Manifests)]`,
     benchmarks: [
-      { label: "Domain Deps", value: "Zero", detail: "Pure Python domain core without framework lock-in" },
-      { label: "Contract Check", value: "< 0.4ms", detail: "Input validation enforced at port boundaries" },
-      { label: "Local Test Time", value: "0.82s", detail: "Fast in-memory unit tests without external services" },
-      { label: "Port Reusability", value: "High", detail: "Swap delivery protocols without changing core logic" },
+      { label: "Coursework", value: "PBP UI", detail: "Pemrograman Berbasis Platform capstone at Universitas Indonesia" },
+      { label: "API Latency", value: "48ms p95", detail: "Fast response times on mobile listing endpoints" },
+      { label: "Multi-Client", value: "Synchronized", detail: "Seamless state sharing between Flutter mobile and web" },
+      { label: "Claim Integrity", value: "Defensive", detail: "Zero expired food items allowed through checkout gates" },
     ],
     invariants: [
-      "Domain layer remains free from web framework or persistence dependencies.",
-      "Contracts are validated strictly at interface boundaries using typed models.",
-      "Dependency inversion enables mock-based local regression testing.",
+      "Pickup deadlines must be strictly in the future at the time of donor listing submission.",
+      "Concurrent claim requests on identical food portions resolve with strict database atomicity.",
+      "Session tokens and CSRF validations guard all mutating state operations.",
     ],
-    cliCommand: "python -m hexaml.verify_contracts",
-    githubUrl: "https://github.com/reshandytaftazani",
-    techStack: ["Python", "Clean Arch", "Pydantic v2", "SQLAlchemy", "Docker"],
+    cliCommand: "python manage.py runserver --settings=savebite.settings",
+    githubUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite",
+    techStack: ["Django", "Python", "Flutter", "PostgreSQL", "REST API"],
   },
 ];
 ---
@@ -294,6 +257,15 @@ const projectSpecs: ProjectSpec[] = [
         
         <div class="flex items-center gap-3">
           <a 
+            id="spec-modal-blueprint-link"
+            href="#"
+            class="group inline-flex items-center gap-2 px-4 py-2.5 rounded-sm bg-white/10 hover:bg-white hover:text-black text-white font-bold tracking-wider transition-all duration-200 border border-white/20"
+          >
+            <span>FULL BLUEPRINT</span>
+            <span class="text-accent group-hover:text-black font-bold">→</span>
+          </a>
+
+          <a 
             id="spec-modal-repo-link"
             href="https://github.com/reshandytaftazani" 
             target="_blank" 
@@ -337,6 +309,7 @@ const projectSpecs: ProjectSpec[] = [
       const diagramEl = document.getElementById("spec-modal-diagram");
       const cliEl = document.getElementById("spec-modal-cli");
       const repoLinkEl = document.getElementById("spec-modal-repo-link");
+      const blueprintLinkEl = document.getElementById("spec-modal-blueprint-link");
       const techListEl = document.getElementById("spec-modal-tech-list");
       const benchmarksEl = document.getElementById("spec-modal-benchmarks");
       const invariantsEl = document.getElementById("spec-modal-invariants");
@@ -348,6 +321,7 @@ const projectSpecs: ProjectSpec[] = [
       if (diagramEl) diagramEl.textContent = spec.architectureDiagram;
       if (cliEl) cliEl.textContent = spec.cliCommand;
       if (repoLinkEl) repoLinkEl.href = spec.githubUrl;
+      if (blueprintLinkEl) blueprintLinkEl.href = `/projects/${spec.id}`;
 
       // Tech list
       if (techListEl) {

@@ -1,82 +1,72 @@
 ---
-// Projects.astro (Daniele Buser exact Section 2 layout with grounded copy, interactive spec triggers, category filters & copy micro-interactions)
+// Projects.astro (Daniele Buser exact Section 2 layout with real projects, spotlight flagship layout, and grounded copy)
 const projects = [
   {
-    id: "leakguard-ml",
-    category: "PIPELINES",
-    title: "LeakGuard-ML",
-    subtitle: "Temporal Split Validator & Feature Store Guard",
+    id: "modelarena",
+    category: "MACHINE LEARNING",
+    title: "ModelArena",
+    subtitle: "Dynamic Resource Allocation & Multi-Agent Training Framework",
     summary:
-      "Verification engine designed to validate temporal split boundaries and prevent lookahead data leakage in machine learning feature pipelines.",
-    runCommand: "mlesys verify --target production-pipeline",
-    previewCode: `$ mlesys verify --target production-pipeline
-[PASS] partition_boundary: 0.00% leakage
-[PASS] tombstone_guards: temporal integrity verified
-[PASS] strict_schemas: Pydantic v2 enforced
-[BENCH] split_generation: 12x throughput`,
-    techStack: ["Python", "PyTorch", "FastAPI", "Pydantic", "Docker"],
-    metric: "Temporal Boundary Validated",
-    secondaryMetric: "Strict Type Safety",
-    githubUrl: "https://github.com/reshandytaftazani",
+      "Competitive multi-agent learning ecosystem that dynamically allocates compute and memory quotas across heterogeneous models based on real-time loss trajectory.",
+    isWip: true,
+    progressText: "20/28 TASKS // 71%",
+    progressBar: "[███████░░░]",
+    runCommand: "python main.py --arena --agents 4",
+    previewCode: `$ python main.py --arena --agents 4
+[ARENA] initializing 4 heterogeneous agent workers
+[EVAL] step 120: Agent_A relative loss gradient: +0.42
+[ALLOC] reallocating +40% shared memory pool -> Agent_A
+[STATUS] 20/28 milestone tasks verified [███████░░░] 71%`,
+    techStack: ["PyTorch", "Transformers", "CUDA", "Multi-Agent", "Python"],
+    metric: "20/28 Tasks Completed",
+    secondaryMetric: "Dynamic Memory Alloc",
+    githubUrl: "https://github.com/reshandytaftazani/modelarena",
   },
   {
-    id: "axiomserve",
-    category: "RUNTIMES",
-    title: "AxiomServe",
-    subtitle: "Low-Latency Supervised Inference Runtime",
+    id: "finance-tracker",
+    category: "SYSTEMS & DATA",
+    title: "Finance Tracker",
+    subtitle: "Defensive Personal Accounting Engine & Transaction Ledger",
     summary:
-      "Asynchronous ML model serving runtime featuring POSIX termination signal handlers for clean process lifecycle management.",
-    runCommand: "axiomserve --runtime onnx --workers 4",
-    previewCode: `$ axiomserve --runtime onnx --workers 4
-[INIT] worker_pool initialized in shared memory
-[SIGNAL] POSIX SIGTERM handler registered
-[PASS] p99_latency: 3.82ms | throughput: 14.2k req/s
-[STATUS] zero zombie processes on exit`,
-    techStack: ["FastAPI", "C++", "ONNX", "Linux", "Docker"],
-    metric: "Low Latency p99",
-    secondaryMetric: "Clean Process Exit",
-    githubUrl: "https://github.com/reshandytaftazani",
+      "Double-entry accounting engine built with fixed-point decimal arithmetic and SQLite WAL transactions to guarantee balance integrity and zero floating-point drift.",
+    isWip: false,
+    progressText: "PRODUCTION // VERIFIED",
+    progressBar: "[██████████] 100%",
+    runCommand: "python -m ledger.cli sync --audit",
+    previewCode: `$ python -m ledger.cli sync --audit
+[INGEST] 50,000 transaction records scanned
+[ASSERT] debit_sum == credit_sum: $0.00 drift
+[ACID] atomic WAL journal commit: 4.12ms
+[STATUS] 100% ledger invariant verified`,
+    techStack: ["Python", "FastAPI", "SQLite", "Pydantic v2", "Docker"],
+    metric: "100% Balanced Ledger",
+    secondaryMetric: "Zero Float Drift",
+    githubUrl: "https://github.com/reshandytaftazani/finance-tracker",
   },
   {
-    id: "synthdist-engine",
-    category: "VERIFICATION",
-    title: "SynthDist-Engine",
-    subtitle: "Degenerate Distribution & TDD Chaos Harness",
+    id: "savebite",
+    category: "PLATFORM & WEB",
+    title: "SaveBite",
+    subtitle: "Surplus Food Rescue & Distribution Platform",
     summary:
-      "Property-based testing suite that generates synthetic edge-case distributions to test pipeline resilience against malformed inputs.",
-    runCommand: "pytest tests/fuzz/ --coverage",
-    previewCode: `$ pytest tests/fuzz/ --coverage
-[GENERATE] 10,000 degenerate distribution edge cases
-[PASS] empty_tensor_handling: ok
-[PASS] zero_variance_covariance: defended
-[STATUS] 100% boundary isolation verified`,
-    techStack: ["Python", "NumPy", "scikit-learn", "Pytest", "Hypothesis"],
-    metric: "Property-Based TDD",
-    secondaryMetric: "Isolated Test Harness",
-    githubUrl: "https://github.com/reshandytaftazani",
-  },
-  {
-    id: "hexaml-core",
-    category: "ARCHITECTURE",
-    title: "HexaML Core",
-    subtitle: "Clean Architecture Blueprint for ML Systems",
-    summary:
-      "Hexagonal architecture blueprint decoupling machine learning domain logic from transport protocols, databases, and web frameworks.",
-    runCommand: "python -m hexaml.verify_contracts",
-    previewCode: `$ python -m hexaml.verify_contracts
-class InferenceRequest(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid")
-    tensor_id: UUID4
-    features: Annotated[list[float], Field(min_length=64)]
-[STATUS] zero framework deps in domain layer`,
-    techStack: ["Python", "Clean Arch", "Pydantic", "SQLAlchemy", "Docker"],
-    metric: "Decoupled Domain Core",
-    secondaryMetric: "Fast Local Tests",
-    githubUrl: "https://github.com/reshandytaftazani",
+      "Coursework platform developed for Pemrograman Berbasis Platform (PBP CS UI) coordinating surplus food rescue between commercial donors and beneficiaries.",
+    isWip: false,
+    progressText: "COURSEWORK // COMPLETED",
+    progressBar: "[██████████] 100%",
+    runCommand: "python manage.py runserver",
+    previewCode: `$ python manage.py runserver
+[PBP-UI] SaveBite core cluster active on :8000
+[AUTH] session token & CSRF security verified
+[API] food listing claim endpoint: 48ms p95
+[STATUS] PBP CS UI capstone evaluated`,
+    techStack: ["Django", "Python", "Flutter", "PostgreSQL", "REST API"],
+    metric: "PBP Fasilkom UI '25",
+    secondaryMetric: "RESTful Architecture",
+    githubUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite",
   },
 ];
 
-const categories = ["ALL", "PIPELINES", "RUNTIMES", "VERIFICATION", "ARCHITECTURE"];
+const categories = ["ALL", "MACHINE LEARNING", "SYSTEMS & DATA", "PLATFORM & WEB"];
 ---
 
 <section id="projects" class="relative z-10 flex w-full flex-col pt-24 pb-36" aria-labelledby="projects-list-heading">
@@ -88,7 +78,7 @@ const categories = ["ALL", "PIPELINES", "RUNTIMES", "VERIFICATION", "ARCHITECTUR
         SELECTED WORKS
       </h2>
       <span class="text-caption font-mono text-neutral-dark font-semibold">
-        [04 SYSTEMS]
+        [03 SYSTEMS]
       </span>
     </div>
 
@@ -106,36 +96,39 @@ const categories = ["ALL", "PIPELINES", "RUNTIMES", "VERIFICATION", "ARCHITECTUR
           role="tab"
           aria-selected={idx === 0 ? "true" : "false"}
         >
-          {cat === "ALL" ? `ALL [04]` : cat}
+          {cat === "ALL" ? `ALL [03]` : cat}
         </button>
       ))}
     </div>
   </div>
 
-  <!-- 12-Column Grid (Daniele Buser exact 2-column on desktop) -->
+  <!-- 12-Column Grid (Flagship Spotlight #01 + Balanced 6-Column Cards) -->
   <div class="mt-8 grid w-full grid-cols-12 gap-6 lg:gap-8" id="projects-grid">
     {projects.map((proj, idx) => (
       <div 
-        class="reveal-init col-span-12 flex w-full flex-col lg:col-span-6 project-card-wrapper transition-opacity duration-300" 
+        class={`reveal-init col-span-12 flex w-full flex-col ${idx === 0 ? "lg:col-span-12" : "lg:col-span-6"} project-card-wrapper transition-opacity duration-300`} 
         data-category={proj.category}
         style={`transition-delay: ${idx * 120}ms;`}
       >
-        <div 
+        <a 
+          href={`/projects/${proj.id}`}
           data-project-card="true" 
-          class="group bg-card-dark focus-visible:outline-foreground flex w-full flex-col p-4 pb-8 focus-visible:outline-2 focus-visible:outline-offset-4 border border-transparent hover:border-neutral-dark/50 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(0,0,0,0.55)] transition-all duration-300 ease-out cursor-pointer" 
-          aria-label={`Project: ${proj.title} - Click to inspect architecture`}
-          data-open-spec={proj.id}
-          tabindex="0"
-          role="button"
+          class="group bg-card-dark focus-visible:outline-foreground flex w-full flex-col p-4 pb-8 focus-visible:outline-2 focus-visible:outline-offset-4 border border-transparent hover:border-neutral-dark/50 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(0,0,0,0.55)] transition-all duration-300 ease-out cursor-pointer block no-underline" 
+          aria-label={`Project: ${proj.title} - View full architectural case study`}
         >
           <!-- Aspect container with Code/Telemetry showcase and prominent micro-interactions -->
-          <div class="relative aspect-4/3 w-full overflow-hidden select-none bg-black border border-grid-line-dark group-hover:border-neutral-dark/60 transition-colors duration-300 p-4 flex flex-col justify-between font-mono text-xs">
+          <div class={`relative ${idx === 0 ? "aspect-16/9 lg:aspect-[2.4/1]" : "aspect-4/3"} w-full overflow-hidden select-none bg-black border border-grid-line-dark group-hover:border-neutral-dark/60 transition-colors duration-300 p-4 flex flex-col justify-between font-mono text-xs`}>
             
             <!-- Header bar inside card with SPEC, RUN & SOURCE pills -->
             <div class="flex items-center justify-between text-caption text-neutral-dark border-b border-grid-line-dark pb-2.5">
               <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-accent group-hover:scale-125 transition-transform duration-300"></span>
+                <span class={`w-2.5 h-2.5 rounded-full ${proj.isWip ? "bg-accent animate-pulse" : "bg-accent"} group-hover:scale-125 transition-transform duration-300`}></span>
                 <span class="text-foreground uppercase font-bold tracking-tight text-xs">{proj.title}</span>
+                {proj.isWip && (
+                  <span class="hidden sm:inline-block px-1.5 py-0.5 rounded-xs bg-accent/20 border border-accent/40 text-accent font-bold text-[10px] tracking-wider">
+                    {proj.progressText}
+                  </span>
+                )}
               </div>
               
               <div class="flex items-center gap-2">
@@ -144,7 +137,7 @@ const categories = ["ALL", "PIPELINES", "RUNTIMES", "VERIFICATION", "ARCHITECTUR
                   type="button" 
                   class="copy-run-cmd-btn group/cmd inline-flex items-center gap-1 px-2 py-0.5 rounded-xs bg-white/5 hover:bg-accent text-neutral hover:text-black font-mono text-[10px] font-bold transition-all duration-200 cursor-pointer"
                   data-run-cmd={proj.runCommand}
-                  onclick="event.stopPropagation();"
+                  onclick="event.preventDefault(); event.stopPropagation();"
                   title={`Copy command: ${proj.runCommand}`}
                   aria-label={`Copy run command for ${proj.title}`}
                 >
@@ -152,51 +145,63 @@ const categories = ["ALL", "PIPELINES", "RUNTIMES", "VERIFICATION", "ARCHITECTUR
                   <span class="cmd-label">RUN</span>
                 </button>
 
-                <!-- Spec Button Pill -->
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm bg-accent/20 text-accent group-hover:bg-accent group-hover:text-black font-bold text-[11px] tracking-wider transition-all duration-200">
+                <!-- Spec Button Pill (triggers quick modal) -->
+                <button 
+                  type="button"
+                  data-open-spec={proj.id}
+                  onclick="event.preventDefault(); event.stopPropagation();"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm bg-accent/20 text-accent hover:bg-accent hover:text-black font-bold text-[11px] tracking-wider transition-all duration-200 cursor-pointer"
+                  title={`Open quick spec modal for ${proj.title}`}
+                  aria-label={`Quick spec sheet for ${proj.title}`}
+                >
                   <span>SPEC</span>
                   <span class="text-xs">⚙</span>
-                </span>
+                </button>
 
                 <!-- Direct GitHub link -->
-                <a 
-                  href={proj.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm bg-white/10 hover:bg-white hover:text-black text-neutral transition-all duration-200 font-bold text-[11px] tracking-wider"
-                  onclick="event.stopPropagation();"
+                <button 
+                  type="button"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm bg-white/10 hover:bg-white hover:text-black text-neutral transition-all duration-200 font-bold text-[11px] tracking-wider cursor-pointer"
+                  onclick={`event.preventDefault(); event.stopPropagation(); window.open('${proj.githubUrl}', '_blank', 'noopener,noreferrer');`}
                   aria-label={`Open ${proj.title} source code on GitHub`}
                 >
                   <span>SOURCE</span>
                   <span class="text-accent hover:text-black transition-transform duration-200 ease-out">↗</span>
-                </a>
+                </button>
               </div>
             </div>
 
             <!-- Terminal code preview block with hover scaling -->
-            <pre class="text-neutral text-[11px] leading-relaxed my-auto overflow-x-hidden transition-transform duration-500 ease-out group-hover:scale-[1.025] select-text">
+            <pre class="text-neutral text-[11px] leading-relaxed my-auto overflow-x-hidden transition-transform duration-500 ease-out group-hover:scale-[1.02] select-text">
               <code>{proj.previewCode}</code>
             </pre>
 
             <!-- Card Bottom Telemetry -->
             <div class="flex items-center justify-between pt-2.5 border-t border-grid-line-dark text-[10px] uppercase">
               <span class="text-accent font-bold group-hover:scale-105 transition-transform duration-200 origin-left inline-block">{proj.metric}</span>
-              <span class="text-neutral-dark group-hover:text-foreground font-semibold transition-colors duration-200">{proj.secondaryMetric}</span>
+              <span class="text-neutral-dark group-hover:text-foreground font-semibold transition-colors duration-200">
+                {proj.isWip ? `${proj.progressBar} ${proj.secondaryMetric}` : proj.secondaryMetric}
+              </span>
             </div>
           </div>
 
           <!-- Bottom description & tags (Daniele Buser exact card layout) -->
           <div class="text-foreground mt-6 flex items-start justify-between gap-4 sm:mt-8">
             <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2">
-                <h3 class="text-section min-w-0 font-bold text-foreground group-hover:text-accent group-hover:translate-x-1 transition-all duration-300">
+              <div class="flex flex-wrap items-center gap-3.5 group-hover:translate-x-1.5 transition-transform duration-300 ease-out">
+                <h3 class="text-section min-w-0 font-bold text-foreground group-hover:text-accent transition-colors duration-200">
                   {proj.title}
                 </h3>
-                <span class="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded-xs bg-white/10 text-neutral group-hover:text-accent transition-colors">
-                  {proj.category}
+                <span class="text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-xs bg-white/5 border border-white/10 text-neutral-400 group-hover:text-accent group-hover:border-accent/40 group-hover:bg-accent/10 transition-all duration-200">
+                  [{proj.category}]
                 </span>
+                {proj.isWip && (
+                  <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-xs bg-accent/20 border border-accent/40 text-accent">
+                    {proj.progressText}
+                  </span>
+                )}
               </div>
-              <p class="text-body text-neutral mt-1 line-clamp-2 leading-relaxed">
+              <p class="text-body text-neutral mt-2 line-clamp-2 leading-relaxed">
                 {proj.summary}
               </p>
             </div>
@@ -208,7 +213,7 @@ const categories = ["ALL", "PIPELINES", "RUNTIMES", "VERIFICATION", "ARCHITECTUR
               ))}
             </div>
           </div>
-        </div>
+        </a>
       </div>
     ))}
   </div>
