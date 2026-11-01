@@ -289,6 +289,17 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
             </details>
           </div>
 
+          <!-- Interactive Annotations System Status Banner -->
+          <div class="mb-6 p-3 rounded-xs bg-[#111111] border border-[#222222] flex items-center justify-between flex-wrap gap-2 font-mono text-[11px]">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#ff4500] animate-pulse"></span>
+              <span class="text-neutral-300 font-bold uppercase tracking-wider">INTERACTIVE DEEP ANNOTATIONS ACTIVE</span>
+            </div>
+            <span class="text-neutral-500">
+              CLICK HIGHLIGHTED <span class="text-[#ff4500] font-bold">MATH SYMBOLS [ⓘ]</span> OR <span class="text-[#ff4500] font-bold">CODE LINES [WHY? ⓘ]</span> FOR ARCHITECTURAL JUSTIFICATIONS
+            </span>
+          </div>
+
           <!-- Editorial Markdown Prose -->
           <article class="prose-editorial max-w-none">
             <Content />
@@ -420,8 +431,210 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
     </div>
   </main>
 
-  <!-- Interactive Scripts: Reading Progress Bar, Scrollspy, ESC navigation, Share Button -->
+  <!-- INTERACTIVE ANNOTATION DRAWER / POPOVER -->
+  <aside 
+    id="annotation-drawer" 
+    class="fixed bottom-6 right-6 z-50 max-w-lg w-[calc(100vw-3rem)] sm:w-[480px] rounded-xs border border-[#ff4500]/50 bg-[#0c0c0c]/98 backdrop-blur-xl p-5 sm:p-6 shadow-2xl shadow-black/90 font-mono text-xs transition-all duration-200 translate-y-8 opacity-0 pointer-events-none"
+    role="dialog"
+    aria-labelledby="ann-title"
+    aria-modal="true"
+  >
+    <!-- Drawer Header -->
+    <div class="flex items-center justify-between border-b border-[#222] pb-3 mb-4">
+      <div class="flex items-center gap-2">
+        <span id="ann-category" class="px-2 py-0.5 rounded-xs bg-[#ff4500]/15 text-[#ff4500] font-bold text-[10px] uppercase tracking-wider border border-[#ff4500]/30">
+          MATHEMATICAL PARAMETER
+        </span>
+        <span class="text-neutral-500 text-[10px] uppercase tracking-wider hidden sm:inline-block">
+          // INVARIANT CONTRACT
+        </span>
+      </div>
+      <button 
+        type="button" 
+        id="ann-close-btn"
+        class="text-neutral-400 hover:text-white hover:bg-[#222] px-2 py-0.5 rounded-xs border border-[#333] transition-colors cursor-pointer text-[10px] font-bold"
+        title="Close Annotation (or press ESC)"
+      >
+        [ESC / CLOSE]
+      </button>
+    </div>
+
+    <!-- Parameter / Line Title -->
+    <div class="mb-3">
+      <h4 id="ann-title" class="text-base sm:text-lg font-black text-white tracking-tight">
+        Prediction Horizon (τ)
+      </h4>
+      <div class="mt-2 p-2.5 rounded-xs bg-[#141414] border border-[#262626] text-neutral-200 font-mono text-[11px] overflow-x-auto leading-relaxed">
+        <code id="ann-formula-box">y_i = (P_{'{'}t_0 + \tau{'}'} - P_{'{'}t_0{'}'}) / P_{'{'}t_0{'}'}</code>
+      </div>
+    </div>
+
+    <!-- Architectural Justification Description -->
+    <p id="ann-desc" class="text-xs text-neutral-300 font-sans leading-relaxed mb-4">
+      Batas waktu pelabelan masa depan; jika data fitur ditarik dalam rentang ini tanpa purging, lookahead bias terjadi secara matematis.
+    </p>
+
+    <!-- Invariant Guarantee Box -->
+    <div class="rounded-xs border border-[#00ff66]/30 bg-[#00ff66]/10 p-3 flex items-start gap-2.5">
+      <span class="text-[#00ff66] font-bold text-sm leading-none mt-0.5">✓</span>
+      <div>
+        <span class="text-[9px] text-[#00ff66] uppercase font-bold tracking-wider block mb-0.5">
+          INVARIANT &amp; DEFENSIVE GUARANTEE
+        </span>
+        <span id="ann-invariant" class="text-[11px] text-neutral-200 font-mono font-semibold">
+          Strict Zero Future Contamination: t_train_max &lt; t_test_min - τ
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Interactive Scripts: Reading Progress Bar, Scrollspy, ESC navigation, Share Button, Deep Annotations -->
   <script>
+    import { playClick } from '../../utils/audio';
+
+    interface AnnotationItem {
+      id: string;
+      category: string;
+      title: string;
+      codeOrFormula: string;
+      desc: string;
+      invariant: string;
+    }
+
+    const ANNOTATIONS: Record<string, AnnotationItem> = {
+      // Mathematical parameter annotations
+      "param-tau": {
+        id: "param-tau",
+        category: "MATHEMATICAL PARAMETER",
+        title: "Prediction Horizon (τ)",
+        codeOrFormula: "y_i = (P_{t_0 + τ} - P_{t_0}) / P_{t_0}",
+        desc: "Batas waktu pelabelan masa depan (Forward Return Window). Jika observasi fitur dalam partisi latih ditarik dalam rentang [t_0, t_0 + τ] tanpa purging, model akan terkontaminasi aksi harga masa depan (Lookahead Bias).",
+        invariant: "Purge Boundary: t_train_max < t_test_start - τ",
+      },
+      "param-h": {
+        id: "param-h",
+        category: "MATHEMATICAL PARAMETER",
+        title: "Embargo Buffer Duration (h)",
+        codeOrFormula: "T_embargo = (max(t_test), max(t_test) + h)",
+        desc: "Asymmetric post-test buffer untuk menguras memori serial correlation dan autoregressive features (misal rolling 20-day volatility). Mencegah kebocoran informasi pasca-partisi uji ke partisi latih berikutnya.",
+        invariant: "Embargo Horizon: t_train_min > max(t_test) + h",
+      },
+      "param-t0": {
+        id: "param-t0",
+        category: "POINT-IN-TIME WATERMARK",
+        title: "Feature Observation Timestamp (t_{i,0})",
+        codeOrFormula: "as_of_watermark = t_{i,0}  # Strictly monotonic",
+        desc: "Waktu eksak ketika vektor fitur diobservasi. Semua atribut model wajib di-join secara Point-in-Time (As-Of) pada atau sebelum t_{i,0}.",
+        invariant: "∀ feature f: timestamp(f) ≤ t_{i,0}",
+      },
+      "param-t1": {
+        id: "param-t1",
+        category: "LABEL RESOLUTION WATERMARK",
+        title: "Label Resolution Watermark (t_{i,1})",
+        codeOrFormula: "t_{i,1} = t_{i,0} + τ  # Realization point",
+        desc: "Waktu penyelesaian akhir di mana nilai ground-truth y_i terealisasi di pasar. Informasi harga antara t_{i,0} dan t_{i,1} dilarang keras masuk ke training fold manapun.",
+        invariant: "Leakage detected if any training sample t_j ∈ [t_{i,0}, t_{i,1}]",
+      },
+      "param-yi": {
+        id: "param-yi",
+        category: "GROUND TRUTH TARGET",
+        title: "Forward Return Prediction Target (y_i)",
+        codeOrFormula: "y_i = (P_{t_0 + τ} - P_{t_0}) / P_{t_0}",
+        desc: "Target klasifikasi atau regresi model kuantitatif. Karena bergantung pada lintasan harga masa depan, target ini membutuhkan partition isolation mutlak.",
+        invariant: "Zero backward leakage into prior folds",
+      },
+      "param-tdrain": {
+        id: "param-tdrain",
+        category: "SYSTEMS SLA INVARIANT",
+        title: "Maximum Drain Deadline (T_drain)",
+        codeOrFormula: "T_drain = Δt_ingress_sync + max(t_inference) + δ_serialize",
+        desc: "Batas waktu pengurasan seluruh batch in-flight yang sedang berjalan di worker saat sinyal SIGTERM diterima, sebelum proses diterminasi.",
+        invariant: "T_drain < T_k8s_grace_period - ε (Guarantees P(drop) = 0.00)",
+      },
+      "param-epsilon": {
+        id: "param-epsilon",
+        category: "SYSTEMS SLA INVARIANT",
+        title: "Container Safety Margin (ε)",
+        codeOrFormula: "ε ≥ 3.0 seconds (OS buffer unmount & CUDA cleanup)",
+        desc: "Margin waktu cadangan yang dialokasikan khusus untuk sinkronisasi kernel CUDA, unmounting file descriptor, dan deallokasi memori sebelum hard SIGKILL dikirimkan oleh orchestrator.",
+        invariant: "Worker exits cleanly with code 0 before SIGKILL",
+      },
+      "param-ingress-sync": {
+        id: "param-ingress-sync",
+        category: "NETWORKING INVARIANT",
+        title: "Ingress Route Deprecation Window (Δt_ingress)",
+        codeOrFormula: "Δt_ingress_sync ≈ 2.5 seconds (Envoy/Cilium TTL)",
+        desc: "Waktu propagasi bagi service mesh atau ingress controller untuk menghapus worker pod dari routing table upstream setelah /live mengembalikan HTTP 503.",
+        invariant: "Zero new client requests routed to draining pod",
+      },
+
+      // Code line justification annotations
+      "code-assert-intersect": {
+        id: "code-assert-intersect",
+        category: "ARCHITECTURAL CODE JUSTIFICATION",
+        title: "Defensive Set Intersection Assertion",
+        codeOrFormula: "assert len(np.intersect1d(train_indices, test_indices)) == 0",
+        desc: "Formal mathematical proof guarding against silent indexing bugs. Secara eksplisit memverifikasi bahwa irisan himpunan indeks training dan testing bernilai himpunan kosong ∅ sebelum partition iterator di-yield ke cross-validation trainer.",
+        invariant: "Set(Train) ∩ Set(Test) = ∅ (Mathematically Zero Leakage)",
+      },
+      "code-purge-cutoff": {
+        id: "code-purge-cutoff",
+        category: "ARCHITECTURAL CODE JUSTIFICATION",
+        title: "Purge Horizon Boundary Calculation",
+        codeOrFormula: "t_purge_cutoff = t_test_start - np.timedelta64(self.label_horizon)",
+        desc: "Mengeliminasi seluruh observasi data latih di sebelah kiri test window yang forward return window-nya melompat atau bertumpuk ke dalam periode evaluasi.",
+        invariant: "Purge Window = [t_test_start - label_horizon, t_test_start]",
+      },
+      "code-embargo-cutoff": {
+        id: "code-embargo-cutoff",
+        category: "ARCHITECTURAL CODE JUSTIFICATION",
+        title: "Post-Test Embargo Quarantine Horizon",
+        codeOrFormula: "t_embargo_cutoff = t_test_label_end + np.timedelta64(self.embargo_duration)",
+        desc: "Menambahkan zona karantina asimetris setelah test set berakhir untuk mencegah kebocoran autoregressive memory dan serial correlation pada model time-series kuantitatif.",
+        invariant: "Embargo Window = (t_test_label_end, t_test_label_end + embargo_duration)",
+      },
+      "code-signal-handler": {
+        id: "code-signal-handler",
+        category: "ARCHITECTURAL CODE JUSTIFICATION",
+        title: "Asynchronous POSIX Signal Trap",
+        codeOrFormula: "loop.add_signal_handler(signal.SIGTERM, self._initiate_graceful_drain)",
+        desc: "Mengaitkan handler langsung ke low-level asyncio event loop daripada modul threading standar Python. Mencegah signal handler terblokir oleh Python GIL saat kalkulasi tensor intensif.",
+        invariant: "Signal delivery non-blocking across all worker threads",
+      },
+      "code-cuda-sync": {
+        id: "code-cuda-sync",
+        category: "ARCHITECTURAL CODE JUSTIFICATION",
+        title: "CUDA Stream Barrier Synchronization",
+        codeOrFormula: "torch.cuda.synchronize()  # Force GPU stream flush",
+        desc: "Memblokir proses Python sampai semua operasi asynchronous pada CUDA streams GPU yang sedang berjalan selesai dieksekusi secara tuntas, mencegah segmentasi memori /dev/shm menjadi zombie.",
+        invariant: "Zero zombie GPU workers; all IPC memory buffers cleanly released",
+      },
+      "code-sys-exit": {
+        id: "code-sys-exit",
+        category: "ARCHITECTURAL CODE JUSTIFICATION",
+        title: "Deterministic Clean Process Exit",
+        codeOrFormula: "sys.exit(0)  # Clean exit before SIGKILL",
+        desc: "Mengembalikan exit code 0 yang menandakan penghentian graceful sukses kepada Kubernetes/Docker daemon, mencegah kontainer ditandai sebagai crashed (OOMKilled/CrashLoopBackOff).",
+        invariant: "Process terminates gracefully with exit code 0",
+      },
+      "code-protocol": {
+        id: "code-protocol",
+        category: "ARCHITECTURAL CODE JUSTIFICATION",
+        title: "Hexagonal Outbound Port Contract",
+        codeOrFormula: "class IFeatureStorageAdapter(Protocol):",
+        desc: "Mendefinisikan outbound port menggunakan Python 3.12 Protocol (structural subtyping). Mengisolasi business logic dari Redis, DuckDB, atau Parquet tanpa membebani overhead inheritance runtime.",
+        invariant: "Dependency Inversion: High-level feature domain decouples from driver",
+      },
+      "code-frozen-dataclass": {
+        id: "code-frozen-dataclass",
+        category: "ARCHITECTURAL CODE JUSTIFICATION",
+        title: "Immutable Value Object Guarantee",
+        codeOrFormula: "@dataclass(frozen=True)",
+        desc: "Menjamin bahwa instance EntityKey atau FeatureValue tidak dapat dimutasi setelah dibuat, memastikan thread-safety saat diakses serentak oleh ribuan worker thread.",
+        invariant: "Hashable & strictly immutable across all concurrent threads",
+      },
+    };
+
     function setupNoteReader() {
       // 1. Reading Progress Bar & TOC Scrollspy
       const progressBar = document.getElementById("reading-progress-bar");
@@ -467,9 +680,66 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();
 
-      // 2. ESC Key navigation back to /notes
+      // 2. Interactive Annotation Drawer Controller
+      const drawer = document.getElementById("annotation-drawer");
+      const closeBtn = document.getElementById("ann-close-btn");
+      const annCategory = document.getElementById("ann-category");
+      const annTitle = document.getElementById("ann-title");
+      const annFormulaBox = document.getElementById("ann-formula-box");
+      const annDesc = document.getElementById("ann-desc");
+      const annInvariant = document.getElementById("ann-invariant");
+
+      let isDrawerOpen = false;
+
+      function closeDrawer() {
+        if (!drawer) return;
+        drawer.classList.add("translate-y-8", "opacity-0", "pointer-events-none");
+        drawer.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
+        isDrawerOpen = false;
+      }
+
+      function openDrawer(item: AnnotationItem) {
+        if (!drawer) return;
+        playClick(1400, 0.015, 0.035);
+
+        if (annCategory) annCategory.textContent = item.category;
+        if (annTitle) annTitle.textContent = item.title;
+        if (annFormulaBox) annFormulaBox.textContent = item.codeOrFormula;
+        if (annDesc) annDesc.textContent = item.desc;
+        if (annInvariant) annInvariant.textContent = item.invariant;
+
+        drawer.classList.remove("translate-y-8", "opacity-0", "pointer-events-none");
+        drawer.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
+        isDrawerOpen = true;
+      }
+
+      closeBtn?.addEventListener("click", () => {
+        closeDrawer();
+      });
+
+      // Dismiss on click outside
+      document.addEventListener("click", (e) => {
+        if (!isDrawerOpen || !drawer) return;
+        const target = e.target as HTMLElement;
+        if (
+          !drawer.contains(target) &&
+          !target.closest(".math-annotation-btn") &&
+          !target.closest(".code-annotation-line")
+        ) {
+          closeDrawer();
+        }
+      });
+
+      // 3. ESC Key Navigation (Closes Drawer if open, else navigates back to /notes)
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
+          if (isDrawerOpen) {
+            closeDrawer();
+            e.stopPropagation();
+            e.preventDefault();
+            return;
+          }
+
           if ((window as any).navigateWithCurtain) {
             (window as any).navigateWithCurtain("/notes");
           } else {
@@ -478,7 +748,7 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
         }
       });
 
-      // 3. Back to top button in TOC
+      // 4. Back to top button in TOC
       const backToTopBtn = document.getElementById("back-to-top-note");
       if (backToTopBtn) {
         backToTopBtn.addEventListener("click", () => {
@@ -486,7 +756,7 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
         });
       }
 
-      // 4. Share button (Copies URL with visual feedback)
+      // 5. Share button (Copies URL with visual feedback)
       const shareBtn = document.getElementById("share-note-btn");
       const shareText = document.getElementById("share-btn-text");
       if (shareBtn && shareText) {
@@ -501,6 +771,111 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
           });
         });
       }
+
+      // 6. Article Scanner: Enhance Math Symbols & Code Lines
+      const article = document.querySelector<HTMLElement>("article.prose-editorial");
+      if (!article) return;
+
+      // Enhance Math Symbols in Paragraphs and Headings
+      const mathReplacements: Array<{ pattern: RegExp; id: string; display: string }> = [
+        { pattern: /\$?\\tau\$?/g, id: "param-tau", display: "τ" },
+        { pattern: /\$h\$/g, id: "param-h", display: "h" },
+        { pattern: /\$t_\{i,0\}\$/g, id: "param-t0", display: "t_{i,0}" },
+        { pattern: /\$t_\{i,1\}\$/g, id: "param-t1", display: "t_{i,1}" },
+        { pattern: /\$y_i\$/g, id: "param-yi", display: "y_i" },
+        { pattern: /\$T_\\text\{drain\}\$/g, id: "param-tdrain", display: "T_drain" },
+        { pattern: /\$\\epsilon\$/g, id: "param-epsilon", display: "ε" },
+        { pattern: /\$\\Delta t_\\text\{ingress\\_sync\}\$/g, id: "param-ingress-sync", display: "Δt_ingress" },
+      ];
+
+      const textContainers = article.querySelectorAll<HTMLElement>("p, li, blockquote");
+      textContainers.forEach((container) => {
+        let html = container.innerHTML;
+        let modified = false;
+
+        for (const { pattern, id, display } of mathReplacements) {
+          if (pattern.test(html)) {
+            html = html.replace(pattern, (match) => {
+              modified = true;
+              return `<button type="button" class="math-annotation-btn font-mono" data-ann-id="${id}" title="Click to inspect parameter mathematical justification"><span>${display}</span><span class="ann-icon text-[9px] text-[#ff4500]">ⓘ</span></button>`;
+            });
+          }
+        }
+
+        if (modified) {
+          container.innerHTML = html;
+        }
+      });
+
+      // Enhance Code Blocks with Line-Level Justification Callouts
+      const codeBlocks = article.querySelectorAll<HTMLElement>("pre code");
+      codeBlocks.forEach((codeEl) => {
+        const rawHtml = codeEl.innerHTML;
+        const lines = rawHtml.split("\n");
+        let modified = false;
+
+        const enhancedLines = lines.map((line) => {
+          if (line.includes("assert len(np.intersect1d")) {
+            modified = true;
+            return `<div class="code-annotation-line" data-ann-id="code-assert-intersect"><span class="code-line-content">${line}</span><span class="ann-badge">WHY? ⓘ</span></div>`;
+          }
+          if (line.includes("t_purge_cutoff = ")) {
+            modified = true;
+            return `<div class="code-annotation-line" data-ann-id="code-purge-cutoff"><span class="code-line-content">${line}</span><span class="ann-badge">WHY? ⓘ</span></div>`;
+          }
+          if (line.includes("t_embargo_cutoff = ")) {
+            modified = true;
+            return `<div class="code-annotation-line" data-ann-id="code-embargo-cutoff"><span class="code-line-content">${line}</span><span class="ann-badge">WHY? ⓘ</span></div>`;
+          }
+          if (line.includes("loop.add_signal_handler") || line.includes("signal.signal(signal.SIGTERM")) {
+            modified = true;
+            return `<div class="code-annotation-line" data-ann-id="code-signal-handler"><span class="code-line-content">${line}</span><span class="ann-badge">WHY? ⓘ</span></div>`;
+          }
+          if (line.includes("torch.cuda.synchronize()")) {
+            modified = true;
+            return `<div class="code-annotation-line" data-ann-id="code-cuda-sync"><span class="code-line-content">${line}</span><span class="ann-badge">WHY? ⓘ</span></div>`;
+          }
+          if (line.includes("sys.exit(0)")) {
+            modified = true;
+            return `<div class="code-annotation-line" data-ann-id="code-sys-exit"><span class="code-line-content">${line}</span><span class="ann-badge">WHY? ⓘ</span></div>`;
+          }
+          if (line.includes("class IFeatureStorageAdapter(Protocol)")) {
+            modified = true;
+            return `<div class="code-annotation-line" data-ann-id="code-protocol"><span class="code-line-content">${line}</span><span class="ann-badge">WHY? ⓘ</span></div>`;
+          }
+          if (line.includes("@dataclass(frozen=True)")) {
+            modified = true;
+            return `<div class="code-annotation-line" data-ann-id="code-frozen-dataclass"><span class="code-line-content">${line}</span><span class="ann-badge">WHY? ⓘ</span></div>`;
+          }
+          return line;
+        });
+
+        if (modified) {
+          codeEl.innerHTML = enhancedLines.join("\n");
+        }
+      });
+
+      // Bind Click Events to Math Annotation Buttons
+      article.querySelectorAll<HTMLButtonElement>(".math-annotation-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const annId = btn.getAttribute("data-ann-id");
+          if (annId && ANNOTATIONS[annId]) {
+            openDrawer(ANNOTATIONS[annId]);
+          }
+        });
+      });
+
+      // Bind Click Events to Code Annotation Lines
+      article.querySelectorAll<HTMLElement>(".code-annotation-line").forEach((lineEl) => {
+        lineEl.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const annId = lineEl.getAttribute("data-ann-id");
+          if (annId && ANNOTATIONS[annId]) {
+            openDrawer(ANNOTATIONS[annId]);
+          }
+        });
+      });
     }
 
     if (document.readyState === "loading") {
@@ -670,6 +1045,80 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
     .prose-editorial tr:hover td {
       background-color: #141414;
       color: #f5f5f5;
+    }
+
+    /* Math Parameter Annotation Interactive Badges */
+    .math-annotation-btn {
+      color: #ff4500;
+      background-color: rgba(255, 69, 0, 0.12);
+      border: 1px solid rgba(255, 69, 0, 0.4);
+      padding: 0.1rem 0.4rem;
+      border-radius: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.88em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin: 0 0.15rem;
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      vertical-align: baseline;
+      line-height: 1.2;
+    }
+
+    .math-annotation-btn:hover {
+      background-color: #ff4500;
+      color: #000000;
+      border-color: #ff4500;
+      box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+    }
+
+    .math-annotation-btn:hover .ann-icon {
+      color: #000000;
+    }
+
+    /* Code Line Level Justification Highlights */
+    .code-annotation-line {
+      border-left: 2px solid #ff4500;
+      padding-left: 0.65rem;
+      margin-left: -0.65rem;
+      margin-top: 0.2rem;
+      margin-bottom: 0.2rem;
+      background-color: rgba(255, 69, 0, 0.08);
+      border-radius: 0 2px 2px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.15s ease;
+    }
+
+    .code-annotation-line:hover {
+      background-color: rgba(255, 69, 0, 0.2);
+    }
+
+    .code-annotation-line .ann-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #ff4500;
+      background-color: rgba(255, 69, 0, 0.15);
+      border: 1px solid rgba(255, 69, 0, 0.4);
+      padding: 0.1rem 0.4rem;
+      border-radius: 2px;
+      margin-left: 1rem;
+      flex-shrink: 0;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .code-annotation-line:hover .ann-badge {
+      background-color: #ff4500;
+      color: #000000;
     }
   </style>
 </Layout>

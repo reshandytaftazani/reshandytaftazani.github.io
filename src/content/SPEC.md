@@ -128,8 +128,8 @@
   - High-resolution (1200x630) automated Swiss editorial preview cards with pitch-black canvas, 12-column grid guidelines, Hanken Grotesk typography, and verified metrics.
 - **5.4 Interactive Architecture Topology DAG [COMPLETED]:**
   - Reactive SVG node-edge pipeline topology diagram with packet pulses, schema contract inspector, latency SLA verification, and live hop audit injection embedded in `/projects/modelarena#architecture-dag` and `/projects/finance-tracker#architecture-dag`.
-- **5.5 Code & Formula Deep Annotation Inspector [UPCOMING]:**
-  - Interactive mathematical parameter drilldowns and line-by-line engineering justification overlays in technical dispatches.
+- **5.5 Code & Formula Deep Annotation Inspector [COMPLETED]:**
+  - Interactive mathematical parameter drilldowns ($\tau$, $h$, $t_{i,0}$, $t_{i,1}$, $y_i$, $T_{\text{drain}}$, $\epsilon$, $\Delta t_{\text{ingress\_sync}}$) and line-by-line engineering justification overlays with tactile audio feedback and ESC-aware drawer modal across all technical field notes at `/notes/[slug]`.
 
 ---
 
