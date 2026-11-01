@@ -3,7 +3,9 @@
 const skillGroups = [
   {
     category: "Languages",
+    code: "LANG",
     description: "Core languages for systems, pipelines, and type-safe computation.",
+    badge: "100%_TYPED",
     skills: [
       { name: "Python", detail: "AsyncIO, Typing, C-Extensions, Metaclasses" },
       { name: "C / C++", detail: "Memory safety, Systems tooling, High-perf routines" },
@@ -14,7 +16,9 @@ const skillGroups = [
   },
   {
     category: "ML & Data Systems",
+    code: "MLE",
     description: "Leak-free feature pipelines and reproducible model execution.",
+    badge: "LEAK_FREE",
     skills: [
       { name: "PyTorch", detail: "Custom architectures, Autograd hooks, Tensor compute" },
       { name: "scikit-learn", detail: "Leak-free pipelines, Estimators, CV protocols" },
@@ -25,7 +29,9 @@ const skillGroups = [
   },
   {
     category: "Systems & Architecture",
+    code: "ARCH",
     description: "Decoupled domain cores, explicit contracts, and container runtimes.",
+    badge: "HEXAGONAL",
     skills: [
       { name: "FastAPI", detail: "Asynchronous I/O, Lifespan hooks, High throughput" },
       { name: "Clean Architecture", detail: "Hexagonal / Ports & Adapters, Domain isolation" },
@@ -36,7 +42,9 @@ const skillGroups = [
   },
   {
     category: "Testing & DevOps",
+    code: "TEST",
     description: "Defensive verification, deterministic tests, and automated releases.",
+    badge: "VERIFIED_CI",
     skills: [
       { name: "Pytest & TDD", detail: "Fixtures, Parametrization, Strict test isolation" },
       { name: "Verification Suites", detail: "Process interruption tests, Degenerate distributions" },
@@ -51,7 +59,7 @@ const skillGroups = [
 <section id="skills" class="py-20 border-t border-slate-800/80 bg-slate-950/40 relative">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <!-- Section Header -->
+    <!-- Section Header (Daniele Buser Swiss Layout) -->
     <div class="space-y-3 mb-14">
       <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
         <span>// Technical Competencies</span>
@@ -64,16 +72,19 @@ const skillGroups = [
       </p>
     </div>
 
-    <!-- 4-Column Grid -->
+    <!-- 4-Column Grid with Spotlight Effect -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {skillGroups.map((group) => (
-        <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-5 flex flex-col justify-between hover:border-slate-700 transition-colors">
-          <div>
+        <div class="spotlight-card group rounded-lg border border-slate-800 bg-slate-900/60 p-5 flex flex-col justify-between hover:border-emerald-500/40 transition-all duration-200">
+          <div class="relative z-10">
             <!-- Group Header -->
             <div class="pb-3 border-b border-slate-800/80 mb-4">
-              <h3 class="text-base font-bold text-slate-100 font-mono flex items-center justify-between">
-                <span>{group.category}</span>
-                <span class="text-emerald-400 text-xs">●</span>
+              <div class="flex items-center justify-between font-mono text-xs mb-1">
+                <span class="text-emerald-400 font-semibold">{group.code}</span>
+                <span class="text-[10px] text-slate-500">{group.badge}</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
+                {group.category}
               </h3>
               <p class="text-[11.5px] text-slate-400 mt-1 leading-snug">
                 {group.description}
@@ -84,8 +95,9 @@ const skillGroups = [
             <ul class="space-y-3">
               {group.skills.map((skill) => (
                 <li class="space-y-0.5">
-                  <div class="text-xs font-mono font-semibold text-slate-200">
-                    {skill.name}
+                  <div class="text-xs font-mono font-semibold text-slate-200 flex items-center justify-between">
+                    <span>{skill.name}</span>
+                    <span class="text-[10px] text-slate-600 font-normal">●</span>
                   </div>
                   <div class="text-[11px] text-slate-400 font-sans leading-tight">
                     {skill.detail}
@@ -96,9 +108,9 @@ const skillGroups = [
           </div>
 
           <!-- Bottom Micro-Indicator -->
-          <div class="mt-6 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[10px] font-mono text-slate-500">
+          <div class="mt-6 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[10px] font-mono text-slate-500 relative z-10">
             <span>VERIFIED_STACK</span>
-            <span class="text-emerald-400">READY</span>
+            <span class="text-emerald-400 font-semibold">100% READY</span>
           </div>
         </div>
       ))}

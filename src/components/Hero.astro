@@ -9,13 +9,20 @@
       <!-- Left Column: Copy & Actions -->
       <div class="lg:col-span-7 space-y-6">
         
-        <!-- Animated Availability Badge -->
-        <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span>Available for MLE & Systems Engineering Roles</span>
+        <!-- Animated Availability Badge & Location -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Available for MLE &amp; Systems Engineering Roles</span>
+          </div>
+
+          <!-- Swiss micro-location badge -->
+          <div class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-[11px] font-mono text-slate-400">
+            <span>Depok, Indonesia (UI CS)</span>
+          </div>
         </div>
 
         <!-- Name & Headline -->
@@ -34,19 +41,23 @@
           Architecting reproducible, leak-free machine learning pipelines and local-first software systems with defensive engineering, strict type contracts, and verifiable evaluation protocols.
         </p>
 
-        <!-- Focus Pills -->
+        <!-- Focus Pills (Daniele Buser Swiss Tag Format) -->
         <div class="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
-            Zero Data Leakage
+          <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
+            <span class="text-emerald-400 font-bold">#</span>
+            <span>Zero Data Leakage</span>
           </span>
-          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
-            Clean Architecture &amp; TDD
+          <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
+            <span class="text-emerald-400 font-bold">#</span>
+            <span>Clean Architecture &amp; TDD</span>
           </span>
-          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
-            Pydantic &amp; Type Safety
+          <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
+            <span class="text-emerald-400 font-bold">#</span>
+            <span>Pydantic v2 Contracts</span>
           </span>
-          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
-            High-Performance Compute
+          <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
+            <span class="text-emerald-400 font-bold">#</span>
+            <span>High-Performance Compute</span>
           </span>
         </div>
 
@@ -94,67 +105,160 @@
 
       </div>
 
-      <!-- Right Column: Engineering Terminal Showcase -->
+      <!-- Right Column: Interactive Terminal Showcase (Daniele Buser Swiss Craft) -->
       <div class="lg:col-span-5">
-        <div class="relative rounded-lg border border-slate-800 bg-slate-900/70 backdrop-blur-sm shadow-2xl overflow-hidden font-mono text-xs">
-          <!-- Window Title Bar -->
-          <div class="flex items-center justify-between px-4 py-2.5 bg-slate-900/90 border-b border-slate-800">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+        <div class="spotlight-card relative rounded-lg border border-slate-800 bg-slate-900/80 backdrop-blur-md shadow-2xl overflow-hidden font-mono text-xs">
+          
+          <!-- Terminal Title & Tab Selector Bar -->
+          <div class="flex items-center justify-between px-3 py-2.5 bg-slate-900 border-b border-slate-800">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500/70"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500/70"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/70"></span>
             </div>
-            <span class="text-slate-400 text-[11px]">verification-runner --strict</span>
-            <span class="text-[10px] text-slate-500">v2.4.0</span>
+
+            <!-- Interactive Tab Buttons -->
+            <div class="flex items-center gap-1 text-[11px]">
+              <button
+                type="button"
+                id="tab-btn-verify"
+                class="term-tab px-2 py-0.5 rounded text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 transition-colors"
+                data-tab="verify"
+              >
+                verify.py
+              </button>
+              <button
+                type="button"
+                id="tab-btn-contracts"
+                class="term-tab px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 transition-colors"
+                data-tab="contracts"
+              >
+                contracts.ts
+              </button>
+              <button
+                type="button"
+                id="tab-btn-bench"
+                class="term-tab px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 transition-colors"
+                data-tab="bench"
+              >
+                bench.log
+              </button>
+            </div>
           </div>
 
-          <!-- Terminal Content -->
-          <div class="p-4 space-y-2.5 text-slate-300 select-text leading-relaxed">
-            <div class="flex items-center gap-2 text-slate-400">
-              <span class="text-emerald-400">$</span>
-              <span>mlesys verify --target production-pipeline</span>
-            </div>
+          <!-- Dynamic Tab Content Views -->
+          <div class="p-4 space-y-2.5 text-slate-300 min-h-[220px] select-text leading-relaxed">
             
-            <div class="space-y-1.5 pt-1 text-[11.5px]">
-              <div class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">[PASS]</span>
-                <span class="text-slate-200">partition_boundary:</span>
-                <span class="text-emerald-300">0.00% cross-fold leakage</span>
+            <!-- View 1: Verify Tab -->
+            <div id="view-verify" class="term-view space-y-2">
+              <div class="flex items-center gap-2 text-slate-400 text-[11px]">
+                <span class="text-emerald-400 font-bold">$</span>
+                <span>mlesys verify --partition-check=strict</span>
               </div>
-              <div class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">[PASS]</span>
-                <span class="text-slate-200">tombstone_guards:</span>
-                <span class="text-slate-400">temporal point-in-time verified</span>
+              <div class="space-y-1.5 pt-1 text-[11.5px]">
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400 font-bold">[PASS]</span>
+                  <span class="text-slate-200">partition_boundary:</span>
+                  <span class="text-emerald-300">0.00% cross-fold leakage</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400 font-bold">[PASS]</span>
+                  <span class="text-slate-200">tombstone_guards:</span>
+                  <span class="text-slate-400">temporal point-in-time verified</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400 font-bold">[PASS]</span>
+                  <span class="text-slate-200">contracts:</span>
+                  <span class="text-slate-400">Pydantic v2 strict schema check</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400 font-bold">[PASS]</span>
+                  <span class="text-slate-200">signals:</span>
+                  <span class="text-slate-400">SIGINT / SIGTERM zero-zombie handler</span>
+                </div>
               </div>
-              <div class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">[PASS]</span>
-                <span class="text-slate-200">contracts:</span>
-                <span class="text-slate-400">Pydantic v2 strict schema validation</span>
+            </div>
+
+            <!-- View 2: Contracts Tab -->
+            <div id="view-contracts" class="term-view hidden space-y-2">
+              <div class="flex items-center gap-2 text-slate-400 text-[11px]">
+                <span class="text-emerald-400 font-bold">$</span>
+                <span>cat schemas/inference_contract.py</span>
               </div>
-              <div class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">[PASS]</span>
-                <span class="text-slate-200">process_defense:</span>
-                <span class="text-slate-400">graceful SIGTERM/SIGINT teardown</span>
+              <div class="rounded bg-slate-950 p-2.5 border border-slate-800 text-[11px] text-slate-300 overflow-x-auto">
+                <pre class="leading-tight"><code>class PredictPayload(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    tensor_id: UUID4
+    features: Annotated[list[float], Field(min_length=64)]
+    seed: int = 42  # deterministic split</code></pre>
               </div>
-              <div class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">[PASS]</span>
-                <span class="text-slate-200">runtime_metrics:</span>
-                <span class="text-emerald-300">p99 = 3.8ms | seed = 42 (determ.)</span>
+            </div>
+
+            <!-- View 3: Benchmark Tab -->
+            <div id="view-bench" class="term-view hidden space-y-2">
+              <div class="flex items-center gap-2 text-slate-400 text-[11px]">
+                <span class="text-emerald-400 font-bold">$</span>
+                <span>pytest tests/perf/ --benchmark-only</span>
+              </div>
+              <div class="space-y-1.5 pt-1 text-[11.5px]">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">Inference (ONNX/C++):</span>
+                  <span class="text-emerald-300 font-bold">p99 = 3.82ms</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">Throughput:</span>
+                  <span class="text-emerald-300 font-bold">14,250 req/sec</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-400">Fuzz Resilience:</span>
+                  <span class="text-emerald-300 font-bold">10,000 cases (0 unhandled)</span>
+                </div>
               </div>
             </div>
 
             <!-- Pipeline status summary bar -->
-            <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+            <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
               <div class="flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span class="text-emerald-400 font-medium">All 48 checks passing</span>
+                <span class="text-emerald-400 font-medium">Deterministic verification</span>
               </div>
-              <span class="text-slate-500">100% deterministic</span>
+              <span class="text-slate-500 font-mono">100% reproducible</span>
             </div>
+
           </div>
+
         </div>
       </div>
 
     </div>
   </div>
 </section>
+
+<script>
+  // Interactive Terminal Tab Switcher
+  const tabs = document.querySelectorAll('.term-tab');
+  const views = document.querySelectorAll('.term-view');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const target = tab.getAttribute('data-tab');
+      
+      // Update Tab Styles
+      tabs.forEach((t) => {
+        t.classList.remove('text-emerald-400', 'bg-emerald-500/15', 'border', 'border-emerald-500/30');
+        t.classList.add('text-slate-400');
+      });
+      tab.classList.remove('text-slate-400');
+      tab.classList.add('text-emerald-400', 'bg-emerald-500/15', 'border', 'border-emerald-500/30');
+
+      // Update View Visibility
+      views.forEach((v) => {
+        v.classList.add('hidden');
+      });
+      const activeView = document.getElementById(`view-${target}`);
+      if (activeView) {
+        activeView.classList.remove('hidden');
+      }
+    });
+  });
+</script>

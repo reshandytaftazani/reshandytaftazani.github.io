@@ -1,36 +1,47 @@
 ---
 const navLinks = [
-  { name: "About", href: "#about" },
-  { name: "Principles", href: "#principles" },
-  { name: "Projects", href: "#projects" },
-  { name: "Skills", href: "#skills" },
-  { name: "Contact", href: "#contact" },
+  { key: "1", name: "About", href: "#about" },
+  { key: "2", name: "Principles", href: "#principles" },
+  { key: "3", name: "Projects", href: "#projects" },
+  { key: "4", name: "Skills", href: "#skills" },
+  { key: "5", name: "Contact", href: "#contact" },
 ];
 ---
 
-<header class="sticky top-0 z-50 w-full border-b border-slate-800/80 bg-[#0B0F19]/85 backdrop-blur-md transition-all duration-200">
+<header class="sticky top-0 z-50 w-full border-b border-slate-800/80 bg-[#0B0F19]/90 backdrop-blur-md transition-all duration-200">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       
-      <!-- Logo / Brand -->
-      <a 
-        href="#" 
-        class="group flex items-center gap-2 font-mono text-sm tracking-tight text-slate-200 hover:text-emerald-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 rounded-sm py-1 px-1.5"
-        aria-label="Reshandy Taftazani Home"
-      >
-        <span class="text-emerald-400 group-hover:translate-x-0.5 transition-transform duration-150">&gt;</span>
-        <span class="font-semibold text-slate-100 group-hover:text-emerald-300">reshandy.dev</span>
-        <span class="inline-block w-1.5 h-3.5 bg-emerald-400/80 animate-pulse"></span>
-      </a>
+      <!-- Brand with coordinate marker -->
+      <div class="flex items-center gap-3">
+        <a 
+          href="#" 
+          class="group flex items-center gap-2 font-mono text-sm tracking-tight text-slate-200 hover:text-emerald-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 rounded-sm py-1 px-1.5"
+          aria-label="Reshandy Taftazani Home"
+        >
+          <span class="text-emerald-400 group-hover:translate-x-0.5 transition-transform duration-150">&gt;</span>
+          <span class="font-semibold text-slate-100 group-hover:text-emerald-300">reshandy.dev</span>
+          <span class="inline-block w-1.5 h-3.5 bg-emerald-400/80 animate-pulse"></span>
+        </a>
 
-      <!-- Desktop Navigation Menu -->
-      <nav class="hidden md:flex items-center gap-1 sm:gap-2" aria-label="Main Navigation">
+        <!-- Swiss style coordinate / status chip -->
+        <div class="hidden lg:flex items-center gap-2 text-[10.5px] font-mono text-slate-500 pl-2 border-l border-slate-800">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>UI • CS</span>
+          <span class="text-slate-600">|</span>
+          <span id="nav-time" class="text-slate-400">WIB</span>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation Menu with Keyboard Nav Hints -->
+      <nav class="hidden md:flex items-center gap-1 sm:gap-1.5" aria-label="Main Navigation">
         {navLinks.map((link) => (
           <a
             href={link.href}
-            class="px-3 py-1.5 text-xs font-mono text-slate-400 hover:text-emerald-300 hover:bg-slate-800/60 rounded-md transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+            class="group px-2.5 py-1.5 text-xs font-mono text-slate-400 hover:text-emerald-300 hover:bg-slate-800/60 rounded-md transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 flex items-center gap-1.5"
           >
-            {link.name}
+            <span class="text-[10px] text-slate-600 group-hover:text-emerald-500/70 transition-colors">[{link.key}]</span>
+            <span>{link.name}</span>
           </a>
         ))}
       </nav>
@@ -41,7 +52,7 @@ const navLinks = [
           href="https://github.com/reshandytaftazani"
           target="_blank"
           rel="noopener noreferrer"
-          class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-medium text-slate-200 bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 hover:text-emerald-300 rounded-md transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
+          class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-medium text-slate-200 bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 hover:text-emerald-300 rounded-md transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50"
           aria-label="GitHub Profile"
         >
           <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
@@ -77,9 +88,10 @@ const navLinks = [
     {navLinks.map((link) => (
       <a
         href={link.href}
-        class="block px-3 py-2 text-sm font-mono text-slate-300 hover:text-emerald-400 hover:bg-slate-900 rounded-md transition-colors"
+        class="flex items-center justify-between px-3 py-2 text-sm font-mono text-slate-300 hover:text-emerald-400 hover:bg-slate-900 rounded-md transition-colors"
       >
-        {link.name}
+        <span>{link.name}</span>
+        <span class="text-xs text-slate-600">[{link.key}]</span>
       </a>
     ))}
     <div class="pt-2 border-t border-slate-800/80">
@@ -99,6 +111,7 @@ const navLinks = [
 </header>
 
 <script>
+  // Mobile menu handling
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
   const iconOpen = document.getElementById('menu-icon-open');
@@ -113,7 +126,6 @@ const navLinks = [
       iconClose.classList.toggle('hidden');
     });
 
-    // Close menu when link is clicked
     menu.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', () => {
         btn.setAttribute('aria-expanded', 'false');
@@ -123,4 +135,21 @@ const navLinks = [
       });
     });
   }
+
+  // Live time ticker in WIB
+  function updateTime() {
+    const el = document.getElementById('nav-time');
+    if (!el) return;
+    const now = new Date();
+    const timeString = new Intl.DateTimeFormat('id-ID', {
+      timeZone: 'Asia/Jakarta',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).format(now);
+    el.textContent = `${timeString} WIB`;
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
 </script>

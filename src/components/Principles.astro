@@ -2,6 +2,8 @@
 // Principles.astro
 const principles = [
   {
+    code: "01",
+    tag: "TEMPORAL_INTEGRITY",
     title: "Zero Data Leakage by Design",
     tagline: "Evaluation Integrity & Temporal Boundaries",
     description:
@@ -16,6 +18,8 @@ assert partition.max_timestamp < eval_window.min_timestamp, \\
     "LeakageDetected: lookahead contamination in split"`,
   },
   {
+    code: "02",
+    tag: "DEFENSIVE_CHAOS",
     title: "Rigorous Verification & TDD",
     tagline: "Defensive Engineering & Process Boundaries",
     description:
@@ -32,6 +36,8 @@ def test_worker_interrupt_leaves_no_zombies():
     assert proc.wait(timeout=1.0) == 0`,
   },
   {
+    code: "03",
+    tag: "DOMAIN_ISOLATION",
     title: "Clean Architecture & Explicit Contracts",
     tagline: "Decoupled Domain & Strict Type Boundaries",
     description:
@@ -52,7 +58,7 @@ class InferenceRequest(BaseModel):
 <section id="principles" class="py-20 border-t border-slate-800/80 bg-slate-950/40 relative">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <!-- Section Header -->
+    <!-- Section Header (Daniele Buser Swiss Layout) -->
     <div class="space-y-3 mb-14">
       <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
         <span>// Core Engineering Tenets</span>
@@ -65,18 +71,19 @@ class InferenceRequest(BaseModel):
       </p>
     </div>
 
-    <!-- Cards Grid -->
+    <!-- Cards Grid with Spotlight Effect -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {principles.map((item, index) => (
-        <div class="group flex flex-col justify-between rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-900/80 hover:border-emerald-500/40 p-6 transition-all duration-200">
-          <div class="space-y-4">
+      {principles.map((item) => (
+        <div class="spotlight-card group flex flex-col justify-between rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-900/85 hover:border-emerald-500/40 p-6 transition-all duration-200">
+          <div class="space-y-4 relative z-10">
+            
             <!-- Header with Index Tag -->
             <div class="flex items-center justify-between">
-              <span class="text-xs font-mono text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                P-0{index + 1}
+              <span class="text-xs font-mono text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+                P-[{item.code}]
               </span>
-              <span class="text-[11px] font-mono text-slate-500">
-                SYSTEM_SAFETY
+              <span class="text-[10.5px] font-mono text-slate-500 tracking-wider">
+                {item.tag}
               </span>
             </div>
 
@@ -108,9 +115,9 @@ class InferenceRequest(BaseModel):
             </ul>
           </div>
 
-          <!-- Code Snippet Box -->
-          <div class="mt-6 pt-4 border-t border-slate-800/80">
-            <div class="rounded bg-[#0B0F19] p-2.5 font-mono text-[11px] text-slate-400 border border-slate-800/80 overflow-x-auto">
+          <!-- Code Snippet Box with Copy Button -->
+          <div class="mt-6 pt-4 border-t border-slate-800/80 relative z-10">
+            <div class="relative rounded bg-[#0B0F19] p-3 font-mono text-[11px] text-slate-300 border border-slate-800/90 overflow-x-auto">
               <pre class="leading-tight"><code>{item.codeSnippet}</code></pre>
             </div>
           </div>

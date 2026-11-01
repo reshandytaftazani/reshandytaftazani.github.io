@@ -2,6 +2,8 @@
 // Projects.astro
 const projects = [
   {
+    status: "PRODUCTION_READY",
+    code: "SYS-01",
     title: "LeakGuard-ML",
     subtitle: "Zero-Leakage Feature Store & Split Validator",
     summary:
@@ -17,6 +19,8 @@ const projects = [
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
+    status: "LOCAL_FIRST",
+    code: "SYS-02",
     title: "AxiomServe",
     subtitle: "Low-Latency Supervised Inference Runtime",
     summary:
@@ -32,6 +36,8 @@ const projects = [
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
+    status: "CHAOS_VERIFIED",
+    code: "SYS-03",
     title: "SynthDist-Engine",
     subtitle: "Degenerate Distribution & TDD Chaos Harness",
     summary:
@@ -47,6 +53,8 @@ const projects = [
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
+    status: "CLEAN_ARCH",
+    code: "SYS-04",
     title: "HexaML Core",
     subtitle: "Clean Architecture Engine for ML Systems",
     summary:
@@ -67,7 +75,7 @@ const projects = [
 <section id="projects" class="py-20 border-t border-slate-800/80 relative">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <!-- Section Header -->
+    <!-- Section Header (Daniele Buser Swiss Layout) -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14">
       <div class="space-y-3">
         <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
@@ -92,23 +100,24 @@ const projects = [
       </a>
     </div>
 
-    <!-- Project Cards Grid (2x2) -->
+    <!-- Project Cards Grid (2x2) with Swiss Spotlight Hover -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {projects.map((proj) => (
-        <article class="group flex flex-col justify-between rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-900/85 hover:border-emerald-500/40 p-6 sm:p-7 transition-all duration-200">
-          <div class="space-y-4">
+        <article class="spotlight-card group flex flex-col justify-between rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-900/85 hover:border-emerald-500/40 p-6 sm:p-7 transition-all duration-200">
+          <div class="space-y-4 relative z-10">
             
-            <!-- Header & GitHub Link -->
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <h3 class="text-xl font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
-                  {proj.title}
-                </h3>
-                <p class="text-xs font-mono text-emerald-400/90 mt-0.5">
-                  {proj.subtitle}
-                </p>
+            <!-- Header with Code & Status Badge -->
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-2 font-mono text-xs">
+                <span class="text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+                  {proj.code}
+                </span>
+                <span class="text-[11px] text-slate-500">
+                  {proj.status}
+                </span>
               </div>
 
+              <!-- GitHub Direct Action Icon -->
               <a
                 href={proj.githubUrl}
                 target="_blank"
@@ -122,17 +131,27 @@ const projects = [
               </a>
             </div>
 
+            <!-- Title & Subtitle -->
+            <div>
+              <h3 class="text-xl font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
+                {proj.title}
+              </h3>
+              <p class="text-xs font-mono text-emerald-400/90 mt-0.5">
+                {proj.subtitle}
+              </p>
+            </div>
+
             <!-- Problem / Summary -->
             <p class="text-sm text-slate-300 leading-relaxed">
               {proj.summary}
             </p>
 
-            <!-- Architecture Details -->
-            <div class="rounded bg-[#0B0F19]/80 p-3 border border-slate-800/80">
+            <!-- Architecture Details Callout -->
+            <div class="rounded bg-[#0B0F19]/90 p-3.5 border border-slate-800/90">
               <span class="text-[11px] font-mono text-slate-500 uppercase tracking-wider block mb-1">
                 Architecture &amp; Implementation:
               </span>
-              <p class="text-xs text-slate-400 leading-relaxed font-sans">
+              <p class="text-xs text-slate-300 leading-relaxed font-sans">
                 {proj.architecture}
               </p>
             </div>
@@ -148,10 +167,10 @@ const projects = [
 
           </div>
 
-          <!-- Metrics Footer Bar -->
-          <div class="mt-6 pt-4 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center">
+          <!-- Swiss Tabular Metrics Footer Bar -->
+          <div class="mt-6 pt-4 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center relative z-10">
             {proj.metrics.map((metric) => (
-              <div class="rounded bg-slate-950/60 p-2 border border-slate-800/60">
+              <div class="rounded bg-slate-950/70 p-2 border border-slate-800/80">
                 <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider truncate">
                   {metric.label}
                 </div>
