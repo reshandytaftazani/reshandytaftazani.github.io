@@ -1,14 +1,14 @@
 ---
-// Hero.astro (Daniele Buser exact Section 1 typography, stable display title, and prominent orange hover micro-interactions)
+// Hero.astro (Daniele Buser exact Section 1 typography with refined grounded copy & tactile micro-interactions)
 ---
 
 <section id="about" class="flex min-h-[max(65vh,24rem)] w-full flex-col justify-center pt-24 sm:pt-32 md:pt-40">
   
   <!-- Giant Display Title (Daniele Buser exact text-display-xl - stable without letter-spacing shift) -->
   <h1 id="projects-title" class="text-display-xl text-background relative z-10 flex w-full flex-col leading-[0.92] tracking-tight md:flex-row md:items-baseline md:justify-between md:leading-[0.85]" aria-label="Systems 26">
-    <span class="reveal-hero -ml-1 inline-block text-left sm:-ml-2 md:-ml-3.5 select-none">Systems</span>
-    <span class="reveal-hero -ml-1 inline-block text-left sm:-ml-2 md:-mr-2 md:ml-0 md:text-right select-none" style="transition-delay: 120ms;">
-      <span class="text-accent font-normal">&#x27;</span>26
+    <span class="reveal-hero -ml-1 inline-block text-left sm:-ml-2 md:-ml-3.5 select-none hover:text-neutral-dark transition-colors duration-300">Systems</span>
+    <span class="reveal-hero -ml-1 inline-block text-left sm:-ml-2 md:-mr-2 md:ml-0 md:text-right select-none group/year cursor-default" style="transition-delay: 120ms;">
+      <span class="text-accent font-normal inline-block group-hover/year:-translate-y-1 transition-transform duration-200">&#x27;</span><span class="group-hover/year:text-accent transition-colors duration-200">26</span>
     </span>
   </h1>
 
@@ -16,39 +16,39 @@
   <div class="mt-8 grid grid-cols-1 md:grid-cols-12 gap-6 relative z-10 text-body md:text-body-lg">
     <div class="md:col-span-7 space-y-5">
       <p class="reveal-init leading-relaxed text-neutral-dark font-normal" style="transition-delay: 200ms;">
-        Undergraduate in Computer Science at <a href="https://cs.ui.ac.id/" target="_blank" rel="noopener noreferrer" class="text-background font-bold underline underline-offset-4 decoration-accent decoration-2 hover:text-accent transition-colors duration-200">Universitas Indonesia</a>. 
-        Architecting reproducible, leak-free machine learning pipelines and local-first software systems with clean architecture, strict type contracts, and defensive engineering.
+        Computer Science undergraduate at <a href="https://cs.ui.ac.id/" target="_blank" rel="noopener noreferrer" class="text-background font-bold underline underline-offset-4 decoration-accent decoration-2 hover:text-accent transition-colors duration-200">Universitas Indonesia</a> (Class of 2025). 
+        Focused on machine learning engineering, reproducible data pipelines, and reliable backend systems using Python, C++, and clean architecture principles.
       </p>
       
-      <!-- Quick Action Badges (Hover turns vibrant Orange --color-accent) -->
+      <!-- Quick Action Badges (Tactile hover micro-interactions) -->
       <div class="reveal-init flex flex-wrap items-center gap-3 pt-2 font-mono text-caption uppercase" style="transition-delay: 280ms;">
         
-        <!-- Primary Action: Explore Work (Black -> Orange on hover, text & arrow become black) -->
+        <!-- Primary Action: Explore Work -->
         <a 
           href="#projects" 
-          class="group relative inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-background text-foreground hover:bg-accent hover:text-black border border-transparent transition-all duration-200 font-bold tracking-wider shadow-sm"
+          class="group relative inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-background text-foreground hover:bg-accent hover:text-black border border-transparent transition-all duration-200 font-bold tracking-wider shadow-sm active:scale-95"
         >
           <span class="group-hover:text-black transition-colors duration-200">EXPLORE WORK</span>
           <span class="text-accent group-hover:text-black transition-all duration-200 ease-out group-hover:translate-y-1 font-bold">↓</span>
         </a>
 
-        <!-- Secondary: GitHub (White -> Orange on hover) -->
+        <!-- Secondary: GitHub -->
         <a 
           href="https://github.com/reshandytaftazani" 
           target="_blank" 
           rel="noopener noreferrer" 
-          class="group relative inline-flex items-center gap-2 px-4 py-2 rounded-sm border border-neutral-dark/30 bg-white hover:bg-accent hover:border-accent text-background hover:text-white transition-all duration-200 font-bold tracking-wider shadow-xs"
+          class="group relative inline-flex items-center gap-2 px-4 py-2 rounded-sm border border-neutral-dark/30 bg-white hover:bg-accent hover:border-accent text-background hover:text-white transition-all duration-200 font-bold tracking-wider shadow-xs active:scale-95"
         >
           <span>GITHUB</span>
           <span class="text-accent group-hover:text-white font-bold transition-all duration-200 ease-out group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
         </a>
 
-        <!-- Secondary: LinkedIn (White -> Orange on hover) -->
+        <!-- Secondary: LinkedIn -->
         <a 
           href="https://linkedin.com/in/reshandy-taftazani-aulya" 
           target="_blank" 
           rel="noopener noreferrer" 
-          class="group relative inline-flex items-center gap-2 px-4 py-2 rounded-sm border border-neutral-dark/30 bg-white hover:bg-accent hover:border-accent text-background hover:text-white transition-all duration-200 font-bold tracking-wider shadow-xs"
+          class="group relative inline-flex items-center gap-2 px-4 py-2 rounded-sm border border-neutral-dark/30 bg-white hover:bg-accent hover:border-accent text-background hover:text-white transition-all duration-200 font-bold tracking-wider shadow-xs active:scale-95"
         >
           <span>LINKEDIN</span>
           <span class="text-accent group-hover:text-white font-bold transition-all duration-200 ease-out group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
@@ -56,13 +56,16 @@
       </div>
     </div>
 
-    <!-- Status & Coordinates badge with interactive hover pulse & orange accent -->
+    <!-- Status & Coordinates badge with interactive hover pulse -->
     <div class="reveal-init md:col-span-5 flex flex-col md:items-end justify-between font-mono text-caption text-neutral-dark space-y-3" style="transition-delay: 340ms;">
-      <div class="group flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-neutral-200/60 border border-neutral-300/80 transition-all duration-200 hover:border-accent hover:bg-white shadow-xs cursor-default">
+      <div 
+        class="group flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-neutral-200/60 border border-neutral-300/80 transition-all duration-200 hover:border-accent hover:bg-white shadow-xs cursor-default"
+        title="Student status at Universitas Indonesia"
+      >
         <span class="w-2 h-2 rounded-full bg-accent animate-pulse group-hover:scale-125 transition-transform duration-200"></span>
-        <span class="text-background group-hover:text-accent font-bold text-[11px] tracking-wider transition-colors duration-200">AVAILABLE FOR MLE &amp; SYSTEMS</span>
+        <span class="text-background group-hover:text-accent font-bold text-[11px] tracking-wider transition-colors duration-200">UNDERGRADUATE // CS @ UI</span>
       </div>
-      <div class="text-neutral-dark tracking-wider font-semibold">
+      <div class="text-neutral-dark tracking-wider font-semibold hover:text-background transition-colors duration-200 cursor-default">
         <span>DEPOK, INDONESIA • WIB (UTC+7)</span>
       </div>
     </div>

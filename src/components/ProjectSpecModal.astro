@@ -1,0 +1,467 @@
+---
+// ProjectSpecModal.astro (Daniele Buser & Matthieu Givelet Swiss Engineering Spec Drawer / Modal with grounded copy)
+interface ProjectSpec {
+  id: string;
+  title: string;
+  subtitle: string;
+  status: string;
+  problem: string;
+  architectureDiagram: string;
+  benchmarks: { label: string; value: string; detail: string }[];
+  invariants: string[];
+  cliCommand: string;
+  githubUrl: string;
+  techStack: string[];
+}
+
+const projectSpecs: ProjectSpec[] = [
+  {
+    id: "leakguard-ml",
+    title: "LeakGuard-ML",
+    subtitle: "Temporal Split Validator & Feature Store Guard",
+    status: "TEMPORAL_VERIFIED",
+    problem:
+      "Cross-validation lookahead bias occurs when future data unintentionally leaks into training folds during feature transformations. LeakGuard-ML validates timestamp partition boundaries prior to computing any rolling feature transformations.",
+    architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
+│                    LEAKGUARD DOMAIN CORE                    │
+│  [TimeBoundaryValidator] ──> [DeterministicHasher (SHA-256)]│
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+       ┌───────────────────────┴───────────────────────┐
+       ▼                                               ▼
+┌──────────────┐                               ┌──────────────┐
+│  INPUT PORT  │                               │ OUTPUT PORT  │
+│ Stream Source│                               │ Split Guard  │
+└──────┬───────┘                               └──────┬───────┘
+       │                                               │
+       ▼                                               ▼
+ [Parquet / Arrow]                             [Validation Report]`,
+    benchmarks: [
+      { label: "Temporal Boundary", value: "Verified", detail: "Strict point-in-time train/val isolation" },
+      { label: "Validation Time", value: "< 25ms", detail: "Fast streaming validation per fold" },
+      { label: "Memory Footprint", value: "O(1)", detail: "Zero-copy Arrow chunk streaming verification" },
+      { label: "Schema Safety", value: "Strict", detail: "Enforced via typed Pydantic v2 data models" },
+    ],
+    invariants: [
+      "No feature row with timestamp >= t_split shall exist in the training partition.",
+      "Deterministic seed derivation guarantees reproducible cross-validation splits.",
+      "Boundary violations trigger immediate assertions preventing model training on tainted data.",
+    ],
+    cliCommand: "mlesys verify --target production-pipeline --strict-temporal",
+    githubUrl: "https://github.com/reshandytaftazani",
+    techStack: ["Python", "PyTorch", "FastAPI", "Pydantic v2", "Docker", "Apache Arrow"],
+  },
+  {
+    id: "axiomserve",
+    title: "AxiomServe",
+    subtitle: "Low-Latency Supervised Inference Runtime",
+    status: "POSIX_SIGNAL_HARDENED",
+    problem:
+      "Unhandled OS termination signals and process lockups can spawn orphaned worker processes during server redeployments, consuming memory. AxiomServe introduces defensive supervision with POSIX handlers for graceful shutdown.",
+    architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
+│                 PARENT PROCESS SUPERVISOR                   │
+│      [POSIX Signal Handler] ──> [Worker Process Pool]       │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+      ┌────────────────────────┼────────────────────────┐
+      ▼                        ▼                        ▼
+┌────────────┐           ┌────────────┐           ┌────────────┐
+│  WORKER 01 │           │  WORKER 02 │           │  WORKER 03 │
+│  ONNX / C++│           │  ONNX / C++│           │  ONNX / C++│
+└────────────┘           └────────────┘           └────────────┘
+      │                        │                        │
+      └────────────────────────┼────────────────────────┘
+                               ▼
+               [Unix Domain Sockets (Zero-Copy)]`,
+    benchmarks: [
+      { label: "p99 Latency", value: "3.82ms", detail: "ONNX runtime benchmarks on 4-worker host" },
+      { label: "Throughput", value: "14.2k req/s", detail: "Fast asynchronous request dispatch" },
+      { label: "Process Cleanup", value: "Guaranteed", detail: "Clean child termination on SIGINT and SIGTERM" },
+      { label: "Warmup Time", value: "< 200ms", detail: "Fast worker initialization and model load" },
+    ],
+    invariants: [
+      "Supervisor guarantees all child processes terminate cleanly upon shutdown.",
+      "Isolated ONNX C++ runtime workers avoid Python GIL contention during inference.",
+      "Inter-process communication uses non-blocking sockets with explicit timeouts.",
+    ],
+    cliCommand: "axiomserve --runtime onnx --workers 4",
+    githubUrl: "https://github.com/reshandytaftazani",
+    techStack: ["FastAPI", "C++", "ONNX Runtime", "Linux IPC", "Docker"],
+  },
+  {
+    id: "synthdist-engine",
+    title: "SynthDist-Engine",
+    subtitle: "Degenerate Distribution & TDD Chaos Harness",
+    status: "PROPERTY_BASED_TDD",
+    problem:
+      "Standard unit tests frequently run on clean sample data, failing to expose crashes caused by unexpected real-world inputs like empty tensors, infinite floats, or collinear singular matrices. SynthDist-Engine tests model pipelines against synthetic degenerate distributions.",
+    architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
+│                  SYNTHDIST CHAOS GENERATOR                  │
+│   [Hypothesis Strategies] ──> [Degenerate Tensor Synthesizer]│
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  SANDBOXED INFERENCE PROBE                  │
+│     [NaN Trapper] ──> [Covariance Guard] ──> [Shape Check]  │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+               [Automated Failure Reproduction]`,
+    benchmarks: [
+      { label: "Test Fuzzing", value: "10,000+/s", detail: "Vectorized synthetic tensor generation" },
+      { label: "Failure Shrink", value: "Automated", detail: "Minimizes failing inputs for easier debugging" },
+      { label: "Suite Execution", value: "4.15s", detail: "Comprehensive property-based test pass" },
+      { label: "Exception Guard", value: "Handled", detail: "Traps floating-point and dimension exceptions" },
+    ],
+    invariants: [
+      "All pipeline stages must gracefully handle empty or zero-variance inputs without unhandled crashes.",
+      "Covariance matrix inversions check condition numbers prior to factorization.",
+      "Failing inputs produce deterministic reproduction seeds for straightforward unit regression.",
+    ],
+    cliCommand: "pytest tests/fuzz/ --distributions=degenerate",
+    githubUrl: "https://github.com/reshandytaftazani",
+    techStack: ["Python", "NumPy", "scikit-learn", "Pytest", "Hypothesis"],
+  },
+  {
+    id: "hexaml-core",
+    title: "HexaML Core",
+    subtitle: "Clean Architecture Blueprint for ML Systems",
+    status: "CLEAN_ARCHITECTURE",
+    problem:
+      "Coupling machine learning algorithms directly to specific web frameworks or cloud SDKs makes local testing difficult and ties business logic to third-party APIs. HexaML isolates domain algorithms inside an independent core.",
+    architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
+│                      PURE DOMAIN CORE                       │
+│    ModelInferenceContract │ FeatureTransform │ MetricAssert │
+│         (Zero 3rd-Party Framework Dependencies)             │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+               ┌───────────────┴───────────────┐
+               ▼                               ▼
+       ┌───────────────┐               ┌───────────────┐
+       │ INFERENCE PORT│               │ PERSIST PORT  │
+       └───────┬───────┘               └───────┬───────┘
+               │                               │
+       ┌───────┴───────┐               ┌───────┴───────┐
+       ▼               ▼               ▼               ▼
+ [FastAPI REST]  [gRPC Stream]    [S3 Storage]   [Local Disk]`,
+    benchmarks: [
+      { label: "Domain Deps", value: "Zero", detail: "Pure Python domain core without framework lock-in" },
+      { label: "Contract Check", value: "< 0.4ms", detail: "Input validation enforced at port boundaries" },
+      { label: "Local Test Time", value: "0.82s", detail: "Fast in-memory unit tests without external services" },
+      { label: "Port Reusability", value: "High", detail: "Swap delivery protocols without changing core logic" },
+    ],
+    invariants: [
+      "Domain layer remains free from web framework or persistence dependencies.",
+      "Contracts are validated strictly at interface boundaries using typed models.",
+      "Dependency inversion enables mock-based local regression testing.",
+    ],
+    cliCommand: "python -m hexaml.verify_contracts",
+    githubUrl: "https://github.com/reshandytaftazani",
+    techStack: ["Python", "Clean Arch", "Pydantic v2", "SQLAlchemy", "Docker"],
+  },
+];
+---
+
+<!-- Technical Spec Sheet Dialog Modal -->
+<div 
+  id="project-spec-dialog" 
+  class="fixed inset-0 z-40 hidden size-full overflow-y-auto overflow-x-hidden bg-black/85 backdrop-blur-md text-foreground overscroll-contain transition-opacity duration-300"
+  role="dialog"
+  aria-labelledby="spec-modal-title"
+  aria-modal="true"
+>
+  <div 
+    id="spec-modal-backdrop-wrapper" 
+    class="min-h-full w-full flex items-start justify-center p-4 sm:p-6 lg:p-8 py-8 sm:py-12 lg:py-16"
+  >
+    
+    <!-- Modal Card Container -->
+    <div 
+      id="spec-modal-container"
+      class="relative w-full max-w-5xl bg-[#121212] border border-[#2b2b2b] rounded-none shadow-[0_25px_60px_rgba(0,0,0,0.85)] p-6 sm:p-8 lg:p-10 transition-all duration-300 scale-95 opacity-0"
+    >
+      
+      <!-- Top Telemetry Bar (Sticky at top of card with backdrop blur) -->
+      <div class="sticky -top-6 sm:-top-8 lg:-top-10 -mt-6 sm:-mt-8 lg:-mt-10 -mx-6 sm:-mx-8 lg:-mx-10 px-6 sm:px-8 lg:px-10 py-4 bg-[#121212]/95 backdrop-blur-md z-20 border-b border-grid-line-dark flex flex-wrap items-center justify-between gap-4 font-mono text-caption text-neutral-dark">
+        <div class="flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-accent animate-pulse"></span>
+          <span class="text-foreground font-bold tracking-wider" id="spec-modal-header-tag">[SPEC_SHEET // MLE_SYSTEMS]</span>
+          <span class="text-neutral-dark">•</span>
+          <span class="text-accent font-semibold" id="spec-modal-status">ACTIVE</span>
+        </div>
+
+        <!-- Tactile Close Button -->
+        <button 
+          type="button"
+          id="close-spec-modal-btn"
+          class="group inline-flex items-center gap-2 px-3 py-1.5 rounded-sm bg-card-dark hover:bg-accent text-neutral hover:text-black border border-neutral-dark/40 hover:border-accent font-mono font-bold text-caption transition-all duration-200 cursor-pointer select-none"
+          aria-label="Close project specifications modal"
+        >
+          <span class="text-neutral-dark group-hover:text-black">[</span>
+          <span class="text-foreground group-hover:text-black tracking-wider">ESC / CLOSE</span>
+          <span class="text-accent group-hover:text-black font-bold">✕</span>
+          <span class="text-neutral-dark group-hover:text-black">]</span>
+        </button>
+      </div>
+
+      <!-- Main Spec Body -->
+      <div class="mt-6 space-y-8">
+        
+        <!-- Header Info -->
+        <div>
+          <div class="flex flex-wrap items-center gap-2 font-mono text-[11px] text-accent mb-1" id="spec-modal-tech-list">
+            <!-- Tech badges injected via JS -->
+          </div>
+          <h2 id="spec-modal-title" class="text-display-sm text-foreground font-bold tracking-tight">
+            <!-- Project Title -->
+          </h2>
+          <p id="spec-modal-subtitle" class="text-body-lg text-neutral font-medium mt-1">
+            <!-- Subtitle -->
+          </p>
+        </div>
+
+        <!-- Problem Statement Box -->
+        <div class="p-4 sm:p-5 bg-black border border-grid-line-dark rounded-none space-y-2">
+          <div class="font-mono text-caption text-accent uppercase font-semibold tracking-wider flex items-center gap-2">
+            <span>●</span>
+            <span>ENGINEERING CONTEXT &amp; PROBLEM SOLVED</span>
+          </div>
+          <p id="spec-modal-problem" class="text-body text-neutral-200/90 leading-relaxed font-normal">
+            <!-- Problem text -->
+          </p>
+        </div>
+
+        <!-- System Architecture Monospace Blueprint -->
+        <div class="space-y-2">
+          <div class="font-mono text-caption text-neutral-dark uppercase font-semibold tracking-wider flex items-center justify-between">
+            <span>HEXAGONAL ARCHITECTURE &amp; BOUNDARY BLUEPRINT</span>
+            <span class="text-[11px] text-accent">[ASCII_PRECISION]</span>
+          </div>
+          <div class="bg-black border border-grid-line-dark p-4 overflow-x-auto">
+            <pre class="font-mono text-[11px] sm:text-xs text-neutral leading-tight select-all"><code id="spec-modal-diagram"></code></pre>
+          </div>
+        </div>
+
+        <!-- Verification & Benchmark Matrix -->
+        <div class="space-y-3">
+          <div class="font-mono text-caption text-neutral-dark uppercase font-semibold tracking-wider">
+            TECHNICAL ATTRIBUTES &amp; BENCHMARKS
+          </div>
+          <div id="spec-modal-benchmarks" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Benchmark cards injected via JS -->
+          </div>
+        </div>
+
+        <!-- Invariants Guaranteed -->
+        <div class="space-y-2">
+          <div class="font-mono text-caption text-neutral-dark uppercase font-semibold tracking-wider">
+            CORE INVARIANTS &amp; ARCHITECTURAL GUARANTEES
+          </div>
+          <ul id="spec-modal-invariants" class="space-y-2 font-mono text-caption text-neutral-200/90 bg-card-dark p-4 border border-grid-line-dark">
+            <!-- Invariants injected via JS -->
+          </ul>
+        </div>
+
+        <!-- Verification CLI Shell -->
+        <div class="space-y-2">
+          <div class="font-mono text-caption text-neutral-dark uppercase font-semibold tracking-wider flex items-center justify-between">
+            <span>LOCAL VERIFICATION REPRODUCTION</span>
+            <span class="text-[11px] text-neutral-dark">TERMINAL COMMAND</span>
+          </div>
+          <div class="bg-black border border-grid-line-dark p-3.5 flex items-center justify-between gap-4 font-mono text-xs">
+            <div class="flex items-center gap-2 overflow-x-auto min-w-0">
+              <span class="text-accent font-bold select-none">$</span>
+              <code id="spec-modal-cli" class="text-foreground tracking-wide whitespace-nowrap"></code>
+            </div>
+            <button 
+              type="button" 
+              id="copy-spec-cli-btn" 
+              class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1 rounded-sm bg-neutral-200/10 hover:bg-accent text-neutral hover:text-black font-mono text-[11px] font-bold transition-all duration-200 cursor-pointer"
+            >
+              <span>COPY</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Bottom Actions -->
+      <div class="mt-8 pt-6 border-t border-grid-line-dark flex flex-wrap items-center justify-between gap-4 font-mono text-caption">
+        <div class="text-neutral-dark text-[11px]">
+          PRESS <kbd class="px-1.5 py-0.5 bg-black border border-neutral-dark/40 text-foreground rounded-xs">ESC</kbd> TO CLOSE
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <a 
+            id="spec-modal-repo-link"
+            href="https://github.com/reshandytaftazani" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="group inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-accent text-black hover:bg-white hover:text-black font-bold tracking-wider transition-all duration-200 shadow-sm"
+          >
+            <span>VIEW REPOSITORY ON GITHUB</span>
+            <span class="text-black font-bold transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Client-side Spec Sheet Controller -->
+<script define:vars={{ projectSpecs }}>
+  function setupProjectSpecModal() {
+    const dialog = document.getElementById("project-spec-dialog");
+    const container = document.getElementById("spec-modal-container");
+    const closeBtn = document.getElementById("close-spec-modal-btn");
+    const copyCliBtn = document.getElementById("copy-spec-cli-btn");
+
+    if (!dialog || !container || !closeBtn) return;
+
+    let currentSpec = null;
+
+    function openModal(specId) {
+      const spec = projectSpecs.find((s) => s.id === specId);
+      if (!spec) return;
+
+      currentSpec = spec;
+
+      // Populate elements
+      const titleEl = document.getElementById("spec-modal-title");
+      const subtitleEl = document.getElementById("spec-modal-subtitle");
+      const statusEl = document.getElementById("spec-modal-status");
+      const problemEl = document.getElementById("spec-modal-problem");
+      const diagramEl = document.getElementById("spec-modal-diagram");
+      const cliEl = document.getElementById("spec-modal-cli");
+      const repoLinkEl = document.getElementById("spec-modal-repo-link");
+      const techListEl = document.getElementById("spec-modal-tech-list");
+      const benchmarksEl = document.getElementById("spec-modal-benchmarks");
+      const invariantsEl = document.getElementById("spec-modal-invariants");
+
+      if (titleEl) titleEl.textContent = spec.title;
+      if (subtitleEl) subtitleEl.textContent = spec.subtitle;
+      if (statusEl) statusEl.textContent = spec.status;
+      if (problemEl) problemEl.textContent = spec.problem;
+      if (diagramEl) diagramEl.textContent = spec.architectureDiagram;
+      if (cliEl) cliEl.textContent = spec.cliCommand;
+      if (repoLinkEl) repoLinkEl.href = spec.githubUrl;
+
+      // Tech list
+      if (techListEl) {
+        techListEl.innerHTML = spec.techStack
+          .map(
+            (t) =>
+              `<span class="px-2 py-0.5 rounded-xs bg-black border border-grid-line-dark text-foreground font-mono font-semibold">[${t}]</span>`
+          )
+          .join("");
+      }
+
+      // Benchmarks
+      if (benchmarksEl) {
+        benchmarksEl.innerHTML = spec.benchmarks
+          .map(
+            (b) => `
+          <div class="bg-black border border-grid-line-dark p-3.5 space-y-1">
+            <div class="text-[10px] uppercase text-neutral-dark font-mono font-semibold">${b.label}</div>
+            <div class="text-section font-bold text-accent font-mono tracking-tight">${b.value}</div>
+            <div class="text-[11px] text-neutral font-mono leading-tight">${b.detail}</div>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      // Invariants
+      if (invariantsEl) {
+        invariantsEl.innerHTML = spec.invariants
+          .map(
+            (inv) => `
+          <li class="flex items-start gap-2">
+            <span class="text-accent font-bold select-none">•</span>
+            <span>${inv}</span>
+          </li>
+        `
+          )
+          .join("");
+      }
+
+      // Show modal without flex centering defect (starts at top, fully scrollable)
+      dialog.classList.remove("hidden");
+      dialog.scrollTop = 0;
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(() => {
+        container.classList.remove("scale-95", "opacity-0");
+        container.classList.add("scale-100", "opacity-100");
+      });
+    }
+
+    function closeModal() {
+      container.classList.remove("scale-100", "opacity-100");
+      container.classList.add("scale-95", "opacity-0");
+      setTimeout(() => {
+        dialog.classList.add("hidden");
+        document.body.style.overflow = "";
+      }, 200);
+    }
+
+    closeBtn.addEventListener("click", closeModal);
+
+    const backdropWrapper = document.getElementById("spec-modal-backdrop-wrapper");
+
+    // Click outside container to dismiss
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog || e.target === backdropWrapper) {
+        closeModal();
+      }
+    });
+
+    // Cancel on ESC
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !dialog.classList.contains("hidden")) {
+        closeModal();
+      }
+    });
+
+    // Copy CLI command
+    if (copyCliBtn) {
+      copyCliBtn.addEventListener("click", () => {
+        if (!currentSpec) return;
+        navigator.clipboard.writeText(currentSpec.cliCommand).then(() => {
+          copyCliBtn.textContent = "COPIED ✓";
+          copyCliBtn.classList.add("bg-accent", "text-black");
+          setTimeout(() => {
+            copyCliBtn.textContent = "COPY";
+            copyCliBtn.classList.remove("bg-accent", "text-black");
+          }, 2000);
+        });
+      });
+    }
+
+    // Attach trigger listeners to all [data-open-spec] elements
+    document.querySelectorAll("[data-open-spec]").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        const specId = el.getAttribute("data-open-spec");
+        if (specId) openModal(specId);
+      });
+    });
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        document.body.style.overflow = "";
+      },
+      { once: true }
+    );
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupProjectSpecModal);
+  } else {
+    setupProjectSpecModal();
+  }
+  document.addEventListener("astro:page-load", setupProjectSpecModal);
+</script>

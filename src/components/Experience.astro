@@ -1,0 +1,166 @@
+---
+// Experience.astro (Authentic Daniele Buser Swiss Editorial Spread: Academic Track at Universitas Indonesia)
+const education = {
+  yearNum: "'25",
+  period: "2025 — PRESENT",
+  status: "ACTIVE ENROLLMENT",
+  institution: "Universitas Indonesia",
+  institutionUrl: "https://cs.ui.ac.id/",
+  faculty: "Faculty of Computer Science (Fasilkom UI)",
+  location: "Depok, West Java, Indonesia",
+  degree: "B.Sc. in Computer Science (Undergraduate)",
+  summary:
+    "Undergraduate study in Computer Science at Universitas Indonesia. Building rigorous foundations in computational theory, data structures, algorithms, and computer systems architecture, with an engineering focus on machine learning reliability and clean backend design.",
+  coursework: [
+    { num: "01", name: "Data Structures & Algorithms", track: "CORE_THEORY" },
+    { num: "02", name: "Discrete Mathematics & Logic", track: "FOUNDATION" },
+    { num: "03", name: "Computer Systems & Architecture", track: "HARDWARE_SYS" },
+    { num: "04", name: "Object-Oriented Programming", track: "PARADIGM" },
+    { num: "05", name: "Linear Algebra & Calculus", track: "MATHEMATICS" },
+    { num: "06", name: "Software Engineering Foundations", track: "ENGINEERING" },
+  ],
+  competencies: [
+    "PYTHON",
+    "C / C++",
+    "SYSTEMS_FOUNDATIONS",
+    "ALGORITHMIC_THINKING",
+    "CLEAN_ARCHITECTURE",
+  ],
+};
+---
+
+<section id="experience" class="relative z-10 flex w-full flex-col pt-16 pb-36" aria-labelledby="experience-heading">
+  
+  <!-- Section Heading (Daniele Buser Swiss Style) -->
+  <div class="reveal-init flex items-center justify-between border-b border-grid-line-light pb-4">
+    <div class="flex items-center gap-3">
+      <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="experience-heading">
+        ACADEMIC TRACK
+      </h2>
+      <span class="text-caption font-mono text-neutral-dark font-semibold">
+        [01 INSTITUTION]
+      </span>
+    </div>
+    
+    <!-- Micro-interaction: Telemetry label -->
+    <span class="hidden sm:inline-block font-mono text-[11px] text-neutral-dark">
+      CAMPUS: <span class="text-accent font-semibold">UI_DEPOK</span>
+    </span>
+  </div>
+
+  <!-- Grand Swiss Editorial Spread (12-Column Canvas Integration) -->
+  <div class="mt-10 grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+    
+    <!-- Left Column: Giant Graphic Numeral & Status Instrument (cols 1-4) -->
+    <div class="reveal-init md:col-span-4 flex flex-col justify-between space-y-6">
+      <div>
+        <!-- Massive Swiss Display Numeral -->
+        <div class="text-display-md text-background font-bold tracking-tight select-none leading-none group/num cursor-default">
+          <span class="text-accent group-hover/num:translate-x-1 inline-block transition-transform duration-200">'</span><span class="group-hover/num:text-accent transition-colors duration-200">25</span>
+        </div>
+        
+        <div class="mt-3 font-mono text-caption text-neutral-dark font-bold tracking-wider">
+          <span>{education.period}</span>
+        </div>
+
+        <!-- Live Telemetry Status Pill -->
+        <div class="inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-neutral-200/70 border border-neutral-300 font-mono text-[11px] font-bold text-background select-none shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+          <span>{education.status}</span>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-grid-line-light font-mono text-caption text-neutral-dark space-y-1">
+        <div class="text-[11px] uppercase tracking-wider text-neutral-dark">CAMPUS LOCATION</div>
+        <div class="text-background font-bold">{education.location}</div>
+        <div class="text-[11px] text-accent">LAT -06.3627° | LON 106.8271°</div>
+      </div>
+    </div>
+
+    <!-- Right Column: Institution Headline, Action Badge, Narrative & Tabular Curriculum (cols 5-12) -->
+    <div class="reveal-init md:col-span-8 space-y-8" style="transition-delay: 150ms;">
+      
+      <!-- Top Headline & Action Badge Row -->
+      <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-grid-line-light pb-6">
+        <div>
+          <span class="font-mono text-[11px] text-accent font-semibold tracking-wider uppercase block mb-1">
+            [INSTITUTION // UNDERGRADUATE]
+          </span>
+          <h3 class="text-display-sm text-background font-bold tracking-tight leading-none">
+            {education.institution}<span class="text-accent inline-block">.</span>
+          </h3>
+          <p class="text-section font-semibold text-neutral-dark mt-2 font-sans">
+            {education.faculty}
+          </p>
+          <div class="font-mono text-caption text-background font-bold mt-1">
+            {education.degree}
+          </div>
+        </div>
+
+        <!-- Tactile Swiss Action Button (Black -> Solid Orange on hover, exactly matching EXPLORE WORK) -->
+        <a 
+          href={education.institutionUrl} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="group relative shrink-0 inline-flex items-center gap-2.5 px-4 py-2.5 rounded-sm bg-background text-foreground hover:bg-accent hover:text-black border border-transparent transition-all duration-200 font-mono font-bold text-caption tracking-wider shadow-sm select-none active:scale-95"
+          aria-label="Visit Universitas Indonesia Faculty of Computer Science website (opens in new tab)"
+        >
+          <span class="group-hover:text-black transition-colors duration-200">VISIT FASILKOM UI</span>
+          <span class="text-accent group-hover:text-black font-bold transition-transform duration-200 ease-out group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
+        </a>
+      </div>
+
+      <!-- Narrative Statement -->
+      <div class="max-w-3xl">
+        <p class="text-body md:text-body-lg text-neutral-dark leading-relaxed font-normal">
+          {education.summary}
+        </p>
+      </div>
+
+      <!-- High-Density Swiss Editorial Curriculum Table -->
+      <div class="space-y-3 pt-2">
+        <div class="flex items-center justify-between font-mono text-caption text-neutral-dark uppercase font-semibold tracking-wider border-b border-grid-line-light pb-2">
+          <span>FOUNDATIONAL CURRICULUM</span>
+          <span class="text-[11px] text-accent">[FASILKOM_UI_SYLLABUS]</span>
+        </div>
+
+        <div class="divide-y divide-grid-line-light border-b border-grid-line-light">
+          {education.coursework.map((item) => (
+            <div class="group/row flex items-center justify-between py-3 px-2 -mx-2 rounded-xs transition-colors duration-150 hover:bg-neutral-200/50 cursor-default">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-caption text-accent font-bold group-hover/row:translate-x-1 transition-transform duration-150">
+                  [{item.num}]
+                </span>
+                <span class="text-body font-semibold text-background group-hover/row:text-accent transition-colors duration-150">
+                  {item.name}
+                </span>
+              </div>
+              
+              <div class="flex items-center gap-2 font-mono text-[11px] text-neutral-dark">
+                <span class="group-hover/row:text-background transition-colors duration-150">
+                  {item.track}
+                </span>
+                <span class="text-accent opacity-0 group-hover/row:opacity-100 transition-opacity duration-150 font-bold">
+                  →
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Competency Chips -->
+      <div class="pt-2 flex flex-wrap items-center gap-2 font-mono text-caption">
+        <span class="text-[11px] text-neutral-dark font-semibold uppercase mr-1">AREAS:</span>
+        {education.competencies.map((tag) => (
+          <span class="px-2.5 py-1 rounded-xs bg-neutral-200/80 border border-neutral-300 text-background font-semibold text-[11px] hover:border-accent hover:bg-white hover:text-accent transition-all duration-200 shadow-2xs cursor-default">
+            [{tag}]
+          </span>
+        ))}
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

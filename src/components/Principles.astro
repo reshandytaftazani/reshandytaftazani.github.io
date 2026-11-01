@@ -1,16 +1,16 @@
 ---
-// Principles.astro (Daniele Buser Swiss High-Density Grid with motion reveal & card micro-interactions)
+// Principles.astro (Daniele Buser Swiss High-Density Grid with grounded copy & tactile micro-interactions)
 const principles = [
   {
     code: "01",
     tag: "TEMPORAL_INTEGRITY",
     title: "Zero Data Leakage by Design",
     description:
-      "Cross-validation leakage and lookahead bias are catastrophic because they yield deceptively optimistic metrics that fail silently in production. We architect strict partition boundaries before computing any feature transformations.",
+      "Cross-validation leakage and lookahead bias produce deceptively high metrics that fail in real-world deployment. We enforce explicit temporal partition boundaries before executing any feature transformations.",
     bullets: [
-      "Strict temporal point-in-time joins preventing target signal contamination.",
-      "Deterministic cryptographic entity hashing for leak-free splits.",
-      "Automated tombstone guards that fail loudly on boundary violations.",
+      "Point-in-time joins preventing target signal contamination in time-series data.",
+      "Deterministic hashing strategies for reproducible train-validation splits.",
+      "Automated boundary assertions that fail immediately upon partition violations.",
     ],
     codeSnippet: `assert partition.max_timestamp < eval_window.min_timestamp, \\
     "LeakageDetected: lookahead contamination in split"`,
@@ -18,13 +18,13 @@ const principles = [
   {
     code: "02",
     tag: "DEFENSIVE_CHAOS",
-    title: "Rigorous Verification & TDD",
+    title: "Defensive Verification & TDD",
     description:
-      "Real-world machine learning systems operate in chaotic execution environments. Verification must go far beyond happy-path unit tests to enforce stability under OS signals, malformed inputs, and process interruption.",
+      "Testing should go beyond typical happy paths. We verify system resilience under unexpected OS process signals, interrupted workloads, and edge-case inputs through property-based tests.",
     bullets: [
-      "Property-based testing against degenerate distributions and extreme shifts.",
-      "Child process supervision with idempotent cleanup on SIGINT and SIGTERM.",
-      "Defensive boundaries against unhandled tensor shapes and exceptions.",
+      "Property-based testing against degenerate tensors and irregular distributions.",
+      "Clean process supervision with signal traps on SIGINT and SIGTERM.",
+      "Defensive assertions against unexpected input shapes and null embeddings.",
     ],
     codeSnippet: `def test_worker_interrupt_leaves_no_zombies():
     proc = spawn_worker(task=heavy_inference)
@@ -36,10 +36,10 @@ const principles = [
     tag: "DOMAIN_ISOLATION",
     title: "Clean Architecture & Contracts",
     description:
-      "Machine learning models are implementation details of the domain. By decoupling core business logic from framework-heavy libraries, the system remains modular, highly testable, and resilient to vendor lock-in.",
+      "By decoupling core machine learning algorithms from web frameworks and cloud SDKs, the codebase remains modular, easily testable locally, and resilient to third-party breaking changes.",
     bullets: [
-      "Rigid schema contracts validated via Pydantic V2 at every boundary.",
-      "Hexagonal architecture separating inference ports from transport adapters.",
+      "Strict data validation contracts enforced via Pydantic at API boundaries.",
+      "Hexagonal architecture separating inference routines from network adapters.",
       "Dependency inversion enabling fast, reproducible local test suites.",
     ],
     codeSnippet: `class InferenceRequest(BaseModel):
@@ -53,16 +53,22 @@ const principles = [
   
   <!-- Section Heading (Daniele Buser Swiss Style) -->
   <div class="reveal-init flex items-center justify-between border-b border-grid-line-light pb-4">
-    <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="principles-heading">
-      ENGINEERING PRINCIPLES
-    </h2>
-    <span class="text-caption font-mono text-neutral-dark">
-      [03 CORE TENETS]
+    <div class="flex items-center gap-3">
+      <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="principles-heading">
+        ENGINEERING PRINCIPLES
+      </h2>
+      <span class="text-caption font-mono text-neutral-dark font-semibold">
+        [03 CORE TENETS]
+      </span>
+    </div>
+
+    <span class="hidden sm:inline-block font-mono text-[11px] text-neutral-dark">
+      PARADIGM: <span class="text-accent font-semibold">DEFENSIVE_SYSTEMS</span>
     </span>
   </div>
 
   <!-- 3-Column Grid in bg-card-dark with micro-interactions -->
-  <div class="mt-6 grid w-full grid-cols-12 gap-6 lg:gap-8">
+  <div class="mt-8 grid w-full grid-cols-12 gap-6 lg:gap-8">
     {principles.map((p, idx) => (
       <div 
         class="group reveal-init col-span-12 flex w-full flex-col lg:col-span-4 bg-card-dark p-6 sm:p-8 justify-between border border-transparent hover:border-neutral-dark/40 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.45)] transition-all duration-300 ease-out"
@@ -71,7 +77,7 @@ const principles = [
         <div class="space-y-4">
           <div class="flex items-center justify-between font-mono text-caption text-neutral-dark border-b border-grid-line-dark pb-3">
             <span class="text-foreground font-bold font-mono group-hover:text-accent transition-colors duration-200">P-[{p.code}]</span>
-            <span class="uppercase tracking-wider text-accent font-semibold text-[11px]">{p.tag}</span>
+            <span class="uppercase tracking-wider text-accent font-semibold text-[11px] group-hover:translate-x-0.5 transition-transform duration-200">{p.tag}</span>
           </div>
 
           <h3 class="text-section font-bold tracking-tight text-foreground group-hover:text-accent transition-colors duration-200">
@@ -85,17 +91,17 @@ const principles = [
           <ul class="space-y-2 pt-2 border-t border-grid-line-dark text-caption text-neutral">
             {p.bullets.map((bullet) => (
               <li class="flex items-start gap-2">
-                <span class="text-accent font-bold mt-0.5 group-hover:scale-125 transition-transform duration-200">•</span>
+                <span class="text-accent font-bold mt-0.5 group-hover:scale-125 transition-transform duration-200 select-none">•</span>
                 <span class="group-hover:text-foreground/90 transition-colors duration-200">{bullet}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <!-- Code contract representation with subtle hover focus -->
+        <!-- Code contract representation with subtle hover focus & copyable affordance -->
         <div class="mt-6 pt-4 border-t border-grid-line-dark">
-          <div class="bg-black p-3 border border-grid-line-dark group-hover:border-neutral-dark/40 font-mono text-caption text-neutral overflow-x-auto leading-tight transition-colors duration-200">
-            <code>{p.codeSnippet}</code>
+          <div class="bg-black p-3.5 border border-grid-line-dark group-hover:border-neutral-dark/50 font-mono text-caption text-neutral overflow-x-auto leading-tight transition-colors duration-200">
+            <code class="select-all">{p.codeSnippet}</code>
           </div>
         </div>
       </div>

@@ -3,10 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import Projects from '../components/Projects.astro';
+import Experience from '../components/Experience.astro';
 import Principles from '../components/Principles.astro';
 import Skills from '../components/Skills.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
+import ProjectSpecModal from '../components/ProjectSpecModal.astro';
 ---
 
 <Layout>
@@ -37,10 +39,14 @@ import Footer from '../components/Footer.astro';
 
       <Hero />
       <Projects />
+      <Experience />
       <Principles />
       <Skills />
     </div>
   </main>
+
+  <!-- Project Technical Spec Sheet Modal -->
+  <ProjectSpecModal />
 
   <!-- Dark Deep Canvas Section: "Say Hello." & Footer -->
   <Contact />

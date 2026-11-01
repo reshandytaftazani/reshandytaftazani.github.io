@@ -1,5 +1,5 @@
 ---
-// Contact.astro (Daniele Buser exact Section 3 "Say Hello." layout with perfectly aligned email & rich micro-interactions)
+// Contact.astro (Daniele Buser exact Section 3 "Say Hello." layout with tactile Quick-Copy Email & easter egg dot micro-interactions)
 ---
 
 <section id="contacts" class="bg-background text-foreground relative -mx-4 sm:-mx-6 lg:-mx-8 flex min-h-dvh flex-col justify-center px-4 sm:px-6 lg:px-8 border-t border-grid-line-dark">
@@ -25,10 +25,20 @@
 
     <div class="relative z-10 flex flex-col gap-16 md:gap-24">
       
-      <!-- Giant Heading (Daniele Buser Say Hello. text-display-xl) -->
-      <h2 class="reveal-hero text-display-xl text-foreground leading-[0.92] tracking-tight md:leading-[0.85] select-none" aria-label="Say Hello - Contact section heading">
-        Say <br class="md:hidden"/>Hello<span class="text-accent inline-block hover:scale-125 transition-transform duration-300 cursor-pointer" aria-hidden="true">.</span>
-      </h2>
+      <!-- Giant Heading (Daniele Buser Say Hello. text-display-xl with interactive period dot) -->
+      <div class="space-y-2">
+        <h2 class="reveal-hero text-display-xl text-foreground leading-[0.92] tracking-tight md:leading-[0.85] select-none" aria-label="Say Hello - Contact section heading">
+          Say <br class="md:hidden"/>Hello<span 
+            id="contact-period-dot" 
+            class="text-accent inline-block hover:scale-125 active:scale-90 transition-transform duration-200 cursor-pointer select-none" 
+            title="Click for Depok ping"
+            aria-label="Interactive orange accent dot"
+          >.</span>
+        </h2>
+        <div id="dot-ping-badge" class="font-mono text-caption text-accent opacity-0 transition-opacity duration-300 h-4">
+          [SIGNAL // DEPOK_WIB ACTIVE]
+        </div>
+      </div>
 
       <!-- Sub-grid with narrative & large clickable email -->
       <div class="grid w-full grid-cols-4 items-start gap-8 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
@@ -36,15 +46,16 @@
         <!-- Left narrative paragraph (text-section) -->
         <div class="reveal-init col-span-4 sm:col-span-5 md:col-span-6 lg:col-span-5 space-y-4" style="transition-delay: 150ms;">
           <p class="text-section leading-snug font-normal text-neutral">
-            Interested in leak-free machine learning pipelines, verified process boundaries, or prospective engineering roles? Feel free to reach out.
+            Interested in machine learning systems, reproducible data pipelines, or prospective engineering roles? Feel free to reach out.
           </p>
           <p class="text-caption font-mono text-neutral-dark">
             Faculty of Computer Science, <a href="https://cs.ui.ac.id/" target="_blank" rel="noopener noreferrer" class="group text-neutral hover:text-accent underline underline-offset-4 decoration-accent/60 hover:decoration-accent transition-colors">Universitas Indonesia</a> (Depok, West Java).
           </p>
         </div>
 
-        <!-- Right big email & professional links (adjusted alignment to eliminate right-edge cramming) -->
+        <!-- Right big email & professional links -->
         <div class="reveal-init col-span-4 sm:col-span-6 md:col-span-8 lg:col-span-5 lg:col-start-6 xl:col-span-6 xl:col-start-7 lg:justify-self-start" style="transition-delay: 250ms;">
+          
           <a 
             href="mailto:reshandy.taftazani@ui.ac.id" 
             class="group relative inline-block max-w-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent pb-1" 
@@ -57,8 +68,26 @@
             <span class="absolute bottom-0 left-0 w-full h-[2.5px] bg-accent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" aria-hidden="true"></span>
           </a>
 
+          <!-- Tactile Swiss Quick-Copy Button -->
+          <div class="mt-4 flex items-center gap-3">
+            <button 
+              type="button" 
+              id="copy-email-btn"
+              class="group relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-neutral-dark/40 hover:border-accent bg-card-dark hover:bg-accent text-neutral hover:text-black font-mono font-bold text-caption transition-all duration-300 shadow-sm cursor-pointer select-none active:scale-95"
+              aria-label="Copy email address to clipboard"
+            >
+              <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:-translate-x-0.5">[</span>
+              <span id="copy-btn-label" class="text-foreground group-hover:text-black tracking-wider transition-colors duration-200">COPY ADDRESS</span>
+              <span id="copy-btn-icon" class="text-accent group-hover:text-black font-bold text-xs transition-transform duration-200">📋</span>
+              <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:translate-x-0.5">]</span>
+            </button>
+            
+            <span id="copy-feedback-sr" class="sr-only" aria-live="polite"></span>
+            <span class="text-[11px] font-mono text-neutral-dark hidden sm:inline">DEP-WIB // FAST RESPONSE</span>
+          </div>
+
           <!-- Professional Links (High-visibility Swiss micro-interactions & directional arrow leap) -->
-          <nav class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-body md:text-body-lg font-medium" aria-label="Social and professional links">
+          <nav class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-body md:text-body-lg font-medium" aria-label="Social and professional links">
             <a 
               href="https://linkedin.com/in/reshandy-taftazani-aulya" 
               target="_blank" 
@@ -110,3 +139,60 @@
 
   </div>
 </section>
+
+<!-- Tactile Copy Email & Period Ping Script -->
+<script>
+  function setupContactInteractions() {
+    // 1. Copy Email
+    const copyBtn = document.getElementById("copy-email-btn");
+    const label = document.getElementById("copy-btn-label");
+    const icon = document.getElementById("copy-btn-icon");
+    const srFeedback = document.getElementById("copy-feedback-sr");
+
+    if (copyBtn && label && icon) {
+      const emailAddress = "reshandy.taftazani@ui.ac.id";
+      let resetTimeout: NodeJS.Timeout | null = null;
+
+      copyBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(emailAddress).then(() => {
+          if (resetTimeout) clearTimeout(resetTimeout);
+
+          label.textContent = "COPIED TO CLIPBOARD";
+          icon.textContent = "✓";
+          copyBtn.classList.remove("bg-card-dark", "text-neutral");
+          copyBtn.classList.add("bg-accent", "text-black", "border-accent");
+          if (srFeedback) srFeedback.textContent = "Email address copied to clipboard";
+
+          resetTimeout = setTimeout(() => {
+            label.textContent = "COPY ADDRESS";
+            icon.textContent = "📋";
+            copyBtn.classList.remove("bg-accent", "text-black", "border-accent");
+            copyBtn.classList.add("bg-card-dark", "text-neutral");
+            if (srFeedback) srFeedback.textContent = "";
+          }, 2500);
+        });
+      });
+    }
+
+    // 2. Period Dot Micro-interaction
+    const dot = document.getElementById("contact-period-dot");
+    const badge = document.getElementById("dot-ping-badge");
+    if (dot && badge) {
+      dot.addEventListener("click", () => {
+        badge.classList.remove("opacity-0");
+        badge.classList.add("opacity-100");
+        setTimeout(() => {
+          badge.classList.remove("opacity-100");
+          badge.classList.add("opacity-0");
+        }, 2000);
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupContactInteractions);
+  } else {
+    setupContactInteractions();
+  }
+  document.addEventListener("astro:page-load", setupContactInteractions);
+</script>

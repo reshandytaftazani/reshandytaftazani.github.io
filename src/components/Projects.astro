@@ -1,56 +1,68 @@
 ---
-// Projects.astro (Daniele Buser exact Section 2 layout, cards, and prominent micro-interactions)
+// Projects.astro (Daniele Buser exact Section 2 layout with grounded copy, interactive spec triggers, category filters & copy micro-interactions)
 const projects = [
   {
+    id: "leakguard-ml",
+    category: "PIPELINES",
     title: "LeakGuard-ML",
-    subtitle: "Zero-Leakage Feature Store & Split Validator",
+    subtitle: "Temporal Split Validator & Feature Store Guard",
     summary:
-      "A high-throughput feature verification engine that cryptographically guarantees zero data leakage across cross-validation folds and temporal training windows.",
+      "Verification engine designed to validate temporal split boundaries and prevent lookahead data leakage in machine learning feature pipelines.",
+    runCommand: "mlesys verify --target production-pipeline",
     previewCode: `$ mlesys verify --target production-pipeline
 [PASS] partition_boundary: 0.00% leakage
 [PASS] tombstone_guards: temporal integrity verified
 [PASS] strict_schemas: Pydantic v2 enforced
 [BENCH] split_generation: 12x throughput`,
     techStack: ["Python", "PyTorch", "FastAPI", "Pydantic", "Docker"],
-    metric: "0.00% Leak Guarantee",
-    secondaryMetric: "12x Throughput",
+    metric: "Temporal Boundary Validated",
+    secondaryMetric: "Strict Type Safety",
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
+    id: "axiomserve",
+    category: "RUNTIMES",
     title: "AxiomServe",
     subtitle: "Low-Latency Supervised Inference Runtime",
     summary:
-      "High-reliability asynchronous machine learning serving runtime designed with defensive child process supervision and zero-hang shutdown guarantees.",
-    previewCode: `$ axiomserve --runtime onnx --workers 8
+      "Asynchronous ML model serving runtime featuring POSIX termination signal handlers for clean process lifecycle management.",
+    runCommand: "axiomserve --runtime onnx --workers 4",
+    previewCode: `$ axiomserve --runtime onnx --workers 4
 [INIT] worker_pool initialized in shared memory
 [SIGNAL] POSIX SIGTERM handler registered
 [PASS] p99_latency: 3.82ms | throughput: 14.2k req/s
 [STATUS] zero zombie processes on exit`,
     techStack: ["FastAPI", "C++", "ONNX", "Linux", "Docker"],
-    metric: "p99 < 3.8ms Latency",
-    secondaryMetric: "Zero Zombie Procs",
+    metric: "Low Latency p99",
+    secondaryMetric: "Clean Process Exit",
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
+    id: "synthdist-engine",
+    category: "VERIFICATION",
     title: "SynthDist-Engine",
     subtitle: "Degenerate Distribution & TDD Chaos Harness",
     summary:
-      "Property-based testing and synthetic anomaly generator specifically built to verify machine learning models against extreme distribution shifts and malformed inputs.",
+      "Property-based testing suite that generates synthetic edge-case distributions to test pipeline resilience against malformed inputs.",
+    runCommand: "pytest tests/fuzz/ --coverage",
     previewCode: `$ pytest tests/fuzz/ --coverage
 [GENERATE] 10,000 degenerate distribution edge cases
 [PASS] empty_tensor_handling: ok
 [PASS] zero_variance_covariance: defended
 [STATUS] 100% boundary isolation verified`,
     techStack: ["Python", "NumPy", "scikit-learn", "Pytest", "Hypothesis"],
-    metric: "10,000+ Fuzz Cases/s",
-    secondaryMetric: "OS Sandboxed",
+    metric: "Property-Based TDD",
+    secondaryMetric: "Isolated Test Harness",
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
+    id: "hexaml-core",
+    category: "ARCHITECTURE",
     title: "HexaML Core",
-    subtitle: "Clean Architecture Engine for ML Systems",
+    subtitle: "Clean Architecture Blueprint for ML Systems",
     summary:
-      "Production-ready Hexagonal (Ports & Adapters) architecture template isolating core ML domain algorithms from transport protocols and persistence engines.",
+      "Hexagonal architecture blueprint decoupling machine learning domain logic from transport protocols, databases, and web frameworks.",
+    runCommand: "python -m hexaml.verify_contracts",
     previewCode: `$ python -m hexaml.verify_contracts
 class InferenceRequest(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
@@ -58,54 +70,111 @@ class InferenceRequest(BaseModel):
     features: Annotated[list[float], Field(min_length=64)]
 [STATUS] zero framework deps in domain layer`,
     techStack: ["Python", "Clean Arch", "Pydantic", "SQLAlchemy", "Docker"],
-    metric: "Zero Framework Lock-in",
-    secondaryMetric: "< 0.4ms Contract Check",
+    metric: "Decoupled Domain Core",
+    secondaryMetric: "Fast Local Tests",
     githubUrl: "https://github.com/reshandytaftazani",
   },
 ];
+
+const categories = ["ALL", "PIPELINES", "RUNTIMES", "VERIFICATION", "ARCHITECTURE"];
 ---
 
 <section id="projects" class="relative z-10 flex w-full flex-col pt-24 pb-36" aria-labelledby="projects-list-heading">
   
   <!-- Section Heading (Daniele Buser text-caption / text-body uppercase) -->
-  <div class="reveal-init flex items-center justify-between border-b border-grid-line-light pb-4">
-    <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="projects-list-heading">
-      SELECTED WORKS
-    </h2>
-    <span class="text-caption font-mono text-neutral-dark font-semibold">
-      [04 SYSTEMS]
-    </span>
+  <div class="reveal-init flex flex-col sm:flex-row sm:items-center justify-between border-b border-grid-line-light pb-4 gap-4">
+    <div class="flex items-center gap-3">
+      <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="projects-list-heading">
+        SELECTED WORKS
+      </h2>
+      <span class="text-caption font-mono text-neutral-dark font-semibold">
+        [04 SYSTEMS]
+      </span>
+    </div>
+
+    <!-- Swiss Category Filter Pills -->
+    <div class="flex flex-wrap items-center gap-2 font-mono text-[11px]" role="tablist" aria-label="Project filter categories">
+      {categories.map((cat, idx) => (
+        <button
+          type="button"
+          data-project-filter={cat}
+          class={`filter-btn px-2.5 py-1 rounded-xs border transition-all duration-200 cursor-pointer select-none font-semibold ${
+            idx === 0 
+              ? "active bg-background text-foreground border-background" 
+              : "border-neutral-300 text-neutral-dark hover:border-accent hover:text-background bg-white/60"
+          }`}
+          role="tab"
+          aria-selected={idx === 0 ? "true" : "false"}
+        >
+          {cat === "ALL" ? `ALL [04]` : cat}
+        </button>
+      ))}
+    </div>
   </div>
 
   <!-- 12-Column Grid (Daniele Buser exact 2-column on desktop) -->
-  <div class="mt-6 grid w-full grid-cols-12 gap-6 lg:gap-8">
+  <div class="mt-8 grid w-full grid-cols-12 gap-6 lg:gap-8" id="projects-grid">
     {projects.map((proj, idx) => (
-      <div class="reveal-init col-span-12 flex w-full flex-col lg:col-span-6" style={`transition-delay: ${idx * 120}ms;`}>
-        <a 
+      <div 
+        class="reveal-init col-span-12 flex w-full flex-col lg:col-span-6 project-card-wrapper transition-opacity duration-300" 
+        data-category={proj.category}
+        style={`transition-delay: ${idx * 120}ms;`}
+      >
+        <div 
           data-project-card="true" 
-          class="group bg-card-dark focus-visible:outline-foreground flex w-full flex-col p-4 pb-8 focus-visible:outline-2 focus-visible:outline-offset-4 border border-transparent hover:border-neutral-dark/50 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(0,0,0,0.55)] transition-all duration-300 ease-out" 
-          aria-label={`Project: ${proj.title}`} 
-          href={proj.githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          class="group bg-card-dark focus-visible:outline-foreground flex w-full flex-col p-4 pb-8 focus-visible:outline-2 focus-visible:outline-offset-4 border border-transparent hover:border-neutral-dark/50 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(0,0,0,0.55)] transition-all duration-300 ease-out cursor-pointer" 
+          aria-label={`Project: ${proj.title} - Click to inspect architecture`}
+          data-open-spec={proj.id}
+          tabindex="0"
+          role="button"
         >
           <!-- Aspect container with Code/Telemetry showcase and prominent micro-interactions -->
           <div class="relative aspect-4/3 w-full overflow-hidden select-none bg-black border border-grid-line-dark group-hover:border-neutral-dark/60 transition-colors duration-300 p-4 flex flex-col justify-between font-mono text-xs">
             
-            <!-- Header bar inside card with prominent SOURCE pill -->
+            <!-- Header bar inside card with SPEC, RUN & SOURCE pills -->
             <div class="flex items-center justify-between text-caption text-neutral-dark border-b border-grid-line-dark pb-2.5">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-accent group-hover:scale-125 transition-transform duration-300"></span>
                 <span class="text-foreground uppercase font-bold tracking-tight text-xs">{proj.title}</span>
               </div>
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm bg-white/10 group-hover:bg-accent group-hover:text-white text-neutral transition-all duration-200">
-                <span class="font-bold text-[11px] tracking-wider">SOURCE</span>
-                <span class="text-accent group-hover:text-white transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 font-bold">↗</span>
+              
+              <div class="flex items-center gap-2">
+                <!-- Interactive Quick-Run Copy Micro-interaction -->
+                <button 
+                  type="button" 
+                  class="copy-run-cmd-btn group/cmd inline-flex items-center gap-1 px-2 py-0.5 rounded-xs bg-white/5 hover:bg-accent text-neutral hover:text-black font-mono text-[10px] font-bold transition-all duration-200 cursor-pointer"
+                  data-run-cmd={proj.runCommand}
+                  onclick="event.stopPropagation();"
+                  title={`Copy command: ${proj.runCommand}`}
+                  aria-label={`Copy run command for ${proj.title}`}
+                >
+                  <span class="text-accent group-hover/cmd:text-black font-bold">$</span>
+                  <span class="cmd-label">RUN</span>
+                </button>
+
+                <!-- Spec Button Pill -->
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm bg-accent/20 text-accent group-hover:bg-accent group-hover:text-black font-bold text-[11px] tracking-wider transition-all duration-200">
+                  <span>SPEC</span>
+                  <span class="text-xs">⚙</span>
+                </span>
+
+                <!-- Direct GitHub link -->
+                <a 
+                  href={proj.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm bg-white/10 hover:bg-white hover:text-black text-neutral transition-all duration-200 font-bold text-[11px] tracking-wider"
+                  onclick="event.stopPropagation();"
+                  aria-label={`Open ${proj.title} source code on GitHub`}
+                >
+                  <span>SOURCE</span>
+                  <span class="text-accent hover:text-black transition-transform duration-200 ease-out">↗</span>
+                </a>
               </div>
             </div>
 
             <!-- Terminal code preview block with hover scaling -->
-            <pre class="text-neutral text-[11px] leading-relaxed my-auto overflow-x-hidden transition-transform duration-500 ease-out group-hover:scale-[1.025]">
+            <pre class="text-neutral text-[11px] leading-relaxed my-auto overflow-x-hidden transition-transform duration-500 ease-out group-hover:scale-[1.025] select-text">
               <code>{proj.previewCode}</code>
             </pre>
 
@@ -119,9 +188,14 @@ class InferenceRequest(BaseModel):
           <!-- Bottom description & tags (Daniele Buser exact card layout) -->
           <div class="text-foreground mt-6 flex items-start justify-between gap-4 sm:mt-8">
             <div class="min-w-0 flex-1">
-              <h3 class="text-section min-w-0 flex-1 font-bold text-foreground group-hover:text-accent group-hover:translate-x-1 transition-all duration-300">
-                {proj.title}
-              </h3>
+              <div class="flex items-center gap-2">
+                <h3 class="text-section min-w-0 font-bold text-foreground group-hover:text-accent group-hover:translate-x-1 transition-all duration-300">
+                  {proj.title}
+                </h3>
+                <span class="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded-xs bg-white/10 text-neutral group-hover:text-accent transition-colors">
+                  {proj.category}
+                </span>
+              </div>
               <p class="text-body text-neutral mt-1 line-clamp-2 leading-relaxed">
                 {proj.summary}
               </p>
@@ -134,9 +208,90 @@ class InferenceRequest(BaseModel):
               ))}
             </div>
           </div>
-        </a>
+        </div>
       </div>
     ))}
   </div>
 
 </section>
+
+<!-- Filter Tabs & Quick-Copy Logic -->
+<script>
+  function setupProjectInteractions() {
+    // 1. Filter Tabs
+    const filterBtns = document.querySelectorAll<HTMLButtonElement>("[data-project-filter]");
+    const cards = document.querySelectorAll<HTMLElement>(".project-card-wrapper");
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetCategory = btn.getAttribute("data-project-filter");
+
+        filterBtns.forEach((b) => {
+          b.classList.remove("active", "bg-background", "text-foreground", "border-background");
+          b.classList.add("border-neutral-300", "text-neutral-dark", "bg-white/60");
+          b.setAttribute("aria-selected", "false");
+        });
+        btn.classList.add("active", "bg-background", "text-foreground", "border-background");
+        btn.classList.remove("border-neutral-300", "text-neutral-dark", "bg-white/60");
+        btn.setAttribute("aria-selected", "true");
+
+        cards.forEach((card) => {
+          const category = card.getAttribute("data-category");
+          if (targetCategory === "ALL" || category === targetCategory) {
+            card.style.display = "flex";
+            requestAnimationFrame(() => {
+              card.style.opacity = "1";
+              card.style.transform = "scale(1)";
+            });
+          } else {
+            card.style.opacity = "0";
+            card.style.transform = "scale(0.96)";
+            setTimeout(() => {
+              if (btn.getAttribute("data-project-filter") !== "ALL" && category !== targetCategory) {
+                card.style.display = "none";
+              }
+            }, 200);
+          }
+        });
+      });
+    });
+
+    // 2. Quick Run Command Copy Micro-interaction
+    document.querySelectorAll<HTMLButtonElement>(".copy-run-cmd-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const cmd = btn.getAttribute("data-run-cmd");
+        const label = btn.querySelector(".cmd-label");
+        if (!cmd || !label) return;
+
+        navigator.clipboard.writeText(cmd).then(() => {
+          const originalText = label.textContent;
+          label.textContent = "COPIED ✓";
+          btn.classList.add("bg-accent", "text-black");
+
+          setTimeout(() => {
+            label.textContent = originalText;
+            btn.classList.remove("bg-accent", "text-black");
+          }, 2000);
+        });
+      });
+    });
+
+    // 3. Keyboard Enter/Space to open spec on cards
+    document.querySelectorAll<HTMLElement>("[data-open-spec]").forEach((card) => {
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupProjectInteractions);
+  } else {
+    setupProjectInteractions();
+  }
+  document.addEventListener("astro:page-load", setupProjectInteractions);
+</script>

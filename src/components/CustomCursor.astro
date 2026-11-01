@@ -4,7 +4,7 @@
 
 <div
   id="swiss-cursor"
-  class="pointer-events-none fixed top-0 left-0 z-50 rounded-full bg-accent opacity-0 transition-opacity duration-300 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+  class="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full bg-accent opacity-0 transition-opacity duration-300 -translate-x-1/2 -translate-y-1/2 will-change-transform"
   style="width: 24px; height: 24px;"
   aria-hidden="true"
 ></div>
@@ -101,23 +101,24 @@
       { passive: true }
     );
 
-    // Interactive element shrink handler
-    function bindInteractiveElements() {
-      const interactiveTargets = document.querySelectorAll(
-        "a, button, [data-project-card], [role='button'], input, textarea"
-      );
-
-      interactiveTargets.forEach((el) => {
-        el.addEventListener("mouseenter", () => {
-          isHovering = true;
-        });
-        el.addEventListener("mouseleave", () => {
-          isHovering = false;
-        });
-      });
+    // Interactive element hover detection with robust event delegation
+    function onMouseOver(e: MouseEvent) {
+      const target = e.target as HTMLElement | null;
+      if (target && target.closest("a, button, [data-project-card], [role='button'], [data-open-spec], input, textarea")) {
+        isHovering = true;
+      }
     }
 
-    bindInteractiveElements();
+    function onMouseOut(e: MouseEvent) {
+      const related = e.relatedTarget as HTMLElement | null;
+      if (!related || !related.closest("a, button, [data-project-card], [role='button'], [data-open-spec], input, textarea")) {
+        isHovering = false;
+      }
+    }
+
+    document.addEventListener("mouseover", onMouseOver, { passive: true });
+    document.addEventListener("mouseout", onMouseOut, { passive: true });
+
     rafId = requestAnimationFrame(render);
 
     // Cleanup on Astro page change
@@ -125,6 +126,8 @@
       "astro:before-swap",
       () => {
         if (rafId) cancelAnimationFrame(rafId);
+        document.removeEventListener("mouseover", onMouseOver);
+        document.removeEventListener("mouseout", onMouseOut);
         document.documentElement.classList.remove("has-custom-cursor");
       },
       { once: true }

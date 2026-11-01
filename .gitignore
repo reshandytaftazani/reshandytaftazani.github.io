@@ -20,3 +20,7 @@ pnpm-debug.log*
 
 # Windows
 Thumbs.db
+
+# local specifications
+DESIGN.md
+
