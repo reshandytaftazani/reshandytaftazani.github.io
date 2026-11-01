@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://reshandytaftazani.github.io/sitemap-index.xml

@@ -64,12 +64,37 @@
   - Systems & MLE skills matrix, verified open-source contributions.
   - Seamless navigation integration across Navbar (desktop & mobile drawer) and Hero action badges.
 
-### Phase 3: Technical Field Notes & Engineering Journal (`/notes`)
-- **Route:** `/notes` and `/notes/[slug]`
-- **Scope:** Typography-driven chronological log of engineering dispatches and rigorous technical deep dives.
-- **Sample Initial Dispatches:**
-  - *Eliminating Lookahead Bias in Rolling Splits*
-  - *POSIX Signal Traps in Async Python Inference Runtimes*
-  - *Hexagonal Architecture for ML Feature Stores*
-- **Features:** Reading time indicator, domain pills (`[SYSTEMS]`, `[DATA-INTEGRITY]`, `[RUNTIME]`), high-contrast code snippets.
+### Phase 2.5: Swiss Telemetry Transitions & Global Command Palette (Batch 1) [ACTIVE EXECUTION]
+- **Components:**
+  - `src/components/PageTransition.astro` (Swiss telemetry boot sequence 000% → 100% on landing page + continuous upward wipe shutter with Safety Orange leading edge).
+  - `src/components/CommandPalette.astro` (Keyboard-first `Ctrl + K` / `Cmd + K` Swiss terminal modal for rapid navigation and actions).
+  - SEO foundation (`@astrojs/sitemap`, `robots.txt`, dynamic schema.org JSON-LD & OpenGraph metadata).
+  - Full data synchronization of `leakguard-ml` across `ProjectSpecModal.astro`.
+
+### Phase 3: Technical Field Notes & Engineering Journal (`/notes`) (Batch 2) [PLANNED SPECIFICATION & PROMPT]
+- **Target Routes:** `/notes` (chronological directory) and `/notes/[slug]` (deep-read editorial view).
+- **RSS Route:** `/rss.xml` (automated Astro syndication feed).
+- **Content Collection Schema (`src/content.config.ts`):**
+  - `title`: string
+  - `subtitle`: string
+  - `publishedAt`: string (YYYY-MM-DD)
+  - `category`: 'MACHINE LEARNING' | 'SYSTEMS ARCHITECTURE' | 'VERIFICATION & DATA'
+  - `readingTime`: string (e.g., '6 MIN READ')
+  - `abstract`: string
+  - `invariants`: string[]
+  - `featured`: boolean
+- **Initial Authentic Dispatches:**
+  1. `posix-signals-async-python.md`: *POSIX Signal Traps in Async Python Inference Runtimes (Handling SIGTERM, graceful batch draining, and avoiding zombie worker pools)*
+  2. `eliminating-lookahead-bias.md`: *Eliminating Lookahead Bias in Rolling Splits (Strict temporal data boundaries and purge-embargo validation for financial time-series)*
+  3. `hexagonal-architecture-feature-stores.md`: *Hexagonal Architecture for ML Feature Stores (Decoupling feature serving contracts from storage drivers)*
+- **Prompt Eksekusi Batch 2 untuk Sesi Berikutnya:**
+  ```text
+  Lanjutkan pengembangan portofolio (Reshandy Taftazani Aulya — CS @ Universitas Indonesia, MLE & Systems) sesuai SPEC.md Phase 3:
+  1. Konfigurasi Content Collection `notes` di `src/content.config.ts` sesuai skema Zod.
+  2. Buat 3 artikel teknis autentik di `src/content/notes/` dengan format markdown presisi, rumus/diagram ASCII, dan snippet kode JetBrains Mono.
+  3. Bangun halaman arsip `/notes` (src/pages/notes/index.astro) dengan live search, filter domain tag, dan kalkulasi reading time.
+  4. Bangun halaman pembaca `/notes/[slug]` (src/pages/notes/[slug].astro) dengan gaya Swiss editorial, reading progress indicator, TOC, dan inter-note navigation.
+  5. Konfigurasi feed RSS di `/rss.xml.ts` menggunakan `@astrojs/rss`.
+  6. Integrasikan tautan `/notes` ke Navbar, Command Palette, dan Footer.
+  ```
 

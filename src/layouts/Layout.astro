@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import CustomCursor from '../components/CustomCursor.astro';
 import PageTransition from '../components/PageTransition.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import ProjectSpecModal from '../components/ProjectSpecModal.astro';
 
 interface Props {
   title?: string;
@@ -36,6 +38,40 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:creator" content="@reshandytaftazani" />
+
+    <!-- JSON-LD Structured Data (Schema.org Person / ML Engineer) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Reshandy Taftazani Aulya",
+      "alternateName": "Reshandy Taftazani",
+      "jobTitle": "Machine Learning & Systems Engineer",
+      "url": "https://reshandytaftazani.github.io",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Universitas Indonesia",
+        "department": "Faculty of Computer Science"
+      },
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "Universitas Indonesia"
+      },
+      "sameAs": [
+        "https://github.com/reshandytaftazani",
+        "https://linkedin.com/in/reshandytaftazani"
+      ],
+      "knowsAbout": [
+        "Machine Learning Systems",
+        "Data Leakage Prevention",
+        "Temporal Join Verification",
+        "Clean Architecture",
+        "Python",
+        "C++"
+      ]
+    })} />
 
     <!-- Favicon: Clean Swiss Minimalist Accent Dot SVG -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230a0a0a'/><circle cx='16' cy='16' r='6' fill='%23ff4500'/></svg>" />
@@ -49,6 +85,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     
     <!-- Swiss Telemetry Boot Sequence & Continuous Upward Wipe Shutter -->
     <PageTransition />
+
+    <!-- Global Swiss Command Palette (Ctrl+K / Cmd+K) -->
+    <CommandPalette />
+
+    <!-- Project Technical Spec Sheet Modal Drawer -->
+    <ProjectSpecModal />
 
     <!-- Custom Interactive Spring Cursor -->
     <CustomCursor />

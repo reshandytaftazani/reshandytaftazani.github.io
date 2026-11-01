@@ -123,6 +123,41 @@ const projectSpecs: ProjectSpec[] = [
     githubUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite",
     techStack: ["Django", "Python", "Flutter", "PostgreSQL", "REST API"],
   },
+  {
+    id: "leakguard-ml",
+    title: "LeakGuard ML",
+    subtitle: "Point-in-Time Feature Store & Lookahead Leakage Prevention Harness",
+    status: "100% TEMPORAL ISOLATION",
+    problem:
+      "In predictive machine learning pipelines, lookahead data leakage occurs when target information or future statistics contaminate the training horizon. LeakGuard enforces strict point-in-time cross-validation boundaries and temporal as-of joins with mathematical guarantees.",
+    architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
+│                 EVENT STREAM INGESTION & AUDIT              │
+│    [Timestamp Ingestion] ──> [Point-in-Time Boundary Check] │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 POLARS AS-OF TEMPORAL ENGINE                │
+│    [Zero Future Data] ──> [Chaos Timestamp Scrambler Gate]  │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
+             [DuckDB / Parquet Columnar Storage]`,
+    benchmarks: [
+      { label: "Throughput", value: "14.2M rows/sec", detail: "Vectorized as-of temporal joins via Polars Rust core" },
+      { label: "Peak RAM", value: "412 MB", detail: "Streaming lazy evaluation memory footprint under 50k events" },
+      { label: "Violations", value: "0 / 50,000", detail: "Strict temporal boundary assertions barring future leakage" },
+      { label: "Query Speedup", value: "6.4x", detail: "Vectorized temporal joins computed over Pandas baseline" },
+    ],
+    invariants: [
+      "No feature row may reference a timestamp greater than the assigned evaluation cutoff.",
+      "Target encoders and standardizers evaluate strictly within the past-sliding partition.",
+      "Chaos fuzzing fixture verifies 0 / 50,000 boundary violation detection rate across random shuffles.",
+    ],
+    cliCommand: "pytest -v tests/test_leakage_bounds.py --strict-time-split",
+    githubUrl: "https://github.com/reshandytaftazani/leakguard-ml",
+    techStack: ["Python 3.12", "Polars", "Pytest", "DuckDB", "Temporal Joins", "Data Integrity"],
+  },
 ];
 ---
 

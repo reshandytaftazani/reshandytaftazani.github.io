@@ -1,0 +1,514 @@
+---
+// CommandPalette.astro — Global Swiss Terminal Command Palette (Ctrl + K / Cmd + K)
+// High-precision keyboard-driven navigation, system telemetry, and quick actions
+---
+
+<div 
+  id="swiss-command-dialog" 
+  class="fixed inset-0 z-[99998] hidden bg-black/80 backdrop-blur-sm p-4 sm:p-6 lg:p-12 items-start justify-center overflow-y-auto"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Command Palette"
+>
+  <div 
+    id="swiss-command-container"
+    class="relative w-full max-w-2xl bg-[#0f0f0f] border border-[#2a2a2a] shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono text-xs transition-all duration-150 scale-95 opacity-0 mt-8 sm:mt-16"
+  >
+    <!-- Command Header & Search Bar -->
+    <div class="flex items-center gap-3 px-4 py-3.5 border-b border-[#222] bg-[#141414]">
+      <span class="text-accent font-bold text-sm select-none">&gt;</span>
+      <input 
+        type="text" 
+        id="command-input"
+        placeholder="Type a command, project name, or action... (ESC to exit)" 
+        class="w-full bg-transparent text-foreground placeholder-neutral-500 font-mono text-xs sm:text-sm focus:outline-none tracking-wide"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="flex items-center gap-1.5 shrink-0 select-none text-[10px] text-neutral-500">
+        <kbd class="px-1.5 py-0.5 rounded-xs border border-[#333] bg-[#0a0a0a] text-neutral-400 font-mono">ESC</kbd>
+      </div>
+    </div>
+
+    <!-- Commands List -->
+    <div 
+      id="command-results" 
+      class="max-h-[60vh] overflow-y-auto p-2 divide-y divide-[#1a1a1a]"
+      role="listbox"
+    >
+      <!-- Results injected & filtered via JavaScript -->
+    </div>
+
+    <!-- Telemetry Footer -->
+    <div class="flex items-center justify-between px-4 py-2 border-t border-[#1f1f1f] bg-[#0a0a0a] text-[10px] text-neutral-500 font-mono select-none">
+      <div class="flex items-center gap-3">
+        <span><kbd class="text-neutral-400">↑↓</kbd> NAVIGATE</span>
+        <span><kbd class="text-neutral-400">↵</kbd> EXECUTE</span>
+      </div>
+      <div class="flex items-center gap-1.5 text-accent">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+        <span class="font-bold">SWISS CLI // v2.4</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface CommandItem {
+    id: string;
+    label: string;
+    category: "NAVIGATION" | "SYSTEMS" | "ACTIONS";
+    shortcut?: string;
+    icon?: string;
+    action: () => void;
+    keywords: string;
+  }
+
+  function setupCommandPalette() {
+    const dialog = document.getElementById("swiss-command-dialog");
+    const container = document.getElementById("swiss-command-container");
+    const input = document.getElementById("command-input") as HTMLInputElement | null;
+    const resultsContainer = document.getElementById("command-results");
+
+    if (!dialog || !container || !input || !resultsContainer) return;
+
+    let selectedIndex = 0;
+    let filteredCommands: CommandItem[] = [];
+
+    // Continuous upward wipe transition helper for cross-page navigation
+    function navigateWithCurtain(targetPath: string) {
+      // Instantly dismiss palette to prevent overlap with curtain
+      dialog.classList.remove("flex");
+      dialog.classList.add("hidden");
+      document.body.style.overflow = "";
+
+      const targetUrl = new URL(targetPath, window.location.origin);
+      const normalizePath = (p: string) => p.replace(/\/$/, "") || "/";
+      const isSamePath = normalizePath(targetUrl.pathname) === normalizePath(window.location.pathname);
+
+      // If already on the destination page, smooth scroll to anchor
+      if (isSamePath) {
+        if (targetUrl.hash) {
+          const el = document.querySelector(targetUrl.hash);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+          } else {
+            window.location.hash = targetUrl.hash;
+          }
+        }
+        return;
+      }
+
+      // Pre-flag destination page for instant black curtain cover before first paint
+      sessionStorage.setItem("swiss_nav_transition", "fast");
+
+      const shutter = document.getElementById("swiss-shutter");
+      if (!shutter) {
+        window.location.href = targetUrl.href;
+        return;
+      }
+
+      // Wipe shutter upwards from bottom to center (100% -> 0%)
+      shutter.style.display = "block";
+      shutter.style.transform = "translate3d(0, 100%, 0)";
+      void shutter.offsetHeight; // force reflow
+
+      shutter.style.transition = "transform 0.4s cubic-bezier(0.85, 0, 0.15, 1)";
+      shutter.style.transform = "translate3d(0, 0, 0)";
+
+      let hasNavigated = false;
+      const onCoverComplete = () => {
+        if (hasNavigated) return;
+        hasNavigated = true;
+        shutter.removeEventListener("transitionend", onCoverComplete);
+        window.location.href = targetUrl.href;
+      };
+
+      shutter.addEventListener("transitionend", onCoverComplete);
+
+      // Failsafe timer: ensures page navigates even if animation is interrupted
+      setTimeout(() => {
+        if (hasNavigated) return;
+        hasNavigated = true;
+        window.location.href = targetUrl.href;
+      }, 500);
+    }
+
+    // Static registry of all commands and actions
+    const commands: CommandItem[] = [
+      // Navigation
+      {
+        id: "nav-home",
+        label: "Go to Home / Selected Works",
+        category: "NAVIGATION",
+        shortcut: "G H",
+        icon: "⌂",
+        action: () => navigateWithCurtain("/"),
+        keywords: "home root landing selected works about",
+      },
+      {
+        id: "nav-projects",
+        label: "Open Engineering Directory & Archive",
+        category: "NAVIGATION",
+        shortcut: "G P",
+        icon: "⊞",
+        action: () => navigateWithCurtain("/projects"),
+        keywords: "projects directory archive systems catalog all",
+      },
+      {
+        id: "nav-resume",
+        label: "View Printable Technical CV / Resume",
+        category: "NAVIGATION",
+        shortcut: "G R",
+        icon: "↗",
+        action: () => navigateWithCurtain("/resume"),
+        keywords: "resume cv curriculum vitae print pdf education fasilkom ui",
+      },
+      {
+        id: "nav-track",
+        label: "Jump to Academic Track & Experience",
+        category: "NAVIGATION",
+        shortcut: "G E",
+        icon: "↓",
+        action: () => {
+          if (window.location.pathname === "/" || window.location.pathname === "") {
+            closePalette();
+            document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" });
+          } else {
+            navigateWithCurtain("/#experience");
+          }
+        },
+        keywords: "experience education track university of indonesia fasilkom ui",
+      },
+      {
+        id: "nav-principles",
+        label: "Jump to Engineering Principles",
+        category: "NAVIGATION",
+        shortcut: "G L",
+        icon: "↓",
+        action: () => {
+          if (window.location.pathname === "/" || window.location.pathname === "") {
+            closePalette();
+            document.getElementById("principles")?.scrollIntoView({ behavior: "smooth" });
+          } else {
+            navigateWithCurtain("/#principles");
+          }
+        },
+        keywords: "principles philosophy architecture defensive invariants zero data leakage",
+      },
+      {
+        id: "nav-skills",
+        label: "Jump to Technical Stack Matrix",
+        category: "NAVIGATION",
+        shortcut: "G S",
+        icon: "↓",
+        action: () => {
+          if (window.location.pathname === "/" || window.location.pathname === "") {
+            closePalette();
+            document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" });
+          } else {
+            navigateWithCurtain("/#skills");
+          }
+        },
+        keywords: "skills tech stack pytorch cuda fastapi polars transformers",
+      },
+      {
+        id: "nav-contacts",
+        label: "Jump to Say Hello / Contact",
+        category: "NAVIGATION",
+        shortcut: "G C",
+        icon: "↓",
+        action: () => {
+          if (window.location.pathname === "/" || window.location.pathname === "") {
+            closePalette();
+            document.getElementById("contacts")?.scrollIntoView({ behavior: "smooth" });
+          } else {
+            navigateWithCurtain("/#contacts");
+          }
+        },
+        keywords: "contact say hello email linkedin github",
+      },
+
+      // Systems Deep Dives
+      {
+        id: "sys-modelarena",
+        label: "Case Study: ModelArena (Multi-Agent RL)",
+        category: "SYSTEMS",
+        shortcut: "SPEC",
+        icon: "●",
+        action: () => navigateWithCurtain("/projects/modelarena"),
+        keywords: "modelarena multi-agent training framework pytorch transformers cuda allocation",
+      },
+      {
+        id: "sys-finance",
+        label: "Case Study: Finance Tracker (ACID Ledger)",
+        category: "SYSTEMS",
+        shortcut: "SPEC",
+        icon: "●",
+        action: () => navigateWithCurtain("/projects/finance-tracker"),
+        keywords: "finance tracker accounting engine double-entry sqlite wal pydantic fastapi",
+      },
+      {
+        id: "sys-savebite",
+        label: "Case Study: SaveBite (Food Rescue Platform)",
+        category: "SYSTEMS",
+        shortcut: "SPEC",
+        icon: "●",
+        action: () => navigateWithCurtain("/projects/savebite"),
+        keywords: "savebite food surplus platform django rest flutter postgresql pbp ui",
+      },
+      {
+        id: "sys-leakguard",
+        label: "Case Study: LeakGuard ML (Feature Store)",
+        category: "SYSTEMS",
+        shortcut: "SPEC",
+        icon: "●",
+        action: () => navigateWithCurtain("/projects/leakguard-ml"),
+        keywords: "leakguard ml lookahead leakage feature store polars temporal join duckdb",
+      },
+
+      // System Actions
+      {
+        id: "act-copy-email",
+        label: "Copy Institutional Email (UI)",
+        category: "ACTIONS",
+        shortcut: "COPY",
+        icon: "@",
+        action: () => {
+          navigator.clipboard.writeText("reshandy.taftazani@ui.ac.id");
+          alertFeedback("EMAIL COPIED: reshandy.taftazani@ui.ac.id");
+        },
+        keywords: "copy email mail contact reshandy taftazani ui ac id",
+      },
+      {
+        id: "act-github",
+        label: "Open GitHub Profile (@reshandytaftazani)",
+        category: "ACTIONS",
+        shortcut: "EXT ↗",
+        icon: "↗",
+        action: () => window.open("https://github.com/reshandytaftazani", "_blank", "noopener,noreferrer"),
+        keywords: "github open profile repository source code",
+      },
+      {
+        id: "act-linkedin",
+        label: "Open LinkedIn Network Profile",
+        category: "ACTIONS",
+        shortcut: "EXT ↗",
+        icon: "↗",
+        action: () => window.open("https://linkedin.com/in/reshandy-taftazani-aulya", "_blank", "noopener,noreferrer"),
+        keywords: "linkedin social professional network",
+      },
+      {
+        id: "act-print",
+        label: "Print Technical CV / Save as PDF",
+        category: "ACTIONS",
+        shortcut: "PRINT",
+        icon: "⎙",
+        action: () => {
+          if (window.location.pathname.startsWith("/resume")) {
+            closePalette();
+            window.print();
+          } else {
+            navigateWithCurtain("/resume");
+          }
+        },
+        keywords: "print pdf save resume cv document",
+      },
+    ];
+
+    function alertFeedback(msg: string) {
+      const banner = document.createElement("div");
+      banner.className = "fixed bottom-6 right-6 z-[999999] bg-accent text-black font-mono font-bold text-xs px-4 py-2.5 rounded-xs shadow-lg";
+      banner.textContent = msg;
+      document.body.appendChild(banner);
+      setTimeout(() => banner.remove(), 2500);
+    }
+
+    function renderResults(query: string) {
+      const q = query.toLowerCase().trim();
+      filteredCommands = q
+        ? commands.filter(
+            (c) =>
+              c.label.toLowerCase().includes(q) ||
+              c.keywords.toLowerCase().includes(q) ||
+              c.category.toLowerCase().includes(q)
+          )
+        : commands;
+
+      selectedIndex = Math.min(selectedIndex, Math.max(0, filteredCommands.length - 1));
+
+      if (filteredCommands.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="py-8 text-center text-neutral-500 font-mono text-xs">
+            NO MATCHING COMMANDS FOUND FOR "${query.toUpperCase()}"
+          </div>
+        `;
+        return;
+      }
+
+      // Group by category
+      const categories: ("NAVIGATION" | "SYSTEMS" | "ACTIONS")[] = ["NAVIGATION", "SYSTEMS", "ACTIONS"];
+      let html = "";
+      let itemIdx = 0;
+
+      categories.forEach((cat) => {
+        const catItems = filteredCommands.filter((c) => c.category === cat);
+        if (catItems.length === 0) return;
+
+        html += `
+          <div class="pt-2 pb-1 px-2 text-[10px] uppercase font-bold text-neutral-500 tracking-widest flex items-center justify-between">
+            <span>[${cat}]</span>
+            <span class="text-neutral-600">${catItems.length}</span>
+          </div>
+          <div class="space-y-0.5 pb-2">
+        `;
+
+        catItems.forEach((item) => {
+          const isSelected = itemIdx === selectedIndex;
+          html += `
+            <div 
+              data-command-idx="${itemIdx}"
+              class="command-item flex items-center justify-between px-3 py-2 rounded-xs cursor-pointer select-none transition-colors duration-100 ${
+                isSelected 
+                  ? "bg-accent text-black font-bold" 
+                  : "text-neutral-300 hover:bg-[#1a1a1a] hover:text-white"
+              }"
+              role="option"
+              aria-selected="${isSelected ? "true" : "false"}"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="${isSelected ? "text-black" : "text-accent"} font-bold w-4 text-center select-none">${item.icon || "•"}</span>
+                <span class="truncate">${item.label}</span>
+              </div>
+              ${
+                item.shortcut
+                  ? `<span class="shrink-0 font-mono text-[10px] px-1.5 py-0.5 rounded-xs border ${
+                      isSelected 
+                        ? "border-black text-black bg-black/10" 
+                        : "border-[#333] text-neutral-500 bg-[#0a0a0a]"
+                    }">${item.shortcut}</span>`
+                  : ""
+              }
+            </div>
+          `;
+          itemIdx++;
+        });
+
+        html += `</div>`;
+      });
+
+      resultsContainer.innerHTML = html;
+
+      // Click listener for items
+      document.querySelectorAll(".command-item").forEach((el) => {
+        el.addEventListener("click", () => {
+          const idx = parseInt(el.getAttribute("data-command-idx") || "0", 10);
+          executeCommand(idx);
+        });
+      });
+    }
+
+    function executeCommand(idx: number) {
+      const item = filteredCommands[idx];
+      if (!item) return;
+      closePalette();
+      item.action();
+    }
+
+    function openPalette() {
+      dialog.classList.remove("hidden");
+      dialog.classList.add("flex");
+      document.body.style.overflow = "hidden";
+
+      requestAnimationFrame(() => {
+        container.classList.remove("scale-95", "opacity-0");
+        container.classList.add("scale-100", "opacity-100");
+        input.value = "";
+        input.focus();
+        renderResults("");
+      });
+    }
+
+    function closePalette() {
+      container.classList.remove("scale-100", "opacity-100");
+      container.classList.add("scale-95", "opacity-0");
+      setTimeout(() => {
+        dialog.classList.remove("flex");
+        dialog.classList.add("hidden");
+        document.body.style.overflow = "";
+      }, 150);
+    }
+
+    // Input live filter
+    input.addEventListener("input", () => {
+      renderResults(input.value);
+    });
+
+    // Keyboard navigation
+    window.addEventListener("keydown", (e) => {
+      // Toggle palette: Ctrl+K or Cmd+K
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (dialog.classList.contains("hidden")) {
+          openPalette();
+        } else {
+          closePalette();
+        }
+        return;
+      }
+
+      // Close on ESC
+      if (e.key === "Escape" && !dialog.classList.contains("hidden")) {
+        e.preventDefault();
+        closePalette();
+        return;
+      }
+
+      // Inside open palette: Arrow navigation & Enter execution
+      if (!dialog.classList.contains("hidden")) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          selectedIndex = (selectedIndex + 1) % Math.max(1, filteredCommands.length);
+          renderResults(input.value);
+          scrollSelectedIntoView();
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          selectedIndex = (selectedIndex - 1 + filteredCommands.length) % Math.max(1, filteredCommands.length);
+          renderResults(input.value);
+          scrollSelectedIntoView();
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          executeCommand(selectedIndex);
+        }
+      }
+    });
+
+    function scrollSelectedIntoView() {
+      const selectedEl = resultsContainer.querySelector<HTMLElement>("[aria-selected='true']");
+      if (selectedEl) {
+        selectedEl.scrollIntoView({ block: "nearest" });
+      }
+    }
+
+    // Click outside container to close
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) {
+        closePalette();
+      }
+    });
+
+    // Global trigger buttons (data-open-command-palette)
+    document.querySelectorAll("[data-open-command-palette]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openPalette();
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupCommandPalette);
+  } else {
+    setupCommandPalette();
+  }
+</script>
