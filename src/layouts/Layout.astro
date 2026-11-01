@@ -9,14 +9,21 @@ import TerminalDrawer from '../components/TerminalDrawer.astro';
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
 }
 
 const {
   title = "Reshandy Taftazani | ML & Systems Engineer",
   description = "Portfolio of Reshandy Taftazani Aulya - Computer Science at Universitas Indonesia. Machine Learning Engineering & Software Systems focused on zero data leakage, clean architecture, and rigorous verification.",
+  ogImage = "/api/og/default.png",
+  ogType = "website",
+  publishedTime,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site).toString();
 ---
 
 <!doctype html>
@@ -37,14 +44,23 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="alternate" type="application/rss+xml" title="Reshandy Taftazani — Technical Notes RSS Feed" href="/rss.xml" />
 
     <!-- Open Graph / Twitter -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:creator" content="@reshandytaftazani" />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={title} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+    <meta name="twitter:creator" content="@reshandytaftazani" />
 
     <!-- JSON-LD Structured Data (Schema.org Person / ML Engineer) -->
     <script type="application/ld+json" set:html={JSON.stringify({

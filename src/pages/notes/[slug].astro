@@ -48,6 +48,9 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
 <Layout 
   title={`${note.data.title} — Technical Field Note | Reshandy Taftazani`}
   description={note.data.abstract}
+  ogImage={`/api/og/notes/${note.id}.png`}
+  ogType="article"
+  publishedTime={note.data.publishedAt}
 >
   <!-- Thin Swiss Reading Progress Bar -->
   <div 

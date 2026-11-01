@@ -23,6 +23,8 @@ const { Content } = await render(project);
 <Layout 
   title={`${project.data.title} — System Spec & Architecture | Reshandy Taftazani`}
   description={project.data.subtitle}
+  ogImage={`/api/og/projects/${project.id}.png`}
+  ogType="website"
 >
   <main class="min-h-screen bg-[#0a0a0a] text-neutral-200 selection:bg-[#ff4500] selection:text-white font-sans relative">
     
