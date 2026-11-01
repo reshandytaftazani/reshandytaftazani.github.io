@@ -117,18 +117,18 @@
   - Mobile inline mechanical accordion expansion beneath selected item.
   - 150ms cubic-bezier transition, hairline scanline indicator, and subtle Web Audio synthesizer clicks.
 
-### Phase 5: Advanced Systems Capabilities & Distribution Roadmap [PLANNED]
-- **5.1 In-Browser UNIX / REPL Terminal Drawer (`~` / `⌘J`):**
+### Phase 5: Advanced Systems Capabilities & Distribution Roadmap [IN ACTIVE EXECUTION]
+- **5.1 In-Browser UNIX / REPL Terminal Drawer (`~` / `⌘J`) [COMPLETED]:**
   - Interactive sliding drawer terminal with native command parser (`help`, `cat`, `run [proj]`, `eval`, `benchmark`, `whoami`, `curl /contact`).
-  - Real-time ASCII stdout streaming logs, loss bars, and IPC memory statistics.
-- **5.2 Hardware Roofline Model & Compute Profiler:**
+  - Real-time ASCII stdout streaming logs, loss bars, and IPC memory statistics with zero memory leaks.
+- **5.2 Hardware Roofline Model & Compute Profiler [COMPLETED]:**
   - Double logarithmic interactive SVG canvas (FLOPs/Byte vs GFLOP/s) comparing A100 vs RTX 4090 vs T4.
-  - Interactive precision selectors (`FP32`, `BF16`, `INT8`, `INT4 AWQ`) and batch size sliders illustrating memory-bound vs compute-bound transitions.
-- **5.3 Dynamic Swiss OpenGraph Social Cards:**
-  - High-resolution (1200x630) automated Swiss editorial preview cards with dark grid canvas, Hanken Grotesk typography, and verified metrics.
-- **5.4 Interactive Architecture Topology DAG:**
+  - Interactive precision selectors (`FP32`, `BF16`, `INT8`, `INT4 AWQ`) and calibrated $B, L$ arithmetic intensity sliders with real-time memory/compute bound detection.
+- **5.3 Dynamic Swiss OpenGraph Social Cards [COMPLETED]:**
+  - High-resolution (1200x630) automated Swiss editorial preview cards with pitch-black canvas, 12-column grid guidelines, Hanken Grotesk typography, and verified metrics.
+- **5.4 Interactive Architecture Topology DAG [UPCOMING]:**
   - Reactive SVG node-edge pipeline topology diagram with packet pulses, schema contract inspector, and latency SLA verification.
-- **5.5 Code & Formula Deep Annotation Inspector:**
+- **5.5 Code & Formula Deep Annotation Inspector [UPCOMING]:**
   - Interactive mathematical parameter drilldowns and line-by-line engineering justification overlays in technical dispatches.
 
 ---
