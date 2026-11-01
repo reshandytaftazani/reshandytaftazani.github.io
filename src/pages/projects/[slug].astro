@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
+import ModelArenaVramSimulator from '../../components/ModelArenaVramSimulator.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -63,6 +64,17 @@ const { Content } = await render(project);
 
         <!-- Right: Status Ping & Actions -->
         <div class="flex items-center gap-2.5 font-mono text-xs">
+          {project.id === 'modelarena' && (
+            <a 
+              href="#interactive-simulator" 
+              class="group inline-flex items-center gap-1 px-2 py-1 rounded-xs border border-[#ff4500]/50 hover:border-[#ff4500] bg-[#ff4500]/15 hover:bg-[#ff4500] text-[#ff4500] hover:text-black font-bold transition-all duration-200"
+              title="Jump to Live In-Browser VRAM Simulator"
+            >
+              <span class="text-[10px]">⚡</span>
+              <span>SIMULATE</span>
+            </a>
+          )}
+
           <div class="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#141414] border border-[#222]">
             <span class="h-1.5 w-1.5 rounded-full bg-[#ff4500] animate-pulse"></span>
             <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-semibold">{project.data.status}</span>
@@ -131,6 +143,18 @@ const { Content } = await render(project);
             <span class="text-sm font-bold">↗</span>
           </a>
 
+          {project.id === 'modelarena' && (
+            <a 
+              href="#interactive-simulator" 
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xs bg-[#ff4500]/15 hover:bg-[#ff4500] text-[#ff4500] hover:text-black border border-[#ff4500]/40 hover:border-[#ff4500] font-bold transition-all duration-200"
+              title="Jump to Live In-Browser VRAM Simulator"
+            >
+              <span>⚡</span>
+              <span>LIVE VRAM SIMULATOR</span>
+              <span class="text-xs">↓</span>
+            </a>
+          )}
+
           <!-- Quick Run CLI Micro-interaction -->
           <button 
             type="button" 
@@ -175,6 +199,17 @@ const { Content } = await render(project);
       <article class="prose-blueprint py-12 sm:py-16 max-w-none">
         <Content />
       </article>
+
+      <!-- EMBEDDED INTERACTIVE RUNTIME SIMULATOR -->
+      {project.id === 'modelarena' && (
+        <section id="interactive-simulator" class="border-t border-[#1f1f1f] pt-12 pb-16 scroll-mt-20">
+          <div class="flex items-center gap-2 font-mono text-xs text-[#ff4500] tracking-widest uppercase mb-4">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#ff4500] animate-pulse"></span>
+            <span>INTERACTIVE BENCHMARK // DYNAMIC VRAM REALLOCATION</span>
+          </div>
+          <ModelArenaVramSimulator />
+        </section>
+      )}
 
       <!-- INTER-PROJECT PAGINATION FOOTER -->
       <nav class="border-t border-[#1f1f1f] pt-12 pb-16 grid grid-cols-1 sm:grid-cols-12 gap-4 items-stretch" aria-label="Project pagination">

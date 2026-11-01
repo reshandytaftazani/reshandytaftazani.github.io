@@ -1,0 +1,362 @@
+---
+// ModelArenaVramSimulator.astro — In-Browser Multi-Agent Dynamic VRAM Arbiter Simulator
+// Pure zero-dependency reactive Canvas/SVG & telemetry engine
+---
+
+<div class="simulator-card bg-[#0b0b0b] border border-[#222] rounded-xs p-6 sm:p-8 font-mono text-xs select-none">
+  
+  <!-- Header & Telemetry Status -->
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#1f1f1f] pb-4">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[#ff4500] animate-pulse"></span>
+      <span class="text-white font-bold tracking-wider text-sm">MODELARENA VRAM ARBITER</span>
+      <span class="text-neutral-600">//</span>
+      <span class="text-neutral-400 text-[11px] uppercase">Dynamic GPU Memory &amp; Multi-Agent Runtime</span>
+    </div>
+    
+    <!-- Control Actions -->
+    <div class="flex items-center gap-2">
+      <button 
+        type="button" 
+        id="arena-step-btn"
+        class="px-3 py-1 rounded-xs bg-[#ff4500] hover:bg-white text-black font-bold text-[11px] transition-all cursor-pointer shadow-sm active:scale-95"
+      >
+        STEP ROUND ↵
+      </button>
+
+      <button 
+        type="button" 
+        id="arena-autoplay-btn"
+        class="px-2.5 py-1 rounded-xs bg-[#161616] hover:bg-[#ff4500] text-neutral-300 hover:text-black border border-[#2a2a2a] hover:border-[#ff4500] font-bold text-[11px] transition-colors cursor-pointer"
+      >
+        AUTO-RUN ▶
+      </button>
+
+      <button 
+        type="button" 
+        id="arena-reset-btn"
+        class="px-2 py-1 rounded-xs bg-[#161616] hover:bg-[#ff4500] text-neutral-400 hover:text-black border border-[#2a2a2a] font-bold text-[10px] transition-colors cursor-pointer"
+        title="Reset simulation to initial state"
+      >
+        RESET
+      </button>
+    </div>
+  </div>
+
+  <!-- Global Shared Memory (Shm) Ring-Buffer Pool Bar -->
+  <div class="mt-6 p-4 sm:p-5 bg-[#0f0f0f] border border-[#1a1a1a] rounded-xs">
+    <div class="flex items-center justify-between text-[11px] text-neutral-400 mb-2">
+      <div class="flex items-center gap-2">
+        <span class="text-white font-bold">SHARED GPU VRAM POOL:</span>
+        <span class="text-[#ff4500] font-bold">16.0 GB TOTAL</span>
+        <span class="text-neutral-600">//</span>
+        <span>ROUND <span id="arena-round-counter" class="text-white font-bold">01</span></span>
+      </div>
+      <span id="arena-arbiter-state" class="text-[10px] px-2 py-0.5 rounded-xs bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">
+        ARBITER_BALANCED
+      </span>
+    </div>
+
+    <!-- Segmented Multi-Color Allocation Bar -->
+    <div class="relative w-full h-8 bg-[#141414] rounded-xs overflow-hidden flex border border-[#262626]">
+      <div id="bar-agent-1" class="h-full bg-[#ff4500] transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-black overflow-hidden" style="width: 25%;">
+        AGT_01
+      </div>
+      <div id="bar-agent-2" class="h-full bg-neutral-400 transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-black overflow-hidden" style="width: 25%;">
+        AGT_02
+      </div>
+      <div id="bar-agent-3" class="h-full bg-neutral-600 transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-white overflow-hidden" style="width: 25%;">
+        AGT_03
+      </div>
+      <div id="bar-agent-4" class="h-full bg-neutral-800 transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-neutral-400 overflow-hidden" style="width: 25%;">
+        AGT_04
+      </div>
+    </div>
+
+    <!-- Free VRAM Footnote -->
+    <div class="flex items-center justify-between mt-2 text-[10.5px] text-neutral-500">
+      <span>Zero IPC fragmentation via fixed memory ring-buffer offsets</span>
+      <span id="arena-alloc-percent" class="text-neutral-400">100% POOL SATURATED</span>
+    </div>
+  </div>
+
+  <!-- 4-Agent Real-Time Status Grid -->
+  <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    
+    <!-- Agent 01 -->
+    <div id="card-agent-1" class="p-3.5 bg-[#121212] border border-[#ff4500]/50 rounded-xs transition-all">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-white font-bold text-xs flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#ff4500]"></span>
+          <span>AGENT_01</span>
+        </span>
+        <span id="badge-agent-1" class="text-[9px] px-1.5 py-0.2 rounded-xs bg-[#ff4500]/15 text-[#ff4500] font-bold">
+          BOOST +40%
+        </span>
+      </div>
+      <div class="text-[10px] text-neutral-400">Topology: Transformer-A</div>
+      <div class="mt-2 flex items-baseline justify-between text-xs">
+        <span class="text-neutral-500 text-[10px]">VRAM Quota:</span>
+        <span id="vram-agent-1" class="text-white font-bold">4.0 GB</span>
+      </div>
+      <div class="flex items-baseline justify-between text-xs mt-0.5">
+        <span class="text-neutral-500 text-[10px]">ΔLoss Curvature:</span>
+        <span id="loss-agent-1" class="text-emerald-400 font-bold">+0.48</span>
+      </div>
+    </div>
+
+    <!-- Agent 02 -->
+    <div id="card-agent-2" class="p-3.5 bg-[#0f0f0f] border border-[#222] rounded-xs transition-all">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-neutral-300 font-bold text-xs flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-neutral-400"></span>
+          <span>AGENT_02</span>
+        </span>
+        <span id="badge-agent-2" class="text-[9px] px-1.5 py-0.2 rounded-xs bg-[#1a1a1a] text-neutral-400 font-bold">
+          EVALUATING
+        </span>
+      </div>
+      <div class="text-[10px] text-neutral-400">Topology: GPT-2 Sparse</div>
+      <div class="mt-2 flex items-baseline justify-between text-xs">
+        <span class="text-neutral-500 text-[10px]">VRAM Quota:</span>
+        <span id="vram-agent-2" class="text-white font-bold">4.0 GB</span>
+      </div>
+      <div class="flex items-baseline justify-between text-xs mt-0.5">
+        <span class="text-neutral-500 text-[10px]">ΔLoss Curvature:</span>
+        <span id="loss-agent-2" class="text-neutral-400 font-bold">+0.12</span>
+      </div>
+    </div>
+
+    <!-- Agent 03 -->
+    <div id="card-agent-3" class="p-3.5 bg-[#0f0f0f] border border-[#222] rounded-xs transition-all">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-neutral-300 font-bold text-xs flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-neutral-600"></span>
+          <span>AGENT_03</span>
+        </span>
+        <span id="badge-agent-3" class="text-[9px] px-1.5 py-0.2 rounded-xs bg-[#1a1a1a] text-neutral-400 font-bold">
+          STEADY
+        </span>
+      </div>
+      <div class="text-[10px] text-neutral-400">Topology: MoE-Hybrid</div>
+      <div class="mt-2 flex items-baseline justify-between text-xs">
+        <span class="text-neutral-500 text-[10px]">VRAM Quota:</span>
+        <span id="vram-agent-3" class="text-white font-bold">4.0 GB</span>
+      </div>
+      <div class="flex items-baseline justify-between text-xs mt-0.5">
+        <span class="text-neutral-500 text-[10px]">ΔLoss Curvature:</span>
+        <span id="loss-agent-3" class="text-neutral-400 font-bold">+0.25</span>
+      </div>
+    </div>
+
+    <!-- Agent 04 -->
+    <div id="card-agent-4" class="p-3.5 bg-[#0f0f0f] border border-[#222] rounded-xs transition-all">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-neutral-300 font-bold text-xs flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-neutral-800"></span>
+          <span>AGENT_04</span>
+        </span>
+        <span id="badge-agent-4" class="text-[9px] px-1.5 py-0.2 rounded-xs bg-[#1a1a1a] text-neutral-400 font-bold">
+          STAGNATING
+        </span>
+      </div>
+      <div class="text-[10px] text-neutral-400">Topology: Dense-FeedForward</div>
+      <div class="mt-2 flex items-baseline justify-between text-xs">
+        <span class="text-neutral-500 text-[10px]">VRAM Quota:</span>
+        <span id="vram-agent-4" class="text-white font-bold">4.0 GB</span>
+      </div>
+      <div class="flex items-baseline justify-between text-xs mt-0.5">
+        <span class="text-neutral-500 text-[10px]">ΔLoss Curvature:</span>
+        <span id="loss-agent-4" class="text-red-400 font-bold">-0.08</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Live Terminal Telemetry Output -->
+  <div class="mt-4 p-3.5 bg-black border border-[#1c1c1c] rounded-xs font-mono text-[11px]">
+    <div class="flex items-center justify-between text-[10px] text-neutral-500 border-b border-[#181818] pb-1.5 mb-2">
+      <span class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#ff4500]"></span>
+        <span>IPC TELEMETRY STREAM (DEV_SHM)</span>
+      </span>
+      <span>REALTIME EVAL</span>
+    </div>
+    <div id="arena-terminal-log" class="space-y-1 text-neutral-400 h-24 overflow-y-auto leading-relaxed select-text font-mono text-[10.5px]">
+      <div>[RUNTIME] Initialized 4 heterogeneous workers over shared IPC ring-buffer.</div>
+      <div>[ARBITER] Quota allocator listening on /dev/shm/arena_vram_sock.</div>
+      <div class="text-white">[READY] Press "STEP ROUND ↵" or "AUTO-RUN ▶" to observe dynamic reallocation.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function setupArenaSimulator() {
+    const stepBtn = document.getElementById("arena-step-btn");
+    const autoplayBtn = document.getElementById("arena-autoplay-btn");
+    const resetBtn = document.getElementById("arena-reset-btn");
+    const roundCounter = document.getElementById("arena-round-counter");
+    const arbiterState = document.getElementById("arena-arbiter-state");
+    const terminalLog = document.getElementById("arena-terminal-log");
+
+    if (!stepBtn || !autoplayBtn || !resetBtn || !roundCounter) return;
+
+    let round = 1;
+    let isAutoplaying = false;
+    let timer: number | null = null;
+
+    // Initial agent states
+    let agents = [
+      { id: 1, name: "AGT_01", vram: 4.0, delta: 0.42, status: "BOOST +40%" },
+      { id: 2, name: "AGT_02", vram: 4.0, delta: 0.15, status: "EVALUATING" },
+      { id: 3, name: "AGT_03", vram: 4.0, delta: 0.28, status: "STEADY" },
+      { id: 4, name: "AGT_04", vram: 4.0, delta: -0.05, status: "STAGNATING" },
+    ];
+
+    function appendLog(msg: string, highlight: boolean = false) {
+      if (!terminalLog) return;
+      const row = document.createElement("div");
+      if (highlight) row.className = "text-[#ff4500] font-semibold";
+      row.textContent = msg;
+      terminalLog.appendChild(row);
+      terminalLog.scrollTop = terminalLog.scrollHeight;
+    }
+
+    function renderState() {
+      if (roundCounter) roundCounter.textContent = round < 10 ? `0${round}` : `${round}`;
+
+      // Calculate total 16GB allocations
+      const totalVram = 16.0;
+
+      agents.forEach((ag) => {
+        const bar = document.getElementById(`bar-agent-${ag.id}`);
+        const vramText = document.getElementById(`vram-agent-${ag.id}`);
+        const lossText = document.getElementById(`loss-agent-${ag.id}`);
+        const badge = document.getElementById(`badge-agent-${ag.id}`);
+        const card = document.getElementById(`card-agent-${ag.id}`);
+
+        const pct = (ag.vram / totalVram) * 100;
+        if (bar) {
+          bar.style.width = `${pct}%`;
+          bar.textContent = `${ag.name} (${ag.vram.toFixed(1)}G)`;
+        }
+        if (vramText) vramText.textContent = `${ag.vram.toFixed(1)} GB`;
+        if (lossText) {
+          lossText.textContent = ag.delta >= 0 ? `+${ag.delta.toFixed(2)}` : `${ag.delta.toFixed(2)}`;
+          lossText.className = ag.delta > 0.3 ? "text-emerald-400 font-bold" : ag.delta < 0 ? "text-red-400 font-bold" : "text-neutral-400 font-bold";
+        }
+        if (badge) {
+          badge.textContent = ag.status;
+          if (ag.status.includes("BOOST")) {
+            badge.className = "text-[9px] px-1.5 py-0.2 rounded-xs bg-[#ff4500]/15 text-[#ff4500] font-bold";
+          } else if (ag.status.includes("THROTTLE")) {
+            badge.className = "text-[9px] px-1.5 py-0.2 rounded-xs bg-red-950 text-red-400 font-bold border border-red-900";
+          } else {
+            badge.className = "text-[9px] px-1.5 py-0.2 rounded-xs bg-[#1a1a1a] text-neutral-400 font-bold";
+          }
+        }
+        if (card) {
+          if (ag.status.includes("BOOST")) {
+            card.className = "p-3.5 bg-[#141414] border border-[#ff4500]/70 rounded-xs transition-all shadow-2xs";
+          } else {
+            card.className = "p-3.5 bg-[#0f0f0f] border border-[#222] rounded-xs transition-all";
+          }
+        }
+      });
+    }
+
+    function stepTournament() {
+      round++;
+      
+      // Mutate learning trajectories
+      agents[0].delta = Math.min(0.85, Math.max(0.35, agents[0].delta + (Math.random() * 0.1 - 0.04)));
+      agents[1].delta = Math.min(0.50, Math.max(-0.1, agents[1].delta + (Math.random() * 0.15 - 0.08)));
+      agents[2].delta = Math.min(0.60, Math.max(0.1, agents[2].delta + (Math.random() * 0.1 - 0.05)));
+      agents[3].delta = Math.min(0.20, Math.max(-0.25, agents[3].delta + (Math.random() * 0.08 - 0.06)));
+
+      // Dynamic reallocation rules:
+      // High trajectory (>0.40) gains up to +1.6GB quota from stagnating agents
+      if (agents[0].delta > 0.40 && agents[3].delta < 0) {
+        agents[0].vram = Math.min(6.8, agents[0].vram + 0.4);
+        agents[3].vram = Math.max(1.8, agents[3].vram - 0.4);
+        agents[0].status = "BOOST +40%";
+        agents[3].status = "THROTTLED";
+        appendLog(`[REALLOC] Round ${round}: AGT_01 trajectory (+${agents[0].delta.toFixed(2)}) awarded +400MB from AGT_04.`, true);
+      } else if (agents[2].delta > 0.45) {
+        agents[2].vram = Math.min(5.5, agents[2].vram + 0.3);
+        agents[1].vram = Math.max(2.2, agents[1].vram - 0.3);
+        agents[2].status = "BOOST +20%";
+        appendLog(`[REALLOC] Round ${round}: AGT_03 surge (+${agents[2].delta.toFixed(2)}) rebalanced +300MB quota.`);
+      } else {
+        appendLog(`[EVAL] Round ${round}: Arbiter evaluated population loss curvature; state optimal.`);
+      }
+
+      // Ensure sum is exactly 16.0
+      const currentSum = agents.reduce((acc, a) => acc + a.vram, 0);
+      const diff = 16.0 - currentSum;
+      agents[1].vram += diff;
+
+      if (arbiterState) {
+        arbiterState.textContent = "DYNAMIC_REALLOCATING";
+        arbiterState.className = "text-[10px] px-2 py-0.5 rounded-xs bg-[#ff4500]/20 text-[#ff4500] border border-[#ff4500]/40 font-bold";
+        setTimeout(() => {
+          arbiterState.textContent = "ARBITER_BALANCED";
+          arbiterState.className = "text-[10px] px-2 py-0.5 rounded-xs bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold";
+        }, 300);
+      }
+
+      renderState();
+    }
+
+    stepBtn.addEventListener("click", () => {
+      if (isAutoplaying) stopAutoplay();
+      stepTournament();
+    });
+
+    function startAutoplay() {
+      isAutoplaying = true;
+      autoplayBtn.textContent = "PAUSE ⏸";
+      autoplayBtn.className = "px-2.5 py-1 rounded-xs bg-[#ff4500] text-black font-bold text-[11px] transition-colors cursor-pointer";
+      timer = window.setInterval(stepTournament, 1200);
+    }
+
+    function stopAutoplay() {
+      isAutoplaying = false;
+      autoplayBtn.textContent = "AUTO-RUN ▶";
+      autoplayBtn.className = "px-2.5 py-1 rounded-xs bg-[#161616] hover:bg-[#ff4500] text-neutral-300 hover:text-black border border-[#2a2a2a] hover:border-[#ff4500] font-bold text-[11px] transition-colors cursor-pointer";
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+
+    autoplayBtn.addEventListener("click", () => {
+      if (isAutoplaying) {
+        stopAutoplay();
+      } else {
+        startAutoplay();
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      stopAutoplay();
+      round = 1;
+      agents = [
+        { id: 1, name: "AGT_01", vram: 4.0, delta: 0.42, status: "BOOST +40%" },
+        { id: 2, name: "AGT_02", vram: 4.0, delta: 0.15, status: "EVALUATING" },
+        { id: 3, name: "AGT_03", vram: 4.0, delta: 0.28, status: "STEADY" },
+        { id: 4, name: "AGT_04", vram: 4.0, delta: -0.05, status: "STAGNATING" },
+      ];
+      renderState();
+      appendLog("[RESET] Tournament reset to round 01 baseline (4.0GB per worker).");
+    });
+
+    renderState();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupArenaSimulator);
+  } else {
+    setupArenaSimulator();
+  }
+  document.addEventListener("astro:page-load", setupArenaSimulator);
+</script>

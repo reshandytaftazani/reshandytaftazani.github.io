@@ -1,0 +1,573 @@
+---
+// TemporalSplitterSimulator.astro — In-Browser Zero-Leakage Purge & Embargo Visualizer
+// Pure zero-dependency reactive SVG & telemetry console
+---
+
+<div class="simulator-card bg-[#0b0b0b] border border-[#222] rounded-xs p-6 sm:p-8 font-mono text-xs select-none">
+  
+  <!-- Header & Telemetry Status -->
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#1f1f1f] pb-4">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[#ff4500] animate-pulse"></span>
+      <span class="text-white font-bold tracking-wider text-sm">TEMPORAL SPLIT LABORATORY</span>
+      <span class="text-neutral-600">//</span>
+      <span class="text-neutral-400 text-[11px] uppercase">Interactive Boundary Simulator</span>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <span class="px-2 py-0.5 rounded-xs bg-[#161616] border border-[#2a2a2a] text-neutral-400 text-[10px]">
+        60 FPS SVG ENGINE
+      </span>
+      <button 
+        type="button" 
+        id="sim-temporal-reset"
+        class="px-2 py-0.5 rounded-xs bg-[#161616] hover:bg-[#ff4500] text-neutral-300 hover:text-black border border-[#2a2a2a] hover:border-[#ff4500] font-bold text-[10px] transition-colors cursor-pointer"
+        title="Reset to recommended defaults"
+      >
+        RESET
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive Controls Section -->
+  <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#0f0f0f] border border-[#1a1a1a] p-4 sm:p-5 rounded-xs">
+    
+    <!-- Control 1: Validation Strategy -->
+    <div>
+      <label class="block text-neutral-400 font-bold text-[11px] mb-2 uppercase tracking-wide">
+        1. Validation Strategy
+      </label>
+      <div class="space-y-1.5" role="radiogroup" aria-label="Validation split strategy">
+        <label class="flex items-center gap-2 p-2 rounded-xs border border-[#262626] bg-[#141414] hover:border-[#ff4500]/60 cursor-pointer transition-colors text-neutral-300 text-xs">
+          <input type="radio" name="split-strategy" value="purged" checked class="accent-[#ff4500] cursor-pointer" />
+          <span class="font-bold">Purged &amp; Embargoed</span>
+        </label>
+        <label class="flex items-center gap-2 p-2 rounded-xs border border-[#262626] bg-[#141414] hover:border-[#ff4500]/60 cursor-pointer transition-colors text-neutral-300 text-xs">
+          <input type="radio" name="split-strategy" value="naive" class="accent-[#ff4500] cursor-pointer" />
+          <span>Naive TimeSeriesSplit</span>
+        </label>
+        <label class="flex items-center gap-2 p-2 rounded-xs border border-[#262626] bg-[#141414] hover:border-[#ff4500]/60 cursor-pointer transition-colors text-neutral-300 text-xs">
+          <input type="radio" name="split-strategy" value="random" class="accent-[#ff4500] cursor-pointer" />
+          <span>Random K-Fold (Shuffle)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Control 2: Label Prediction Horizon (tau) -->
+    <div>
+      <div class="flex items-center justify-between mb-2 text-[11px]">
+        <label for="slider-tau" class="text-neutral-400 font-bold uppercase tracking-wide">
+          2. Label Horizon (<span class="text-[#ff4500]">τ</span>)
+        </label>
+        <span id="label-tau-val" class="font-bold text-white bg-[#1a1a1a] border border-[#262626] px-1.5 py-0.2 rounded-xs">5 DAYS</span>
+      </div>
+      <input 
+        type="range" 
+        id="slider-tau" 
+        min="1" 
+        max="10" 
+        value="5" 
+        class="w-full h-1.5 bg-[#222] rounded-lg appearance-none cursor-pointer accent-[#ff4500]"
+      />
+      <p class="mt-2 text-[10.5px] text-neutral-500 font-sans leading-normal">
+        Forward time interval required to observe cumulative asset return $y_i$.
+      </p>
+    </div>
+
+    <!-- Control 3: Post-Test Embargo Buffer (h) -->
+    <div>
+      <div class="flex items-center justify-between mb-2 text-[11px]">
+        <label for="slider-embargo" class="text-neutral-400 font-bold uppercase tracking-wide">
+          3. Embargo Buffer (<span class="text-[#ff4500]">h</span>)
+        </label>
+        <span id="label-embargo-val" class="font-bold text-white bg-[#1a1a1a] border border-[#262626] px-1.5 py-0.2 rounded-xs">3 DAYS</span>
+      </div>
+      <input 
+        type="range" 
+        id="slider-embargo" 
+        min="0" 
+        max="7" 
+        value="3" 
+        class="w-full h-1.5 bg-[#222] rounded-lg appearance-none cursor-pointer accent-[#ff4500]"
+      />
+      <p class="mt-2 text-[10.5px] text-neutral-500 font-sans leading-normal">
+        Protective buffer preventing autoregressive volatility memory from leaking.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Reactive SVG Partition Timeline Canvas -->
+  <div class="mt-6 border border-[#1f1f1f] bg-[#080808] p-4 sm:p-6 rounded-xs overflow-x-auto">
+    <div class="flex items-center justify-between text-[11px] text-neutral-500 mb-3">
+      <span>TIME-SERIES OBSERVATION TIMELINE (DAYS 00 — 20)</span>
+      <span id="leak-status-badge" class="px-2 py-0.5 rounded-xs font-bold text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800">
+        ZERO_LEAKAGE_VERIFIED ✓
+      </span>
+    </div>
+
+    <!-- SVG Container -->
+    <svg id="timeline-svg" viewBox="0 0 800 160" class="w-full h-auto min-w-[650px] overflow-visible">
+      <defs>
+        <!-- Diagonal hazard stripe pattern for leakage warning -->
+        <pattern id="leak-stripes" width="12" height="12" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="12" stroke="#ff4500" stroke-width="4" stroke-opacity="0.4" />
+        </pattern>
+        <pattern id="purge-stripes" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#666" stroke-width="2" stroke-opacity="0.3" />
+        </pattern>
+      </defs>
+
+      <!-- Day markers axis line -->
+      <line x1="20" y1="130" x2="780" y2="130" stroke="#222" stroke-width="1.5" />
+      
+      <!-- Timeline elements injected & updated via JS -->
+      <g id="timeline-axis-ticks"></g>
+      <g id="timeline-partitions"></g>
+      <g id="timeline-labels"></g>
+    </svg>
+  </div>
+
+  <!-- Telemetry Metrics Matrix -->
+  <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3 font-mono">
+    
+    <div class="p-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-xs">
+      <span class="text-[10px] text-neutral-500 uppercase tracking-wider block mb-1">
+        Leakage Index
+      </span>
+      <span id="metric-leakage-idx" class="text-xl sm:text-2xl font-bold text-emerald-400 tabular-nums">
+        0.00%
+      </span>
+      <span id="metric-leakage-status" class="text-[10px] text-neutral-500 block mt-1">
+        Guaranteed temporal isolation
+      </span>
+    </div>
+
+    <div class="p-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-xs">
+      <span class="text-[10px] text-neutral-500 uppercase tracking-wider block mb-1">
+        Backtest Sharpe
+      </span>
+      <span id="metric-backtest-sharpe" class="text-xl sm:text-2xl font-bold text-white tabular-nums">
+        1.34
+      </span>
+      <span id="metric-backtest-desc" class="text-[10px] text-neutral-500 block mt-1">
+        Realistic model edge
+      </span>
+    </div>
+
+    <div class="p-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-xs">
+      <span class="text-[10px] text-neutral-500 uppercase tracking-wider block mb-1">
+        Live Paper Sharpe
+      </span>
+      <span id="metric-live-sharpe" class="text-xl sm:text-2xl font-bold text-emerald-400 tabular-nums">
+        +1.29
+      </span>
+      <span id="metric-live-desc" class="text-[10px] text-neutral-500 block mt-1">
+        Consistent performance
+      </span>
+    </div>
+
+    <div class="p-3.5 bg-[#0f0f0f] border border-[#1f1f1f] rounded-xs">
+      <span class="text-[10px] text-neutral-500 uppercase tracking-wider block mb-1">
+        Boundary Gap (Δt)
+      </span>
+      <span id="metric-boundary-gap" class="text-xl sm:text-2xl font-bold text-white tabular-nums">
+        +8 DAYS
+      </span>
+      <span id="metric-boundary-desc" class="text-[10px] text-neutral-500 block mt-1">
+        τ_purge (5d) + h_embargo (3d)
+      </span>
+    </div>
+
+  </div>
+
+  <!-- Invariant Feedback Console -->
+  <div class="mt-4 p-3 bg-[#0c0c0c] border border-[#1a1a1a] flex items-center justify-between text-[11px] text-neutral-400 font-mono">
+    <div class="flex items-center gap-2">
+      <span class="text-[#ff4500] font-bold">INVARIANT CONTRACT:</span>
+      <span id="console-invariant-text" class="text-neutral-300">
+        t_train_max (Day 7) &lt; t_test_min (Day 10) - τ_purge (5d) // ZERO_LEAKAGE
+      </span>
+    </div>
+    <span class="text-neutral-600 hidden sm:inline">[POLARS AS-OF JOIN GATE]</span>
+  </div>
+
+</div>
+
+<script>
+  function setupTemporalSimulator() {
+    const sliderTau = document.getElementById("slider-tau") as HTMLInputElement | null;
+    const sliderEmbargo = document.getElementById("slider-embargo") as HTMLInputElement | null;
+    const labelTauVal = document.getElementById("label-tau-val");
+    const labelEmbargoVal = document.getElementById("label-embargo-val");
+    const resetBtn = document.getElementById("sim-temporal-reset");
+    const strategyRadios = document.querySelectorAll<HTMLInputElement>('input[name="split-strategy"]');
+    
+    // Telemetry output elements
+    const leakBadge = document.getElementById("leak-status-badge");
+    const metricLeakage = document.getElementById("metric-leakage-idx");
+    const metricLeakStatus = document.getElementById("metric-leakage-status");
+    const metricBacktest = document.getElementById("metric-backtest-sharpe");
+    const metricBacktestDesc = document.getElementById("metric-backtest-desc");
+    const metricLive = document.getElementById("metric-live-sharpe");
+    const metricLiveDesc = document.getElementById("metric-live-desc");
+    const metricGap = document.getElementById("metric-boundary-gap");
+    const consoleText = document.getElementById("console-invariant-text");
+    
+    // SVG Containers
+    const ticksGroup = document.getElementById("timeline-axis-ticks");
+    const partitionsGroup = document.getElementById("timeline-partitions");
+    const labelsGroup = document.getElementById("timeline-labels");
+
+    if (!sliderTau || !sliderEmbargo || !ticksGroup || !partitionsGroup || !labelsGroup) return;
+
+    // Render baseline ticks (Days 0 to 20)
+    function renderTicks() {
+      if (!ticksGroup) return;
+      ticksGroup.innerHTML = "";
+      const totalDays = 20;
+      const startX = 20;
+      const endX = 780;
+      const step = (endX - startX) / totalDays;
+
+      for (let i = 0; i <= totalDays; i++) {
+        const x = startX + i * step;
+        const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        tick.setAttribute("x1", String(x));
+        tick.setAttribute("y1", "125");
+        tick.setAttribute("x2", String(x));
+        tick.setAttribute("y2", "135");
+        tick.setAttribute("stroke", i % 5 === 0 ? "#555" : "#2a2a2a");
+        tick.setAttribute("stroke-width", "1");
+        ticksGroup.appendChild(tick);
+
+        if (i % 2 === 0) {
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.setAttribute("x", String(x));
+          text.setAttribute("y", "150");
+          text.setAttribute("fill", "#666");
+          text.setAttribute("font-size", "10");
+          text.setAttribute("font-family", "JetBrains Mono, monospace");
+          text.setAttribute("text-anchor", "middle");
+          text.textContent = `D${i < 10 ? '0' + i : i}`;
+          ticksGroup.appendChild(text);
+        }
+      }
+    }
+
+    renderTicks();
+
+    function updateSimulation() {
+      const tau = parseInt(sliderTau?.value || "5", 10);
+      const embargo = parseInt(sliderEmbargo?.value || "3", 10);
+      let strategy = "purged";
+      strategyRadios.forEach((r) => {
+        if (r.checked) strategy = r.value;
+      });
+
+      if (labelTauVal) labelTauVal.textContent = `${tau} DAYS`;
+      if (labelEmbargoVal) labelEmbargoVal.textContent = `${embargo} DAYS`;
+
+      const totalDays = 20;
+      const startX = 20;
+      const endX = 780;
+      const dayWidth = (endX - startX) / totalDays;
+
+      // Define standard test partition: Days 10 to 14
+      const testStartDay = 10;
+      const testEndDay = 14;
+
+      if (!partitionsGroup || !labelsGroup) return;
+      partitionsGroup.innerHTML = "";
+      labelsGroup.innerHTML = "";
+
+      if (strategy === "random") {
+        // Random K-Fold visualization
+        if (leakBadge) {
+          leakBadge.textContent = "CRITICAL_SHUFFLE_LEAKAGE ✕";
+          leakBadge.className = "px-2 py-0.5 rounded-xs font-bold text-[10px] bg-red-950 text-red-400 border border-red-800 animate-pulse";
+        }
+        if (metricLeakage) {
+          metricLeakage.textContent = "78.4%";
+          metricLeakage.className = "text-xl sm:text-2xl font-bold text-red-500 tabular-nums";
+        }
+        if (metricLeakStatus) metricLeakStatus.textContent = "Future samples in past folds!";
+        if (metricBacktest) metricBacktest.textContent = "4.21";
+        if (metricBacktestDesc) metricBacktestDesc.textContent = "Deceptive overfit mirage";
+        if (metricLive) {
+          metricLive.textContent = "-0.84";
+          metricLive.className = "text-xl sm:text-2xl font-bold text-red-500 tabular-nums";
+        }
+        if (metricLiveDesc) metricLiveDesc.textContent = "Live portfolio collapse!";
+        if (metricGap) metricGap.textContent = "NONE";
+        if (consoleText) {
+          consoleText.textContent = "SHUFFLE_VIOLATION: Future data points train past predictions. Temporal order destroyed.";
+        }
+
+        // Draw interleaved bars
+        for (let d = 0; d < totalDays; d++) {
+          const isTest = (d % 3 === 0);
+          const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rect.setAttribute("x", String(startX + d * dayWidth + 2));
+          rect.setAttribute("y", "35");
+          rect.setAttribute("width", String(dayWidth - 4));
+          rect.setAttribute("height", "80");
+          rect.setAttribute("rx", "2");
+          rect.setAttribute("fill", isTest ? "#ff4500" : "#1e1e1e");
+          rect.setAttribute("stroke", isTest ? "#ff4500" : "#333");
+          rect.setAttribute("stroke-width", "1");
+          partitionsGroup.appendChild(rect);
+        }
+
+      } else if (strategy === "naive") {
+        // Naive TimeSeriesSplit (No purge, no embargo)
+        if (leakBadge) {
+          leakBadge.textContent = "LABEL_OVERLAP_CONTAMINATION ✕";
+          leakBadge.className = "px-2 py-0.5 rounded-xs font-bold text-[10px] bg-amber-950 text-amber-400 border border-amber-800";
+        }
+        if (metricLeakage) {
+          metricLeakage.textContent = `${(tau * 4.2).toFixed(1)}%`;
+          metricLeakage.className = "text-xl sm:text-2xl font-bold text-amber-400 tabular-nums";
+        }
+        if (metricLeakStatus) metricLeakStatus.textContent = `${tau}d forward label overlap leak`;
+        if (metricBacktest) metricBacktest.textContent = "2.65";
+        if (metricBacktestDesc) metricBacktestDesc.textContent = "Inflated by label leakage";
+        if (metricLive) {
+          metricLive.textContent = "-0.12";
+          metricLive.className = "text-xl sm:text-2xl font-bold text-amber-400 tabular-nums";
+        }
+        if (metricLiveDesc) metricLiveDesc.textContent = "Sub-par live returns";
+        if (metricGap) metricGap.textContent = "0 DAYS";
+        if (consoleText) {
+          consoleText.textContent = `LEAKAGE_DETECTED: Train obs at D${testStartDay - 1} incorporates label formed at D${testStartDay - 1 + tau}.`;
+        }
+
+        // Left Train: 0 to testStartDay
+        const trainRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        trainRect.setAttribute("x", String(startX));
+        trainRect.setAttribute("y", "40");
+        trainRect.setAttribute("width", String(testStartDay * dayWidth));
+        trainRect.setAttribute("height", "75");
+        trainRect.setAttribute("rx", "2");
+        trainRect.setAttribute("fill", "#141414");
+        trainRect.setAttribute("stroke", "#333");
+        partitionsGroup.appendChild(trainRect);
+
+        // Highlight leaking zone (last tau days of train)
+        const leakX = startX + (testStartDay - tau) * dayWidth;
+        const leakW = tau * dayWidth;
+        const leakRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        leakRect.setAttribute("x", String(Math.max(startX, leakX)));
+        leakRect.setAttribute("y", "40");
+        leakRect.setAttribute("width", String(Math.min(leakW, testStartDay * dayWidth)));
+        leakRect.setAttribute("height", "75");
+        leakRect.setAttribute("fill", "url(#leak-stripes)");
+        leakRect.setAttribute("stroke", "#ff4500");
+        partitionsGroup.appendChild(leakRect);
+
+        // Test fold
+        const testRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        testRect.setAttribute("x", String(startX + testStartDay * dayWidth));
+        testRect.setAttribute("y", "35");
+        testRect.setAttribute("width", String((testEndDay - testStartDay) * dayWidth));
+        testRect.setAttribute("height", "85");
+        testRect.setAttribute("rx", "2");
+        testRect.setAttribute("fill", "#1c1c1c");
+        testRect.setAttribute("stroke", "#ff4500");
+        testRect.setAttribute("stroke-width", "2");
+        partitionsGroup.appendChild(testRect);
+
+        // Labels
+        const lbl1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        lbl1.setAttribute("x", String(startX + (testStartDay * dayWidth) / 2));
+        lbl1.setAttribute("y", "80");
+        lbl1.setAttribute("fill", "#888");
+        lbl1.setAttribute("text-anchor", "middle");
+        lbl1.setAttribute("font-size", "11");
+        lbl1.textContent = "TRAIN FOLD (CONTAMINATED)";
+        labelsGroup.appendChild(lbl1);
+
+        const lbl2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        lbl2.setAttribute("x", String(startX + ((testStartDay + testEndDay) / 2) * dayWidth));
+        lbl2.setAttribute("y", "80");
+        lbl2.setAttribute("fill", "#ff4500");
+        lbl2.setAttribute("font-weight", "bold");
+        lbl2.setAttribute("text-anchor", "middle");
+        lbl2.setAttribute("font-size", "11");
+        lbl2.textContent = "TEST FOLD";
+        labelsGroup.appendChild(lbl2);
+
+      } else {
+        // Purged & Embargoed Strategy (Defensive)
+        if (leakBadge) {
+          leakBadge.textContent = "ZERO_LEAKAGE_VERIFIED ✓";
+          leakBadge.className = "px-2 py-0.5 rounded-xs font-bold text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800";
+        }
+        if (metricLeakage) {
+          metricLeakage.textContent = "0.00%";
+          metricLeakage.className = "text-xl sm:text-2xl font-bold text-emerald-400 tabular-nums";
+        }
+        if (metricLeakStatus) metricLeakStatus.textContent = "Mathematical isolation active";
+        if (metricBacktest) metricBacktest.textContent = "1.34";
+        if (metricBacktestDesc) metricBacktestDesc.textContent = "True verifiable edge";
+        if (metricLive) {
+          metricLive.textContent = "+1.29";
+          metricLive.className = "text-xl sm:text-2xl font-bold text-emerald-400 tabular-nums";
+        }
+        if (metricLiveDesc) metricLiveDesc.textContent = "Consistent with backtest";
+        if (metricGap) metricGap.textContent = `+${tau + embargo} DAYS`;
+        
+        const purgeStart = Math.max(0, testStartDay - tau);
+        const embargoEnd = Math.min(totalDays, testEndDay + embargo);
+
+        if (consoleText) {
+          consoleText.textContent = `DEFENSIVE INVARIANT SATISFIED: Train (D00-D0${purgeStart}) < Test (D${testStartDay}-D${testEndDay}) < Embargo (D${testEndDay}-D${embargoEnd})`;
+        }
+
+        // 1. Left Train (Clean)
+        const leftTrainW = purgeStart * dayWidth;
+        if (leftTrainW > 0) {
+          const trainRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          trainRect.setAttribute("x", String(startX));
+          trainRect.setAttribute("y", "40");
+          trainRect.setAttribute("width", String(leftTrainW));
+          trainRect.setAttribute("height", "75");
+          trainRect.setAttribute("rx", "2");
+          trainRect.setAttribute("fill", "#141414");
+          trainRect.setAttribute("stroke", "#333");
+          partitionsGroup.appendChild(trainRect);
+
+          const lblTrain = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          lblTrain.setAttribute("x", String(startX + leftTrainW / 2));
+          lblTrain.setAttribute("y", "80");
+          lblTrain.setAttribute("fill", "#999");
+          lblTrain.setAttribute("font-size", "11");
+          lblTrain.setAttribute("text-anchor", "middle");
+          lblTrain.textContent = "CLEAN TRAIN";
+          labelsGroup.appendChild(lblTrain);
+        }
+
+        // 2. Purge Zone (tau overlap)
+        const purgeX = startX + purgeStart * dayWidth;
+        const purgeW = tau * dayWidth;
+        const purgeRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        purgeRect.setAttribute("x", String(purgeX));
+        purgeRect.setAttribute("y", "45");
+        purgeRect.setAttribute("width", String(purgeW));
+        purgeRect.setAttribute("height", "65");
+        purgeRect.setAttribute("rx", "2");
+        purgeRect.setAttribute("fill", "url(#purge-stripes)");
+        purgeRect.setAttribute("stroke", "#444");
+        purgeRect.setAttribute("stroke-dasharray", "3,3");
+        partitionsGroup.appendChild(purgeRect);
+
+        const lblPurge = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        lblPurge.setAttribute("x", String(purgeX + purgeW / 2));
+        lblPurge.setAttribute("y", "80");
+        lblPurge.setAttribute("fill", "#888");
+        lblPurge.setAttribute("font-size", "9");
+        lblPurge.setAttribute("text-anchor", "middle");
+        lblPurge.textContent = `PURGE (τ=${tau}d)`;
+        labelsGroup.appendChild(lblPurge);
+
+        // 3. Test Fold
+        const testX = startX + testStartDay * dayWidth;
+        const testW = (testEndDay - testStartDay) * dayWidth;
+        const testRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        testRect.setAttribute("x", String(testX));
+        testRect.setAttribute("y", "35");
+        testRect.setAttribute("width", String(testW));
+        testRect.setAttribute("height", "85");
+        testRect.setAttribute("rx", "2");
+        testRect.setAttribute("fill", "#181818");
+        testRect.setAttribute("stroke", "#ff4500");
+        testRect.setAttribute("stroke-width", "2");
+        partitionsGroup.appendChild(testRect);
+
+        const lblTest = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        lblTest.setAttribute("x", String(testX + testW / 2));
+        lblTest.setAttribute("y", "80");
+        lblTest.setAttribute("fill", "#fff");
+        lblTest.setAttribute("font-weight", "bold");
+        lblTest.setAttribute("font-size", "11");
+        lblTest.setAttribute("text-anchor", "middle");
+        lblTest.textContent = "TEST FOLD";
+        labelsGroup.appendChild(lblTest);
+
+        // 4. Embargo Zone (h buffer)
+        if (embargo > 0) {
+          const embX = startX + testEndDay * dayWidth;
+          const embW = embargo * dayWidth;
+          const embRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          embRect.setAttribute("x", String(embX));
+          embRect.setAttribute("y", "45");
+          embRect.setAttribute("width", String(embW));
+          embRect.setAttribute("height", "65");
+          embRect.setAttribute("rx", "2");
+          embRect.setAttribute("fill", "url(#purge-stripes)");
+          embRect.setAttribute("stroke", "#555");
+          embRect.setAttribute("stroke-dasharray", "3,3");
+          partitionsGroup.appendChild(embRect);
+
+          const lblEmb = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          lblEmb.setAttribute("x", String(embX + embW / 2));
+          lblEmb.setAttribute("y", "80");
+          lblEmb.setAttribute("fill", "#888");
+          lblEmb.setAttribute("font-size", "9");
+          lblEmb.setAttribute("text-anchor", "middle");
+          lblEmb.textContent = `EMBARGO (h=${embargo}d)`;
+          labelsGroup.appendChild(lblEmb);
+        }
+
+        // 5. Right Train (if days remain)
+        const rightTrainStart = testEndDay + embargo;
+        if (rightTrainStart < totalDays) {
+          const rTrainX = startX + rightTrainStart * dayWidth;
+          const rTrainW = (totalDays - rightTrainStart) * dayWidth;
+          const rTrainRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rTrainRect.setAttribute("x", String(rTrainX));
+          rTrainRect.setAttribute("y", "40");
+          rTrainRect.setAttribute("width", String(rTrainW));
+          rTrainRect.setAttribute("height", "75");
+          rTrainRect.setAttribute("rx", "2");
+          rTrainRect.setAttribute("fill", "#141414");
+          rTrainRect.setAttribute("stroke", "#333");
+          partitionsGroup.appendChild(rTrainRect);
+
+          const lblRTrain = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          lblRTrain.setAttribute("x", String(rTrainX + rTrainW / 2));
+          lblRTrain.setAttribute("y", "80");
+          lblRTrain.setAttribute("fill", "#999");
+          lblRTrain.setAttribute("font-size", "11");
+          lblRTrain.setAttribute("text-anchor", "middle");
+          lblRTrain.textContent = "TRAIN";
+          labelsGroup.appendChild(lblRTrain);
+        }
+      }
+    }
+
+    sliderTau.addEventListener("input", updateSimulation);
+    sliderEmbargo.addEventListener("input", updateSimulation);
+    strategyRadios.forEach((r) => r.addEventListener("change", updateSimulation));
+
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        sliderTau.value = "5";
+        sliderEmbargo.value = "3";
+        strategyRadios.forEach((r, idx) => {
+          r.checked = (idx === 0);
+        });
+        updateSimulation();
+      });
+    }
+
+    updateSimulation();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupTemporalSimulator);
+  } else {
+    setupTemporalSimulator();
+  }
+  document.addEventListener("astro:page-load", setupTemporalSimulator);
+</script>

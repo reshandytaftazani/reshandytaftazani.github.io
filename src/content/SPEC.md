@@ -95,3 +95,15 @@
   - RSS 2.0 feed at `/rss.xml` with auto-discovery tag in Layout.
   - Cross-navigation integration across Navbar, Command Palette (`⌘K`), Footer, and Hero quick badges.
 
+### Phase 4: Interactive Systems Telemetry & In-Browser Simulators [COMPLETED]
+- **Target Routes:** 
+  - `/notes/eliminating-lookahead-bias#interactive-simulator`
+  - `/projects/modelarena#interactive-simulator`
+- **Simulators Implemented:**
+  1. `TemporalSplitterSimulator.astro`: Zero-dependency reactive SVG time-series visualizer. Manipulates label prediction horizon ($\tau$), embargo buffer ($h$), and contrasts Naive vs Purged validation partitions with live leakage index calculation and Sharpe projection.
+  2. `ModelArenaVramSimulator.astro`: Zero-dependency multi-agent dynamic VRAM arbiter console. Simulates real-time shared memory ring-buffer reallocations (+40% compute boosts to high-gradient agents, throttling stagnating candidates) with streaming IPC terminal telemetry.
+- **Entry Points & Global Access:**
+  - Tactile `[⚡ SIM]` badges on ModelArena card (`Projects.astro`) and note card (`notes/index.astro`).
+  - Hero action badges `[LIVE SIMULATOR ⚡]` on `/projects/modelarena` and `/notes/eliminating-lookahead-bias`.
+  - Direct search shortcuts in Command Palette (`⌘K`): `SIMULATE: Purge-Embargo Splitter` and `SIMULATE: ModelArena Dynamic VRAM Arbiter`.
+

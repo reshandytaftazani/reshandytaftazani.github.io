@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
+import TemporalSplitterSimulator from '../../components/TemporalSplitterSimulator.astro';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes');
@@ -89,6 +90,17 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
 
         <!-- Right: Actions & Share -->
         <div class="flex items-center gap-2.5 font-mono text-xs">
+          {note.id === 'eliminating-lookahead-bias' && (
+            <a 
+              href="#interactive-simulator" 
+              class="group inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-[#ff4500]/50 hover:border-[#ff4500] bg-[#ff4500]/15 hover:bg-[#ff4500] text-[#ff4500] hover:text-black font-bold transition-all duration-200"
+              title="Jump to Live In-Browser Simulator"
+            >
+              <span class="text-xs">⚡</span>
+              <span>SIMULATE</span>
+            </a>
+          )}
+
           <div class="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#141414] border border-[#222]">
             <span class="h-1.5 w-1.5 rounded-full bg-[#ff4500] animate-pulse"></span>
             <span class="text-[10px] text-neutral-400 font-semibold">{readingTime}</span>
@@ -215,6 +227,18 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
                   </span>
                 </a>
               ))}
+              {note.id === 'eliminating-lookahead-bias' && (
+                <a
+                  href="#interactive-simulator"
+                  data-toc-link="interactive-simulator"
+                  class="toc-link block py-1.5 px-2 rounded-xs transition-colors duration-150 text-[#ff4500] hover:bg-[#161616] font-bold text-xs"
+                >
+                  <span class="flex items-center gap-1.5 truncate">
+                    <span class="text-[10px]">⚡</span>
+                    <span>LIVE SIMULATOR</span>
+                  </span>
+                </a>
+              )}
             </nav>
 
             <div class="pt-3 border-t border-[#1a1a1a] flex items-center justify-between text-[10px] text-neutral-500">
@@ -266,6 +290,17 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
           <article class="prose-editorial max-w-none">
             <Content />
           </article>
+
+          <!-- EMBEDDED INTERACTIVE LAB SIMULATOR -->
+          {note.id === 'eliminating-lookahead-bias' && (
+            <section id="interactive-simulator" class="mt-16 pt-10 border-t border-[#1f1f1f] scroll-mt-20">
+              <div class="flex items-center gap-2 font-mono text-xs text-[#ff4500] tracking-widest uppercase mb-4">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#ff4500] animate-pulse"></span>
+                <span>INTERACTIVE LAB // TEMPORAL PARTITION SIMULATOR</span>
+              </div>
+              <TemporalSplitterSimulator />
+            </section>
+          )}
 
           <!-- POST-ARTICLE: AUTHOR ATTRIBUTION CARD -->
           <div class="mt-16 p-6 sm:p-8 rounded-xs bg-[#0d0d0d] border border-[#1f1f1f] font-mono text-xs">

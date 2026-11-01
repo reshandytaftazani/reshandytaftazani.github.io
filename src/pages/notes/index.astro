@@ -252,13 +252,25 @@ const categories = [
                   AUTHOR: RESHANDY TAFTAZANI (CS @ UI)
                 </span>
 
-                <a 
-                  href={`/notes/${note.id}`} 
-                  class="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xs bg-[#1a1a1a] hover:bg-[#ff4500] text-neutral-200 hover:text-black font-bold border border-[#2a2a2a] hover:border-[#ff4500] transition-all duration-200 cursor-pointer select-none group/btn"
-                >
-                  <span>READ DISPATCH</span>
-                  <span class="text-[#ff4500] group-hover/btn:text-black transition-transform duration-200 group-hover/btn:translate-x-1">→</span>
-                </a>
+                <div class="ml-auto flex items-center gap-2">
+                  {note.id === 'eliminating-lookahead-bias' && (
+                    <a 
+                      href={`/notes/${note.id}#interactive-simulator`}
+                      class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xs bg-[#ff4500]/15 hover:bg-[#ff4500] text-[#ff4500] hover:text-black font-bold border border-[#ff4500]/30 hover:border-[#ff4500] transition-all duration-200"
+                      title="Run live in-browser Purge-Embargo simulation"
+                    >
+                      <span>⚡ SIMULATE</span>
+                    </a>
+                  )}
+
+                  <a 
+                    href={`/notes/${note.id}`} 
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xs bg-[#1a1a1a] hover:bg-[#ff4500] text-neutral-200 hover:text-black font-bold border border-[#2a2a2a] hover:border-[#ff4500] transition-all duration-200 cursor-pointer select-none group/btn"
+                  >
+                    <span>READ DISPATCH</span>
+                    <span class="text-[#ff4500] group-hover/btn:text-black transition-transform duration-200 group-hover/btn:translate-x-1">→</span>
+                  </a>
+                </div>
               </div>
             </article>
           );
