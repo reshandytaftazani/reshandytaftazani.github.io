@@ -52,7 +52,7 @@ const navLinks = [
     <!-- Right: Desktop Navigation Links (Visible on lg and above) -->
     <div class="pointer-events-auto hidden lg:flex items-center">
       <nav aria-label="Main desktop navigation" class="select-none">
-        <ul class="flex items-center gap-3.5 xl:gap-6">
+        <ul class="flex items-center gap-2.5 xl:gap-4.5 2xl:gap-6">
           {navLinks.map((item, idx) => (
             <li class="reveal-init" style={`transition-delay: ${100 + idx * 40}ms;`}>
               <a 
@@ -74,30 +74,47 @@ const navLinks = [
               </a>
             </li>
           ))}
-          <!-- CV Action Link (Printable Swiss Technical Resume) -->
-          <li class="reveal-init pl-1" style={`transition-delay: ${100 + navLinks.length * 40}ms;`}>
-            <a 
-              href="/resume" 
-              class="group relative inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-current/30 hover:border-accent bg-current/5 hover:bg-accent text-foreground hover:text-black font-mono font-bold text-caption transition-all duration-200 active:scale-95 select-none"
-              title="Curriculum Vitae / Printable Swiss Technical CV"
+          <!-- Swiss Actions Deck: Segmented Control Cluster [ ⌘K | TERM $ | CV ↗ ] -->
+          <li class="reveal-init pl-1.5" style={`transition-delay: ${100 + navLinks.length * 40}ms;`}>
+            <div 
+              class="flex items-center rounded-xs border border-current/25 bg-current/5 divide-x divide-current/20 font-mono text-[11px] font-bold select-none overflow-hidden"
+              role="group"
+              aria-label="Developer and Quick Actions"
             >
-              <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:-translate-x-0.5">[</span>
-              <span class="tracking-wider">CV</span>
-              <span class="text-accent group-hover:text-black font-bold transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
-              <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:translate-x-0.5">]</span>
-            </a>
-          </li>
-          <!-- Command Palette Trigger Button (Ctrl + K) -->
-          <li class="reveal-init pl-1" style={`transition-delay: ${100 + (navLinks.length + 1) * 40}ms;`}>
-            <button 
-              type="button"
-              data-open-command-palette
-              class="group relative inline-flex items-center gap-1 px-2 py-1 rounded-xs border border-current/25 hover:border-accent bg-current/5 hover:bg-accent text-foreground hover:text-black font-mono font-bold text-[11px] transition-all duration-200 active:scale-95 select-none cursor-pointer"
-              title="Open Global Command Palette (Ctrl + K / Cmd + K)"
-              aria-label="Open command palette"
-            >
-              <span class="text-accent group-hover:text-black font-bold">⌘K</span>
-            </button>
+              <!-- Command Palette (⌘K) -->
+              <button 
+                type="button" 
+                data-open-command-palette
+                class="group relative inline-flex items-center gap-1 px-2.5 py-1 text-foreground hover:bg-accent hover:text-black transition-colors duration-150 active:scale-95 cursor-pointer"
+                title="Global Command Palette (Ctrl+K / Cmd+K)"
+                aria-label="Open command palette"
+              >
+                <span class="text-accent group-hover:text-black font-bold">⌘K</span>
+              </button>
+
+              <!-- Interactive UNIX Terminal (~ / Ctrl+J) -->
+              <button 
+                type="button"
+                data-open-terminal
+                class="group relative inline-flex items-center gap-0.5 px-2.5 py-1 text-foreground hover:bg-accent hover:text-black transition-colors duration-150 active:scale-95 cursor-pointer"
+                title="Interactive Kernel Terminal (~ / Ctrl+J)"
+                aria-label="Open terminal drawer"
+              >
+                <span class="tracking-wider">TERM</span>
+                <span class="text-accent group-hover:text-black font-bold">$</span>
+              </button>
+
+              <!-- Curriculum Vitae (CV ↗) -->
+              <a 
+                href="/resume" 
+                class="group relative inline-flex items-center gap-0.5 px-2.5 py-1 text-foreground hover:bg-accent hover:text-black transition-colors duration-150 active:scale-95"
+                title="Technical CV / Printable Resume"
+                aria-label="View Curriculum Vitae"
+              >
+                <span class="tracking-wider">CV</span>
+                <span class="text-accent group-hover:text-black font-bold text-[10px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+              </a>
+            </div>
           </li>
         </ul>
       </nav>
@@ -193,6 +210,20 @@ const navLinks = [
             <span class="group-hover:translate-x-2 transition-transform duration-200">COMMAND PALETTE</span>
           </div>
           <span class="text-accent font-mono text-sm">↵</span>
+        </button>
+      </li>
+      <li class="border-b border-grid-line-dark/60 pb-2.5">
+        <button 
+          type="button" 
+          data-open-terminal
+          onclick="document.getElementById('mobile-menu-close-btn')?.click();"
+          class="w-full text-left group flex items-baseline justify-between text-display-sm font-bold tracking-tight text-neutral hover:text-accent transition-all duration-200 cursor-pointer"
+        >
+          <div class="flex items-baseline gap-3">
+            <span class="text-caption font-mono text-accent">[TERM $]</span>
+            <span class="group-hover:translate-x-2 transition-transform duration-200">INTERACTIVE TERMINAL</span>
+          </div>
+          <span class="text-accent font-mono text-sm">&gt;_</span>
         </button>
       </li>
     </ul>

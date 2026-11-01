@@ -369,6 +369,18 @@
         keywords: "print pdf save resume cv document",
       },
       {
+        id: "act-terminal",
+        label: "Open Interactive UNIX Terminal (REPL Shell)",
+        category: "ACTIONS",
+        shortcut: "TERM $",
+        icon: ">_",
+        action: () => {
+          closePalette();
+          window.dispatchEvent(new CustomEvent("terminal:open"));
+        },
+        keywords: "terminal unix shell repl bash console cli command line run modelarena whoami eval cat curl contact",
+      },
+      {
         id: "act-rss",
         label: "Subscribe to RSS Feed (Technical Dispatches)",
         category: "ACTIONS",

@@ -4,6 +4,7 @@ import CustomCursor from '../components/CustomCursor.astro';
 import PageTransition from '../components/PageTransition.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import ProjectSpecModal from '../components/ProjectSpecModal.astro';
+import TerminalDrawer from '../components/TerminalDrawer.astro';
 
 interface Props {
   title?: string;
@@ -94,6 +95,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
     <!-- Project Technical Spec Sheet Modal Drawer -->
     <ProjectSpecModal />
+
+    <!-- Global Interactive UNIX Monospaced Terminal Drawer (~ / Ctrl+J) -->
+    <TerminalDrawer />
 
     <!-- Custom Interactive Spring Cursor -->
     <CustomCursor />
