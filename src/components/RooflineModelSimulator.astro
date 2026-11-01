@@ -1,0 +1,866 @@
+---
+// RooflineModelSimulator.astro
+// Interactive Hardware Roofline Model Visualizer & Arithmetic Intensity Analyzer for ModelArena
+// Pure zero-dependency reactive SVG & TypeScript engine
+---
+
+<div class="simulator-card bg-[#0b0c0e] border border-[#222a30] rounded-xs p-5 sm:p-8 font-mono text-xs select-none shadow-2xl">
+  
+  <!-- Header Bar & Live Status Badge -->
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#1c2329] pb-4">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+      <span class="text-white font-bold tracking-wider text-sm sm:text-base">ROOFLINE MODEL // HARDWARE INTENSITY ANALYZER</span>
+    </div>
+
+    <!-- Real-time Status Badge (Memory-Bound vs Compute-Bound) -->
+    <div 
+      id="roofline-status-badge" 
+      class="px-2.5 py-1 rounded-xs bg-amber-950/70 border border-amber-500/60 text-amber-400 font-bold text-[11px] tracking-wider transition-colors flex items-center gap-1.5 shadow-sm"
+    >
+      <span class="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
+      <span id="roofline-status-text">STATUS: MEMORY_BOUND (Bounded by HBM Bandwidth)</span>
+    </div>
+  </div>
+
+  <!-- Interactive Controls Deck (Hardware Target + Precision Mode + Sliders) -->
+  <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+    
+    <!-- Left Column: Hardware Target & Precision Selectors -->
+    <div class="lg:col-span-5 space-y-4">
+      
+      <!-- Target Hardware Selector -->
+      <div>
+        <label class="block text-neutral-400 font-bold text-[11px] uppercase tracking-wider mb-2 flex items-center justify-between">
+          <span>1. TARGET HARDWARE ARCHITECTURE:</span>
+          <span class="text-[10px] text-accent font-normal">[CLICK TO SELECT]</span>
+        </label>
+        <div class="grid grid-cols-1 gap-2">
+          <!-- A100 -->
+          <button 
+            type="button" 
+            class="hw-select-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-xs border border-accent bg-accent/15 text-left transition-all duration-150 cursor-pointer text-xs shadow-sm"
+            data-hw="a100"
+          >
+            <div>
+              <div class="hw-name font-bold text-white flex items-center gap-1.5">
+                <span>NVIDIA A100 SXM4 (80GB)</span>
+              </div>
+              <div class="text-[10px] text-neutral-400">Bandwidth: 1,555 GB/s • Peak FP16: 312,000 GFLOP/s</div>
+            </div>
+            <span class="hw-indicator text-[10px] text-accent font-bold px-1.5 py-0.5 rounded-xs bg-accent/20 border border-accent/40">● ACTIVE</span>
+          </button>
+
+          <!-- RTX 4090 -->
+          <button 
+            type="button" 
+            class="hw-select-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xs border border-[#222a30] bg-[#12161a] hover:border-accent/40 text-left transition-all duration-150 cursor-pointer text-xs"
+            data-hw="rtx4090"
+          >
+            <div>
+              <div class="hw-name font-bold text-neutral-300 flex items-center gap-1.5">
+                <span>NVIDIA RTX 4090 (24GB)</span>
+              </div>
+              <div class="text-[10px] text-neutral-400">Bandwidth: 1,008 GB/s • Peak FP16: 82,600 GFLOP/s</div>
+            </div>
+            <span class="hw-indicator text-[10px] text-neutral-500 font-normal">○ SELECT</span>
+          </button>
+
+          <!-- T4 -->
+          <button 
+            type="button" 
+            class="hw-select-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xs border border-[#222a30] bg-[#12161a] hover:border-accent/40 text-left transition-all duration-150 cursor-pointer text-xs"
+            data-hw="t4"
+          >
+            <div>
+              <div class="hw-name font-bold text-neutral-300 flex items-center gap-1.5">
+                <span>NVIDIA T4 (16GB)</span>
+              </div>
+              <div class="text-[10px] text-neutral-400">Bandwidth: 320 GB/s • Peak FP16: 65,000 GFLOP/s</div>
+            </div>
+            <span class="hw-indicator text-[10px] text-neutral-500 font-normal">○ SELECT</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Precision / Quantization Mode Selector -->
+      <div>
+        <label class="block text-neutral-400 font-bold text-[11px] uppercase tracking-wider mb-2 flex items-center justify-between">
+          <span>2. PRECISION / QUANTIZATION MODE:</span>
+          <span class="text-[10px] text-neutral-500 font-normal">[AFFECTS INTENSITY &amp; CEILING]</span>
+        </label>
+        <div class="grid grid-cols-2 gap-2">
+          <!-- FP32 -->
+          <button 
+            type="button" 
+            class="precision-btn px-3 py-2 rounded-xs border border-[#222a30] bg-[#12161a] hover:border-accent/40 text-neutral-400 font-bold text-[11px] transition-all cursor-pointer text-left"
+            data-precision="fp32"
+          >
+            <div class="prec-title text-neutral-200">FP32 (Single)</div>
+            <div class="text-[9.5px] text-neutral-500 font-normal">4 Bytes/Param • Standard</div>
+          </button>
+
+          <!-- FP16 -->
+          <button 
+            type="button" 
+            class="precision-btn active px-3 py-2 rounded-xs border border-accent bg-accent/15 text-white font-bold text-[11px] transition-all cursor-pointer text-left shadow-sm"
+            data-precision="fp16"
+          >
+            <div class="prec-title text-white">FP16 / BF16</div>
+            <div class="text-[9.5px] text-neutral-300 font-normal">2 Bytes/Param • TensorCore</div>
+          </button>
+
+          <!-- INT8 -->
+          <button 
+            type="button" 
+            class="precision-btn px-3 py-2 rounded-xs border border-[#222a30] bg-[#12161a] hover:border-accent/40 text-neutral-400 font-bold text-[11px] transition-all cursor-pointer text-left"
+            data-precision="int8"
+          >
+            <div class="prec-title text-neutral-200">INT8 TensorCore</div>
+            <div class="text-[9.5px] text-neutral-500 font-normal">1 Byte/Param • 2x Peak</div>
+          </button>
+
+          <!-- INT4 -->
+          <button 
+            type="button" 
+            class="precision-btn px-3 py-2 rounded-xs border border-[#222a30] bg-[#12161a] hover:border-accent/40 text-neutral-400 font-bold text-[11px] transition-all cursor-pointer text-left"
+            data-precision="int4"
+          >
+            <div class="prec-title text-neutral-200">INT4 AWQ</div>
+            <div class="text-[9.5px] text-neutral-500 font-normal">0.5 Byte • 4x Peak</div>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Interactive Workload Sliders & Telemetry Counters -->
+    <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+      
+      <!-- Sliders Card -->
+      <div class="p-4 bg-[#101417] border border-[#1e252b] rounded-xs space-y-4">
+        
+        <!-- Batch Size Slider -->
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="text-neutral-300 font-bold">BATCH SIZE (<span class="text-accent font-mono">B</span>):</span>
+            <span class="font-bold text-white font-mono bg-[#181e24] px-2 py-0.5 rounded-xs border border-[#2a343d]">
+              <span id="slider-batch-val" class="text-accent font-bold">16</span> sequences
+            </span>
+          </div>
+          <input 
+            type="range" 
+            id="slider-batch" 
+            min="1" 
+            max="128" 
+            value="16" 
+            step="1"
+            class="w-full accent-accent bg-[#1c242b] h-1.5 rounded-sm cursor-pointer"
+          />
+          <!-- Quick Clickable Presets for Batch Size -->
+          <div class="flex items-center justify-between text-[10px] text-neutral-500 mt-1.5 gap-1 overflow-x-auto">
+            <button type="button" class="preset-batch-btn hover:text-accent cursor-pointer transition-colors" data-val="1">[B=1 Decode]</button>
+            <button type="button" class="preset-batch-btn hover:text-accent cursor-pointer transition-colors" data-val="8">[B=8]</button>
+            <button type="button" class="preset-batch-btn hover:text-accent cursor-pointer transition-colors" data-val="32">[B=32]</button>
+            <button type="button" class="preset-batch-btn hover:text-accent cursor-pointer transition-colors" data-val="64">[B=64]</button>
+            <button type="button" class="preset-batch-btn hover:text-accent cursor-pointer transition-colors" data-val="128">[B=128 Tournament]</button>
+          </div>
+        </div>
+
+        <!-- Context Length Slider -->
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="text-neutral-300 font-bold">CONTEXT / SEQUENCE LENGTH (<span class="text-[#38bdf8] font-mono">L</span>):</span>
+            <span class="font-bold text-white font-mono bg-[#181e24] px-2 py-0.5 rounded-xs border border-[#2a343d]">
+              <span id="slider-seq-val" class="text-[#38bdf8] font-bold">1024</span> tokens
+            </span>
+          </div>
+          <input 
+            type="range" 
+            id="slider-seq" 
+            min="128" 
+            max="4096" 
+            value="1024" 
+            step="128"
+            class="w-full accent-[#38bdf8] bg-[#1c242b] h-1.5 rounded-sm cursor-pointer"
+          />
+          <!-- Quick Clickable Presets for Sequence Length -->
+          <div class="flex items-center justify-between text-[10px] text-neutral-500 mt-1.5 gap-1 overflow-x-auto">
+            <button type="button" class="preset-seq-btn hover:text-[#38bdf8] cursor-pointer transition-colors" data-val="128">[L=128]</button>
+            <button type="button" class="preset-seq-btn hover:text-[#38bdf8] cursor-pointer transition-colors" data-val="512">[L=512]</button>
+            <button type="button" class="preset-seq-btn hover:text-[#38bdf8] cursor-pointer transition-colors" data-val="1024">[L=1024]</button>
+            <button type="button" class="preset-seq-btn hover:text-[#38bdf8] cursor-pointer transition-colors" data-val="2048">[L=2048]</button>
+            <button type="button" class="preset-seq-btn hover:text-[#38bdf8] cursor-pointer transition-colors" data-val="4096">[L=4096 Deep]</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Real-Time Analytical Metric Counters -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+        <div class="p-2.5 bg-[#121619] border border-[#1e252b] rounded-xs">
+          <span class="block text-[10px] text-neutral-500 font-bold uppercase">ARITHMETIC INTENSITY</span>
+          <span id="metric-intensity" class="text-sm sm:text-base font-extrabold text-white font-mono">
+            18.35
+          </span>
+          <span class="text-[9px] text-neutral-400 block">FLOPs / Byte</span>
+        </div>
+
+        <div class="p-2.5 bg-[#121619] border border-[#1e252b] rounded-xs">
+          <span class="block text-[10px] text-neutral-500 font-bold uppercase">ATTAINABLE SPEED</span>
+          <span id="metric-attainable" class="text-sm sm:text-base font-extrabold text-accent font-mono">
+            26.25
+          </span>
+          <span class="text-[9px] text-neutral-400 block">TFLOP/s</span>
+        </div>
+
+        <div class="p-2.5 bg-[#121619] border border-[#1e252b] rounded-xs">
+          <span class="block text-[10px] text-neutral-500 font-bold uppercase">RIDGE KNEE POINT</span>
+          <span id="metric-knee" class="text-sm sm:text-base font-extrabold text-[#38bdf8] font-mono">
+            200.6
+          </span>
+          <span class="text-[9px] text-neutral-400 block">FLOPs / Byte</span>
+        </div>
+
+        <div class="p-2.5 bg-[#121619] border border-[#1e252b] rounded-xs">
+          <span class="block text-[10px] text-neutral-500 font-bold uppercase">PEAK SATURATION</span>
+          <span id="metric-saturation" class="text-sm sm:text-base font-extrabold text-emerald-400 font-mono">
+            8.41%
+          </span>
+          <span class="text-[9px] text-neutral-400 block">Compute Ceiling</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SVG Log-Log Roofline Chart Visualizer -->
+  <div class="mt-6 p-2 sm:p-4 bg-[#090b0d] border border-[#1c2328] rounded-xs relative overflow-hidden">
+    
+    <div class="flex items-center justify-between text-[10px] text-neutral-500 mb-2 px-2 font-mono">
+      <span>LOG-LOG SCALE: ARITHMETIC INTENSITY (X) vs ATTAINABLE PERFORMANCE (Y)</span>
+      <span class="text-neutral-400 font-semibold">P_attainable = min( Peak_FLOPS, Bandwidth &times; Intensity )</span>
+    </div>
+
+    <!-- Scalable Vector Graphics Log-Log Canvas (overflow-hidden to prevent any visual bleeding) -->
+    <svg 
+      id="roofline-svg" 
+      viewBox="0 0 840 460" 
+      class="w-full h-auto overflow-hidden font-mono"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <defs>
+        <!-- Memory-Bound Shaded Gradient Zone -->
+        <linearGradient id="mem-bound-gradient" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.14" />
+          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.02" />
+        </linearGradient>
+
+        <!-- Compute-Bound Shaded Gradient Zone -->
+        <linearGradient id="comp-bound-gradient" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.03" />
+          <stop offset="100%" stop-color="#10b981" stop-opacity="0.16" />
+        </linearGradient>
+      </defs>
+
+      <!-- Background Plot Area Grid -->
+      <rect x="75" y="35" width="735" height="360" fill="#0c0f12" stroke="#1c252d" stroke-width="1" />
+
+      <!-- Shaded Zones (Dynamic SVG rects) -->
+      <rect id="zone-mem-bound" x="75" y="35" width="450" height="360" fill="url(#mem-bound-gradient)" />
+      <rect id="zone-comp-bound" x="525" y="35" width="285" height="360" fill="url(#comp-bound-gradient)" />
+
+      <!-- Vertical Gridlines (X-Axis Logarithmic Decades: 0.01, 0.1, 1, 10, 100, 250) -->
+      <!-- 0.01 -->
+      <line x1="75" y1="35" x2="75" y2="395" stroke="#222b33" stroke-width="1" stroke-dasharray="2 3" />
+      <text x="75" y="414" fill="#6e7e8c" font-size="10" text-anchor="middle">0.01</text>
+
+      <!-- 0.1 -->
+      <line x1="242" y1="35" x2="242" y2="395" stroke="#222b33" stroke-width="1" stroke-dasharray="2 3" />
+      <text x="242" y="414" fill="#6e7e8c" font-size="10" text-anchor="middle">0.1</text>
+
+      <!-- 1.0 -->
+      <line x1="409" y1="35" x2="409" y2="395" stroke="#2a353f" stroke-width="1.5" stroke-dasharray="2 3" />
+      <text x="409" y="414" fill="#9eb0bf" font-size="10" text-anchor="middle" font-weight="bold">1.0</text>
+
+      <!-- 10 -->
+      <line x1="576" y1="35" x2="576" y2="395" stroke="#222b33" stroke-width="1" stroke-dasharray="2 3" />
+      <text x="576" y="414" fill="#6e7e8c" font-size="10" text-anchor="middle">10</text>
+
+      <!-- 100 -->
+      <line x1="743" y1="35" x2="743" y2="395" stroke="#2a353f" stroke-width="1.5" stroke-dasharray="2 3" />
+      <text x="743" y="414" fill="#9eb0bf" font-size="10" text-anchor="middle" font-weight="bold">100</text>
+
+      <!-- 250 (Max Horizon) -->
+      <line x1="810" y1="35" x2="810" y2="395" stroke="#222b33" stroke-width="1" stroke-dasharray="2 3" />
+      <text x="810" y="414" fill="#6e7e8c" font-size="10" text-anchor="middle">250</text>
+
+      <!-- X-Axis Global Label -->
+      <text x="442" y="442" fill="#a4b3bf" font-size="11" font-weight="bold" text-anchor="middle" letter-spacing="1">
+        OPERATIONAL / ARITHMETIC INTENSITY (FLOPs / Byte)
+      </text>
+
+      <!-- Horizontal Gridlines (Y-Axis Logarithmic Decades: 10, 100, 1k, 10k, 100k, 1M GFLOP/s) -->
+      <!-- 10 GFLOP/s -->
+      <line x1="75" y1="395" x2="810" y2="395" stroke="#222b33" stroke-width="1" />
+      <text x="65" y="398" fill="#6e7e8c" font-size="10" text-anchor="end">10</text>
+
+      <!-- 100 GFLOP/s -->
+      <line x1="75" y1="323" x2="810" y2="323" stroke="#1c252d" stroke-width="1" stroke-dasharray="2 3" />
+      <text x="65" y="326" fill="#6e7e8c" font-size="10" text-anchor="end">100</text>
+
+      <!-- 1,000 GFLOP/s (1 TFLOP/s) -->
+      <line x1="75" y1="251" x2="810" y2="251" stroke="#222b33" stroke-width="1" stroke-dasharray="2 3" />
+      <text x="65" y="254" fill="#8898a6" font-size="10" text-anchor="end">1k (1TF)</text>
+
+      <!-- 10,000 GFLOP/s (10 TFLOP/s) -->
+      <line x1="75" y1="179" x2="810" y2="179" stroke="#1c252d" stroke-width="1" stroke-dasharray="2 3" />
+      <text x="65" y="182" fill="#6e7e8c" font-size="10" text-anchor="end">10k</text>
+
+      <!-- 100,000 GFLOP/s (100 TFLOP/s) -->
+      <line x1="75" y1="107" x2="810" y2="107" stroke="#222b33" stroke-width="1" stroke-dasharray="2 3" />
+      <text x="65" y="110" fill="#8898a6" font-size="10" text-anchor="end">100k</text>
+
+      <!-- 1,000,000 GFLOP/s (1 PFLOP/s) -->
+      <line x1="75" y1="35" x2="810" y2="35" stroke="#222b33" stroke-width="1" />
+      <text x="65" y="38" fill="#6e7e8c" font-size="10" text-anchor="end">1M (1PF)</text>
+
+      <!-- Y-Axis Global Label -->
+      <text transform="rotate(-90)" x="-215" y="22" fill="#a4b3bf" font-size="11" font-weight="bold" text-anchor="middle" letter-spacing="1">
+        ATTAINABLE PERFORMANCE (GFLOP/s)
+      </text>
+
+      <!-- Active Roofline Path (Bandwidth Slope + Compute Ceiling) -->
+      <path 
+        id="roofline-path" 
+        d="M 75,370 L 680,80 L 810,80" 
+        fill="none" 
+        stroke="#ff4500" 
+        stroke-width="3.5" 
+        stroke-linejoin="round"
+        stroke-linecap="round"
+      />
+
+      <!-- Roofline Slope Labels -->
+      <text id="roofline-bw-label" x="250" y="270" fill="#ff4500" font-size="10" font-weight="bold" transform="rotate(-26, 250, 270)">
+        Bandwidth Ceiling (1,555 GB/s)
+      </text>
+      <text id="roofline-peak-label" x="720" y="68" fill="#ff4500" font-size="10" font-weight="bold" text-anchor="end">
+        Peak Compute Ceiling (312k GFLOP/s)
+      </text>
+
+      <!-- Knee / Ridge Drop Line (Vertical hairline at intersection) -->
+      <line 
+        id="roofline-knee-line" 
+        x1="700" 
+        y1="35" 
+        x2="700" 
+        y2="395" 
+        stroke="#38bdf8" 
+        stroke-width="1.5" 
+        stroke-dasharray="4 3" 
+      />
+      <text id="roofline-knee-label" x="700" y="28" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="bold">
+        RIDGE KNEE
+      </text>
+
+      <!-- Crosshair Guidelines to Operating Point -->
+      <line id="crosshair-x" x1="409" y1="395" x2="409" y2="200" stroke="#ff4500" stroke-width="1" stroke-dasharray="3 2" stroke-opacity="0.8" />
+      <line id="crosshair-y" x1="75" y1="200" x2="409" y2="200" stroke="#ff4500" stroke-width="1" stroke-dasharray="3 2" stroke-opacity="0.8" />
+
+      <!-- Current Operating Point Dot (ModelArena Workload) with Native Pure SVG Pulse (no CSS overflow) -->
+      <g id="operating-point-group" transform="translate(409, 200)">
+        <circle id="point-pulse" r="7" fill="#ff4500" fill-opacity="0.3">
+          <animate attributeName="r" values="7;16;7" dur="2s" repeatCount="indefinite" />
+          <animate attributeName="fill-opacity" values="0.4;0.05;0.4" dur="2s" repeatCount="indefinite" />
+        </circle>
+        <circle id="point-core" r="6" fill="#ff4500" stroke="#ffffff" stroke-width="2" />
+        <circle r="2" fill="#000000" />
+      </g>
+
+      <!-- Live Floating Tooltip Box on SVG -->
+      <g id="operating-tooltip" transform="translate(425, 175)">
+        <rect width="195" height="40" rx="2" fill="#0b0e11" stroke="#ff4500" stroke-width="1.2" />
+        <text x="8" y="16" fill="#ffffff" font-size="10" font-weight="bold">
+          INTENSITY: <tspan id="tt-intensity" fill="#ff4500">18.35 FLOP/B</tspan>
+        </text>
+        <text x="8" y="32" fill="#a4b3bf" font-size="9.5">
+          SPEED: <tspan id="tt-perf" fill="#38bdf8" font-weight="bold">26,250 GFLOP/s</tspan>
+        </text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Deep Technical Architecture Justification Box (Zero-Copy Ring Buffer & ModelArena Rationale) -->
+  <div class="mt-6 p-4 sm:p-5 bg-[#0e1215] border-l-2 border-accent border-y border-r border-[#1e262d] rounded-xs space-y-3 font-mono text-[11px] sm:text-xs">
+    <div class="flex items-center justify-between border-b border-[#1c242b] pb-2">
+      <span class="text-accent font-bold tracking-wider text-xs flex items-center gap-1.5">
+        <span>⚡</span>
+        <span>MODELARENA SYSTEMS JUSTIFICATION: ZERO-COPY SHARED MEMORY RING-BUFFER</span>
+      </span>
+      <span id="regime-tag" class="px-2 py-0.5 rounded-xs bg-amber-950/80 text-amber-400 border border-amber-600/60 font-bold text-[10px]">
+        REGIME: MEMORY_BOUND
+      </span>
+    </div>
+
+    <div id="explanation-text" class="text-neutral-300 leading-relaxed space-y-2">
+      <!-- Dynamic explanation injected by TypeScript based on operational regime -->
+    </div>
+  </div>
+
+</div>
+
+<script>
+  import { playClick } from "../utils/audio";
+
+  interface HardwareSpec {
+    id: string;
+    name: string;
+    bandwidthGBs: number; // in GB/s
+    fp16PeakGFlops: number; // in GFLOP/s
+    archLabel: string;
+  }
+
+  const HARDWARE_SPECS: Record<string, HardwareSpec> = {
+    a100: {
+      id: "a100",
+      name: "NVIDIA A100 SXM4 (80GB)",
+      bandwidthGBs: 1555,
+      fp16PeakGFlops: 312000,
+      archLabel: "80GB HBM2e"
+    },
+    rtx4090: {
+      id: "rtx4090",
+      name: "NVIDIA RTX 4090 (24GB)",
+      bandwidthGBs: 1008,
+      fp16PeakGFlops: 82600,
+      archLabel: "24GB GDDR6X"
+    },
+    t4: {
+      id: "t4",
+      name: "NVIDIA T4 (16GB)",
+      bandwidthGBs: 320,
+      fp16PeakGFlops: 65000,
+      archLabel: "16GB GDDR6"
+    }
+  };
+
+  interface PrecisionSpec {
+    id: string;
+    label: string;
+    bytesPerWeight: number;
+    computeMultiplier: number; // relative to hardware FP16 base
+  }
+
+  const PRECISION_SPECS: Record<string, PrecisionSpec> = {
+    fp32: {
+      id: "fp32",
+      label: "FP32",
+      bytesPerWeight: 4,
+      computeMultiplier: 0.25 // Standard FP32 compute ceiling
+    },
+    fp16: {
+      id: "fp16",
+      label: "FP16 / BF16",
+      bytesPerWeight: 2,
+      computeMultiplier: 1.0 // Baseline FP16 Tensor Cores
+    },
+    int8: {
+      id: "int8",
+      label: "INT8 TensorCore",
+      bytesPerWeight: 1,
+      computeMultiplier: 2.0 // INT8 Tensor Core 2x throughput
+    },
+    int4: {
+      id: "int4",
+      label: "INT4 AWQ",
+      bytesPerWeight: 0.5,
+      computeMultiplier: 4.0 // INT4 AWQ 4x throughput
+    }
+  };
+
+  function setupRooflineSimulator() {
+    // DOM Elements
+    const sliderBatch = document.getElementById("slider-batch") as HTMLInputElement | null;
+    const sliderSeq = document.getElementById("slider-seq") as HTMLInputElement | null;
+    const sliderBatchVal = document.getElementById("slider-batch-val");
+    const sliderSeqVal = document.getElementById("slider-seq-val");
+
+    const statusBadge = document.getElementById("roofline-status-badge");
+    const statusText = document.getElementById("roofline-status-text");
+    const regimeTag = document.getElementById("regime-tag");
+    const explanationText = document.getElementById("explanation-text");
+
+    const metricIntensity = document.getElementById("metric-intensity");
+    const metricAttainable = document.getElementById("metric-attainable");
+    const metricKnee = document.getElementById("metric-knee");
+    const metricSaturation = document.getElementById("metric-saturation");
+
+    // SVG Elements
+    const rooflinePath = document.getElementById("roofline-path");
+    const rooflineBwLabel = document.getElementById("roofline-bw-label");
+    const rooflinePeakLabel = document.getElementById("roofline-peak-label");
+    const kneeLine = document.getElementById("roofline-knee-line");
+    const kneeLabel = document.getElementById("roofline-knee-label");
+    const crosshairX = document.getElementById("crosshair-x");
+    const crosshairY = document.getElementById("crosshair-y");
+    const operatingGroup = document.getElementById("operating-point-group");
+    const pointPulse = document.getElementById("point-pulse");
+    const pointCore = document.getElementById("point-core");
+    const operatingTooltip = document.getElementById("operating-tooltip");
+    const ttIntensity = document.getElementById("tt-intensity");
+    const ttPerf = document.getElementById("tt-perf");
+    const zoneMemBound = document.getElementById("zone-mem-bound");
+    const zoneCompBound = document.getElementById("zone-comp-bound");
+
+    if (!sliderBatch || !sliderSeq || !rooflinePath || !operatingGroup) return;
+
+    // Simulation State
+    let currentHwKey = "a100";
+    let currentPrecisionKey = "fp16";
+
+    // Chart Dimensions & Log-Scale Bounds (ViewBox 840 x 460)
+    // Sumbu X: 0.01 hingga 250 FLOPs/Byte (log10: -2 to 2.398)
+    const X_MIN_LOG = -2; // log10(0.01) = -2
+    const X_MAX_LOG = Math.log10(250); // log10(250) ≈ 2.3979
+    const X_SPAN = X_MAX_LOG - X_MIN_LOG;
+
+    // Sumbu Y: 10 hingga 1,000,000 GFLOP/s (10 GFLOP/s to 1 PFLOP/s, 5 decades)
+    const Y_MIN_LOG = 1; // log10(10) = 1
+    const Y_MAX_LOG = 6; // log10(1,000,000) = 6
+    const Y_SPAN = Y_MAX_LOG - Y_MIN_LOG;
+
+    const PLOT_LEFT = 75;
+    const PLOT_WIDTH = 735; // 810 - 75
+    const PLOT_TOP = 35;
+    const PLOT_HEIGHT = 360; // 395 - 35
+
+    function getXPos(intensity: number): number {
+      const clamped = Math.max(0.01, Math.min(250, intensity));
+      const logVal = Math.log10(clamped);
+      const ratio = (logVal - X_MIN_LOG) / X_SPAN;
+      return PLOT_LEFT + ratio * PLOT_WIDTH;
+    }
+
+    function getYPos(gflops: number): number {
+      const clamped = Math.max(10, Math.min(1000000, gflops));
+      const logVal = Math.log10(clamped);
+      const ratio = (logVal - Y_MIN_LOG) / Y_SPAN;
+      return (PLOT_TOP + PLOT_HEIGHT) - ratio * PLOT_HEIGHT;
+    }
+
+    function updateSimulation() {
+      const hw = HARDWARE_SPECS[currentHwKey] || HARDWARE_SPECS.a100;
+      const prec = PRECISION_SPECS[currentPrecisionKey] || PRECISION_SPECS.fp16;
+
+      const B = parseInt(sliderBatch.value, 10);
+      const L = parseInt(sliderSeq.value, 10);
+
+      if (sliderBatchVal) sliderBatchVal.textContent = B.toString();
+      if (sliderSeqVal) sliderSeqVal.textContent = L.toString();
+
+      // Effective peak compute under selected precision
+      const effectivePeakGFlops = hw.fp16PeakGFlops * prec.computeMultiplier;
+      const bandwidthGBs = hw.bandwidthGBs;
+
+      // Ridge Knee Point: I_knee = Peak / Bandwidth (FLOPs/Byte)
+      const kneeIntensity = effectivePeakGFlops / bandwidthGBs;
+
+      // Mathematically grounded Transformer Workload Arithmetic Intensity:
+      // P = 250M parameters, D = 1024, N = 16 layers
+      // FLOPs per step: 2*P*B + 4*B*L*D*N
+      // Memory per step: P * bytesPerWeight + activation/KV cache transfers
+      const baseFlops = 2 * 250_000_000 * B;
+      const attnFlops = 4 * B * L * 1024 * 16;
+      const totalFlops = baseFlops + attnFlops;
+
+      const weightBytes = 250_000_000 * prec.bytesPerWeight;
+      const actBytes = B * L * 1024 * 16 * prec.bytesPerWeight * 0.0018;
+      const totalBytes = weightBytes + actBytes;
+
+      // Arithmetic intensity in FLOPs/Byte
+      const operationalIntensity = Math.max(0.01, Math.min(250, totalFlops / totalBytes));
+
+      // Attainable Performance via Roofline Formulation:
+      // P_attainable = min( Peak, Bandwidth × Intensity )
+      const theoreticalAttainable = Math.min(effectivePeakGFlops, bandwidthGBs * operationalIntensity);
+      // Realistic efficiency (92% kernel saturation)
+      const realisticAttainable = theoreticalAttainable * 0.92;
+
+      // Regime determination
+      const isComputeBound = operationalIntensity >= kneeIntensity;
+
+      // Update Analytical Metric Counters
+      if (metricIntensity) {
+        metricIntensity.textContent = operationalIntensity.toFixed(2);
+      }
+      if (metricAttainable) {
+        metricAttainable.textContent = (realisticAttainable / 1000).toFixed(2);
+      }
+      if (metricKnee) {
+        metricKnee.textContent = kneeIntensity.toFixed(1);
+      }
+      if (metricSaturation) {
+        const satPct = (realisticAttainable / effectivePeakGFlops) * 100;
+        metricSaturation.textContent = satPct.toFixed(1) + "%";
+      }
+
+      // Update Status Badge & Regime
+      if (statusBadge && statusText && regimeTag) {
+        if (isComputeBound) {
+          statusBadge.className = "px-2.5 py-1 rounded-xs bg-emerald-950/70 border border-emerald-500/60 text-emerald-400 font-bold text-[11px] tracking-wider transition-colors flex items-center gap-1.5 shadow-sm";
+          statusText.textContent = "● STATUS: COMPUTE_BOUND (Saturating Tensor Cores)";
+          regimeTag.className = "px-2 py-0.5 rounded-xs bg-emerald-950/80 text-emerald-400 border border-emerald-600/60 font-bold text-[10px]";
+          regimeTag.textContent = "REGIME: COMPUTE_BOUND";
+        } else {
+          statusBadge.className = "px-2.5 py-1 rounded-xs bg-amber-950/70 border border-amber-500/60 text-amber-400 font-bold text-[11px] tracking-wider transition-colors flex items-center gap-1.5 shadow-sm";
+          statusText.textContent = "● STATUS: MEMORY_BOUND (Bounded by HBM Bandwidth)";
+          regimeTag.className = "px-2 py-0.5 rounded-xs bg-amber-950/80 text-amber-400 border border-amber-600/60 font-bold text-[10px]";
+          regimeTag.textContent = "REGIME: MEMORY_BOUND";
+        }
+      }
+
+      // Update Operating Dot Colors
+      if (pointPulse && pointCore) {
+        const accentColor = isComputeBound ? "#10b981" : "#ff4500";
+        pointPulse.setAttribute("fill", accentColor);
+        pointCore.setAttribute("fill", accentColor);
+      }
+
+      // Update Explanation Narrative
+      if (explanationText) {
+        if (isComputeBound) {
+          explanationText.innerHTML = `
+            <p>
+              Dengan Batch Size <strong>B=${B}</strong> dan Context Length <strong>L=${L}</strong> pada presisi <strong>${prec.label}</strong>, intensitas komputasi ModelArena mencapai <span class="text-emerald-400 font-bold">${operationalIntensity.toFixed(2)} FLOPs/Byte</span>, melampaui knee point (<span class="text-[#38bdf8] font-bold">${kneeIntensity.toFixed(1)} FLOPs/Byte</span>). Beban kerja saat ini berada di rezim <strong>COMPUTE_BOUND</strong>.
+            </p>
+            <p>
+              <strong>Justifikasi ModelArena:</strong> Pada rezim ini, bobot model di-reuse berkali-kali untuk setiap urutan dalam batch, sehingga transfer data ke memory bus teramortisasi penuh. Tensor Cores ${hw.name} beroperasi mendekati utilisasi puncak (<span class="text-white font-bold">${(realisticAttainable / 1000).toFixed(1)} TFLOP/s</span>, ${((realisticAttainable / effectivePeakGFlops) * 100).toFixed(1)}% dari kapasitas silikon). Fokus arbiter ModelArena beralih ke <em>stream interleaving</em> dan <em>gradient accumulation</em> tanpa terjadi memory bandwidth stalls.
+            </p>
+          `;
+        } else {
+          explanationText.innerHTML = `
+            <p>
+              Dengan Batch Size <strong>B=${B}</strong> dan Context Length <strong>L=${L}</strong> pada presisi <strong>${prec.label}</strong>, intensitas komputasi ModelArena berada pada <span class="text-amber-400 font-bold">${operationalIntensity.toFixed(2)} FLOPs/Byte</span>, berada di bawah batas knee point (<span class="text-[#38bdf8] font-bold">${kneeIntensity.toFixed(1)} FLOPs/Byte</span>). Beban kerja saat ini tertahan di rezim <strong>MEMORY_BOUND</strong>.
+            </p>
+            <p>
+              <strong>Justifikasi ModelArena:</strong> Pada inferensi agen interaktif atau eksplorasi kebijakan ber-batch kecil (<em>B &le; 8</em>), throughput dibatasi secara fisik oleh bandwidth memori (${bandwidthGBs} GB/s), bukan oleh kecepatan Tensor Core. Jika sistem menggunakan arsitektur konvensional yang menyalin bobot antar-proses (IPC socket / PyTorch DDP copies), performa akan anjlok drastis. <strong>ModelArena mengatasi ini secara fundamental dengan zero-copy POSIX shared memory ring-buffer</strong>—menghilangkan duplikasi memory roundtrip dan mengekstraksi 100% bandwidth fisik hardware.
+            </p>
+          `;
+        }
+      }
+
+      // Draw Roofline Path in SVG
+      const startX = 0.01;
+      const startY = Math.min(effectivePeakGFlops, bandwidthGBs * startX);
+      const startPixelX = getXPos(startX);
+      const startPixelY = getYPos(startY);
+
+      const kneePixelX = getXPos(kneeIntensity);
+      const kneePixelY = getYPos(effectivePeakGFlops);
+      const endPixelX = getXPos(250);
+
+      let pathD = "";
+      if (kneeIntensity <= 250) {
+        pathD = `M ${startPixelX},${startPixelY} L ${kneePixelX},${kneePixelY} L ${endPixelX},${kneePixelY}`;
+      } else {
+        const endY = Math.min(effectivePeakGFlops, bandwidthGBs * 250);
+        pathD = `M ${startPixelX},${startPixelY} L ${endPixelX},${getYPos(endY)}`;
+      }
+
+      rooflinePath.setAttribute("d", pathD);
+
+      // Update Labels on Roofline
+      if (rooflineBwLabel) {
+        rooflineBwLabel.textContent = `Bandwidth Ceiling (${bandwidthGBs.toLocaleString()} GB/s)`;
+      }
+      if (rooflinePeakLabel) {
+        rooflinePeakLabel.setAttribute("y", (kneePixelY - 10).toString());
+        rooflinePeakLabel.textContent = `Peak Compute Ceiling (${Math.round(effectivePeakGFlops / 1000).toLocaleString()} TFLOP/s)`;
+      }
+
+      // Update Knee Line & Label
+      if (kneeLine && kneeLabel) {
+        if (kneeIntensity <= 250) {
+          kneeLine.style.display = "block";
+          kneeLabel.style.display = "block";
+          kneeLine.setAttribute("x1", kneePixelX.toString());
+          kneeLine.setAttribute("x2", kneePixelX.toString());
+          kneeLabel.setAttribute("x", kneePixelX.toString());
+          kneeLabel.textContent = `RIDGE KNEE: ${kneeIntensity.toFixed(1)} FLOP/B`;
+        } else {
+          kneeLine.style.display = "none";
+          kneeLabel.style.display = "none";
+        }
+      }
+
+      // Update Shaded Zones
+      if (zoneMemBound && zoneCompBound) {
+        const boundX = Math.min(PLOT_LEFT + PLOT_WIDTH, Math.max(PLOT_LEFT, kneePixelX));
+        zoneMemBound.setAttribute("x", PLOT_LEFT.toString());
+        zoneMemBound.setAttribute("width", Math.max(0, boundX - PLOT_LEFT).toString());
+
+        zoneCompBound.setAttribute("x", boundX.toString());
+        zoneCompBound.setAttribute("width", Math.max(0, (PLOT_LEFT + PLOT_WIDTH) - boundX).toString());
+      }
+
+      // Update Operating Point Position
+      const opX = getXPos(operationalIntensity);
+      const opY = getYPos(realisticAttainable);
+
+      operatingGroup.setAttribute("transform", `translate(${opX}, ${opY})`);
+
+      // Update Crosshairs
+      if (crosshairX) {
+        crosshairX.setAttribute("x1", opX.toString());
+        crosshairX.setAttribute("x2", opX.toString());
+        crosshairX.setAttribute("y1", (PLOT_TOP + PLOT_HEIGHT).toString());
+        crosshairX.setAttribute("y2", opY.toString());
+        crosshairX.setAttribute("stroke", isComputeBound ? "#10b981" : "#ff4500");
+      }
+
+      if (crosshairY) {
+        crosshairY.setAttribute("x1", PLOT_LEFT.toString());
+        crosshairY.setAttribute("x2", opX.toString());
+        crosshairY.setAttribute("y1", opY.toString());
+        crosshairY.setAttribute("y2", opY.toString());
+        crosshairY.setAttribute("stroke", isComputeBound ? "#10b981" : "#ff4500");
+      }
+
+      // Update Floating Tooltip Position
+      if (operatingTooltip && ttIntensity && ttPerf) {
+        let ttX = opX + 15;
+        let ttY = opY - 45;
+        if (ttX + 195 > PLOT_LEFT + PLOT_WIDTH) {
+          ttX = opX - 210;
+        }
+        if (ttY < PLOT_TOP + 10) {
+          ttY = opY + 15;
+        }
+        operatingTooltip.setAttribute("transform", `translate(${ttX}, ${ttY})`);
+        ttIntensity.textContent = `${operationalIntensity.toFixed(2)} FLOP/B`;
+        ttPerf.textContent = `${Math.round(realisticAttainable).toLocaleString()} GFLOP/s`;
+      }
+    }
+
+    // Hardware Target Selector Handlers
+    function setHardware(hwKey: string) {
+      if (!HARDWARE_SPECS[hwKey]) return;
+      currentHwKey = hwKey;
+
+      document.querySelectorAll<HTMLButtonElement>(".hw-select-btn").forEach((btn) => {
+        const isCurrent = btn.getAttribute("data-hw") === hwKey;
+        const nameEl = btn.querySelector(".hw-name");
+        const ind = btn.querySelector(".hw-indicator");
+
+        if (isCurrent) {
+          btn.className = "hw-select-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-xs border border-accent bg-accent/15 text-left transition-all duration-150 cursor-pointer text-xs shadow-sm";
+          if (nameEl) nameEl.className = "hw-name font-bold text-white flex items-center gap-1.5";
+          if (ind) {
+            ind.textContent = "● ACTIVE";
+            ind.className = "hw-indicator text-[10px] text-accent font-bold px-1.5 py-0.5 rounded-xs bg-accent/20 border border-accent/40";
+          }
+        } else {
+          btn.className = "hw-select-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xs border border-[#222a30] bg-[#12161a] hover:border-accent/40 text-left transition-all duration-150 cursor-pointer text-xs";
+          if (nameEl) nameEl.className = "hw-name font-bold text-neutral-300 flex items-center gap-1.5";
+          if (ind) {
+            ind.textContent = "○ SELECT";
+            ind.className = "hw-indicator text-[10px] text-neutral-500 font-normal";
+          }
+        }
+      });
+
+      playClick();
+      updateSimulation();
+    }
+
+    // Precision Mode Selector Handlers
+    function setPrecision(precKey: string) {
+      if (!PRECISION_SPECS[precKey]) return;
+      currentPrecisionKey = precKey;
+
+      document.querySelectorAll<HTMLButtonElement>(".precision-btn").forEach((btn) => {
+        const isCurrent = btn.getAttribute("data-precision") === precKey;
+        const titleEl = btn.querySelector(".prec-title");
+
+        if (isCurrent) {
+          btn.className = "precision-btn active px-3 py-2 rounded-xs border border-accent bg-accent/15 text-white font-bold text-[11px] transition-all cursor-pointer text-left shadow-sm";
+          if (titleEl) titleEl.className = "prec-title text-white";
+        } else {
+          btn.className = "precision-btn px-3 py-2 rounded-xs border border-[#222a30] bg-[#12161a] hover:border-accent/40 text-neutral-400 font-bold text-[11px] transition-all cursor-pointer text-left";
+          if (titleEl) titleEl.className = "prec-title text-neutral-200";
+        }
+      });
+
+      playClick();
+      updateSimulation();
+    }
+
+    // Attach click listeners to hardware buttons
+    document.querySelectorAll<HTMLButtonElement>(".hw-select-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const hwId = btn.getAttribute("data-hw");
+        if (hwId) setHardware(hwId);
+      });
+    });
+
+    // Attach click listeners to precision buttons
+    document.querySelectorAll<HTMLButtonElement>(".precision-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const precId = btn.getAttribute("data-precision");
+        if (precId) setPrecision(precId);
+      });
+    });
+
+    // Slider Event Listeners (both 'input' and 'change' for maximum browser compatibility)
+    sliderBatch.addEventListener("input", () => {
+      updateSimulation();
+    });
+    sliderBatch.addEventListener("change", () => {
+      updateSimulation();
+    });
+
+    sliderSeq.addEventListener("input", () => {
+      updateSimulation();
+    });
+    sliderSeq.addEventListener("change", () => {
+      updateSimulation();
+    });
+
+    // Quick Preset Buttons for Batch Size
+    document.querySelectorAll<HTMLButtonElement>(".preset-batch-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const val = btn.getAttribute("data-val");
+        if (val) {
+          sliderBatch.value = val;
+          playClick();
+          updateSimulation();
+        }
+      });
+    });
+
+    // Quick Preset Buttons for Sequence Length
+    document.querySelectorAll<HTMLButtonElement>(".preset-seq-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const val = btn.getAttribute("data-val");
+        if (val) {
+          sliderSeq.value = val;
+          playClick();
+          updateSimulation();
+        }
+      });
+    });
+
+    // Initial render
+    updateSimulation();
+  }
+
+  // Idempotent initialization
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupRooflineSimulator);
+  } else {
+    setupRooflineSimulator();
+  }
+  document.addEventListener("astro:page-load", setupRooflineSimulator);
+</script>

@@ -885,6 +885,40 @@
           break;
         }
 
+        case "roofline": {
+          playSuccess();
+          const html = `
+            <div class="space-y-1.5 text-[11px] sm:text-xs">
+              <div class="text-accent font-bold">[HARDWARE ROOFLINE MODEL TELEMETRY]</div>
+              <div class="text-neutral-300">
+                Formula: P_attainable = min( Peak_FLOPS, Bandwidth &times; Operational_Intensity )
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[10px]">
+                <div class="p-2 bg-[#121619] border border-[#222]">
+                  <div class="text-white font-bold">NVIDIA A100 SXM4</div>
+                  <div class="text-neutral-400">BW: 1,555 GB/s | Peak: 312 TF</div>
+                  <div class="text-[#38bdf8]">Knee: 200.6 FLOP/B</div>
+                </div>
+                <div class="p-2 bg-[#121619] border border-[#222]">
+                  <div class="text-white font-bold">NVIDIA RTX 4090</div>
+                  <div class="text-neutral-400">BW: 1,008 GB/s | Peak: 82.6 TF</div>
+                  <div class="text-[#38bdf8]">Knee: 81.9 FLOP/B</div>
+                </div>
+                <div class="p-2 bg-[#121619] border border-[#222]">
+                  <div class="text-white font-bold">NVIDIA T4</div>
+                  <div class="text-neutral-400">BW: 320 GB/s | Peak: 65 TF</div>
+                  <div class="text-[#38bdf8]">Knee: 203.1 FLOP/B</div>
+                </div>
+              </div>
+              <div class="pt-1 text-neutral-400 text-[10px]">
+                Interactive visualizer: <a href="/projects/modelarena#hardware-roofline" class="text-accent underline font-bold" target="_self">/projects/modelarena#hardware-roofline ↗</a>
+              </div>
+            </div>
+          `;
+          appendLogEntry(trimmed, html);
+          break;
+        }
+
         case "clear": {
           if (activeTrainingInterval) {
             clearInterval(activeTrainingInterval);
