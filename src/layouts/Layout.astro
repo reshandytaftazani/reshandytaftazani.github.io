@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import CustomCursor from '../components/CustomCursor.astro';
+import PageTransition from '../components/PageTransition.astro';
 
 interface Props {
   title?: string;
@@ -46,6 +47,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   </head>
   <body class="bg-background text-foreground font-sans antialiased min-h-screen relative overflow-x-hidden selection:bg-[#ff4500] selection:text-white">
     
+    <!-- Swiss Telemetry Boot Sequence & Continuous Upward Wipe Shutter -->
+    <PageTransition />
+
     <!-- Custom Interactive Spring Cursor -->
     <CustomCursor />
 
@@ -78,6 +82,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
         document.querySelectorAll(".reveal-init, .reveal-hero").forEach((el) => {
           revealObserver.observe(el);
+        });
+
+        // Trigger immediate smooth reveal for hero elements when curtain lifts
+        window.addEventListener("swiss:page-unveiled", () => {
+          document.querySelectorAll(".reveal-hero").forEach((el) => {
+            el.classList.add("is-revealed");
+          });
         });
       }
 

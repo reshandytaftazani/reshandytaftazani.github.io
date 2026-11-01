@@ -1,0 +1,388 @@
+---
+// PageTransition.astro — Swiss Telemetry Boot Sequence & Continuous Upward Wipe Shutter
+// Inspired by Daniele Buser (danielebuser.com) & Matthieu Givelet (matthieugivelet.com)
+
+const pathname = Astro.url.pathname;
+const isLandingPage = pathname === "/" || pathname === "" || pathname.endsWith("/index.html");
+---
+
+{isLandingPage && (
+  <div 
+    id="swiss-preloader"
+    class="fixed inset-0 z-[99990] bg-[#0a0a0a] text-foreground flex flex-col justify-between p-6 sm:p-10 lg:p-14 font-mono select-none overflow-hidden"
+    aria-label="System Initializing"
+    aria-hidden="true"
+  >
+    <script is:inline>
+      if (sessionStorage.getItem("swiss_nav_transition") === "fast") {
+        const el = document.getElementById("swiss-preloader");
+        if (el) el.style.display = "none";
+      }
+    </script>
+
+    <!-- Top Telemetry Header -->
+    <div class="flex items-center justify-between text-caption text-neutral-dark border-b border-grid-line-dark pb-4">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+        <span class="text-foreground font-bold tracking-wider">[SYS_BOOT // RESHANDY_KERNEL_v2.4]</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-3 text-neutral-dark text-xs">
+        <span id="preloader-clock">--:--:-- WIB</span>
+        <span>•</span>
+        <span>06°21'S 106°49'E</span>
+      </div>
+    </div>
+
+    <!-- Center Typographic Authority Counter & Gauge -->
+    <div class="my-auto w-full max-w-4xl mx-auto flex flex-col items-start space-y-6">
+      <div class="flex items-baseline gap-2">
+        <span 
+          id="preloader-counter" 
+          class="text-7xl sm:text-9xl lg:text-[11rem] font-bold tracking-tighter text-white leading-none tabular-nums"
+        >
+          000
+        </span>
+        <span class="text-4xl sm:text-6xl lg:text-7xl font-bold text-accent">%</span>
+      </div>
+
+      <!-- Hairline Progress Gauge -->
+      <div class="w-full h-1 bg-[#1a1a1a] relative overflow-hidden">
+        <div 
+          id="preloader-bar" 
+          class="h-full bg-accent transition-all duration-75 ease-out"
+          style="width: 0%;"
+        ></div>
+      </div>
+
+      <!-- Dynamic Kernel Boot Log Stream -->
+      <div class="flex items-center justify-between w-full text-caption text-neutral-400">
+        <span id="preloader-log" class="text-accent font-semibold tracking-wide">
+          &gt; INITIALIZING COMPUTE ECOSYSTEM...
+        </span>
+        <span class="text-neutral-dark hidden md:inline font-mono">
+          [MEM: ZERO_LEAKAGE]
+        </span>
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry Footer -->
+    <div class="flex items-center justify-between text-[11px] text-neutral-dark border-t border-grid-line-dark pt-4">
+      <div class="flex items-center gap-4">
+        <span>CS @ UNIVERSITAS INDONESIA</span>
+        <span class="hidden sm:inline">•</span>
+        <span class="hidden sm:inline">MLE &amp; SYSTEMS ARCHITECTURE</span>
+      </div>
+      <div class="flex items-center gap-2 text-accent font-bold">
+        <span>VERIFIED SPEC</span>
+        <span>✓</span>
+      </div>
+    </div>
+  </div>
+)}
+
+<!-- Pre-paint guard: If arriving via internal navigation, maintain shutter covering the screen before first paint -->
+<script is:inline>
+  if (sessionStorage.getItem("swiss_nav_transition") === "fast") {
+    document.documentElement.classList.add("swiss-shutter-covered");
+  }
+</script>
+
+<style is:global>
+  /* Keeps the destination page completely black and covered before first paint */
+  html.swiss-shutter-covered #swiss-shutter {
+    display: block !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+</style>
+
+<!-- 2. Continuous Upward Wipe Curtain / Shutter Overlay -->
+<div 
+  id="swiss-shutter"
+  class="fixed inset-0 z-[99995] bg-[#0a0a0a] pointer-events-none will-change-transform border-t-2 border-accent"
+  style="display: none; transform: translate3d(0, 100%, 0); box-shadow: 0 -4px 28px rgba(255, 69, 0, 0.35);"
+  aria-hidden="true"
+></div>
+
+<script>
+  function setupPageTransition() {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const preloader = document.getElementById("swiss-preloader");
+    const shutter = document.getElementById("swiss-shutter");
+    const counterEl = document.getElementById("preloader-counter");
+    const barEl = document.getElementById("preloader-bar");
+    const logEl = document.getElementById("preloader-log");
+    const clockEl = document.getElementById("preloader-clock");
+
+    if (!shutter) return;
+
+    // Fast-exit if reduced motion is requested
+    if (prefersReducedMotion) {
+      if (preloader) preloader.style.display = "none";
+      return;
+    }
+
+    // Real-time WIB clock in preloader header
+    if (clockEl) {
+      const updateClock = () => {
+        const now = new Date();
+        const wibTime = new Intl.DateTimeFormat("en-GB", {
+          timeZone: "Asia/Jakarta",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        }).format(now);
+        clockEl.textContent = `${wibTime} WIB`;
+      };
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
+    const pathname = window.location.pathname;
+    const isLandingPage = pathname === "/" || pathname === "" || pathname.endsWith("/index.html");
+    const navigationEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const isReload = navigationEntry?.type === "reload";
+    const transitionType = sessionStorage.getItem("swiss_nav_transition");
+
+    const isCoveredInitially = document.documentElement.classList.contains("swiss-shutter-covered");
+
+    // Clean up temporary session flag
+    if (transitionType) {
+      sessionStorage.removeItem("swiss_nav_transition");
+    }
+
+    // Determine if full boot sequence is needed:
+    // Only run on landing page if it is first load, page refresh, or direct visit
+    const needsFullBoot = isLandingPage && (isReload || transitionType !== "fast");
+
+    if (preloader && !needsFullBoot) {
+      preloader.style.display = "none";
+    }
+
+    // A. Shutter Reveal (Runs whenever entering a page via wipe)
+    function executeShutterReveal() {
+      if (!shutter) return;
+      
+      shutter.style.display = "block";
+      // Wipe upwards from 0% to -100% to uncover the new page
+      shutter.style.transition = "transform 0.65s cubic-bezier(0.85, 0, 0.15, 1)";
+      shutter.style.transform = "translate3d(0, -100%, 0)";
+
+      const onTransitionEnd = () => {
+        shutter.style.transition = "none";
+        shutter.style.transform = "translate3d(0, 100%, 0)";
+        shutter.style.display = "none"; // Hide completely so shadow never bleeds into viewport
+        shutter.removeEventListener("transitionend", onTransitionEnd);
+      };
+
+      shutter.addEventListener("transitionend", onTransitionEnd);
+    }
+
+    // B. Full Swiss Telemetry Boot Sequence (1.2s Snappy Simulation for Landing Page)
+    if (needsFullBoot && preloader && counterEl && barEl && logEl) {
+      document.body.style.overflow = "hidden";
+
+      const bootLogs = [
+        { threshold: 10, text: "> INITIALIZING COMPUTE ECOSYSTEM..." },
+        { threshold: 30, text: "> VERIFYING ZERO DATA LEAKAGE INVARIANTS..." },
+        { threshold: 55, text: "> LOADING PYTORCH SLIDING MEMORY POOL..." },
+        { threshold: 75, text: "> INGESTING DEFENSIVE LEDGER ATOMICITY GATES..." },
+        { threshold: 92, text: "> HYDRATING SWISS EDITORIAL COMPONENT MATRIX..." },
+        { threshold: 100, text: "> ALL SYSTEMS GO // UNVEILING WORKS [OK]" },
+      ];
+
+      let progress = 0;
+      const startTime = performance.now();
+      const totalDuration = 1150; // 1.15 seconds total boot sequence
+
+      function updateBootSequence(now: number) {
+        const elapsed = now - startTime;
+        progress = Math.min(100, Math.floor((elapsed / totalDuration) * 100));
+
+        // Format progress with leading zeros: 007, 045, 100
+        const formatted = String(progress).padStart(3, "0");
+        counterEl.textContent = formatted;
+        barEl.style.width = `${progress}%`;
+
+        // Update active telemetry log message
+        const currentLog = bootLogs.slice().reverse().find((l) => progress >= l.threshold);
+        if (currentLog && logEl.textContent !== currentLog.text) {
+          logEl.textContent = currentLog.text;
+        }
+
+        if (progress < 100) {
+          requestAnimationFrame(updateBootSequence);
+        } else {
+          // Boot complete: launch Continuous Upward Wipe
+          setTimeout(() => {
+            shutter.style.display = "block";
+            shutter.style.transform = "translate3d(0, 100%, 0)";
+            void shutter.offsetHeight; // force reflow
+
+            // 1. Shutter slides up from bottom to center (100% -> 0%)
+            shutter.style.transition = "transform 0.5s cubic-bezier(0.85, 0, 0.15, 1)";
+            shutter.style.transform = "translate3d(0, 0, 0)";
+
+            const onCovered = () => {
+              shutter.removeEventListener("transitionend", onCovered);
+              // Hide preloader behind covered shutter
+              preloader.style.display = "none";
+              document.body.style.overflow = "";
+
+              // Trigger any reveal animations on landing page
+              window.dispatchEvent(new CustomEvent("swiss:page-unveiled"));
+
+              // 2. Shutter continues up (0% -> -100%) to reveal landing page
+              setTimeout(() => {
+                executeShutterReveal();
+              }, 40);
+            };
+
+            shutter.addEventListener("transitionend", onCovered);
+          }, 120);
+        }
+      }
+
+      requestAnimationFrame(updateBootSequence);
+
+      // Failsafe timer (guarantees preloader never blocks interface under any edge case)
+      setTimeout(() => {
+        if (preloader.style.display !== "none") {
+          preloader.style.display = "none";
+          document.body.style.overflow = "";
+        }
+      }, 2500);
+
+    } else if (transitionType === "fast" || isCoveredInitially) {
+      // Fast internal navigation:
+      // Destination page started 100% covered in black (before paint).
+      // Now lift curtain (0% -> -100%) unveiling the new page smoothly!
+      document.documentElement.classList.remove("swiss-shutter-covered");
+      shutter.style.display = "block";
+      shutter.style.transform = "translate3d(0, 0, 0)";
+
+      setTimeout(() => {
+        executeShutterReveal();
+      }, 50);
+
+    } else if (!isLandingPage) {
+      // Direct visit or refresh on non-landing pages (e.g. /projects or /resume):
+      // Perform full two-stage curtain wipe (100% -> 0% -> -100%) without any loading counter!
+      shutter.style.display = "block";
+      shutter.style.transform = "translate3d(0, 100%, 0)";
+      void shutter.offsetHeight;
+
+      shutter.style.transition = "transform 0.4s cubic-bezier(0.85, 0, 0.15, 1)";
+      shutter.style.transform = "translate3d(0, 0, 0)";
+
+      const onDirectCovered = () => {
+        shutter.removeEventListener("transitionend", onDirectCovered);
+        setTimeout(() => {
+          executeShutterReveal();
+        }, 40);
+      };
+
+      shutter.addEventListener("transitionend", onDirectCovered);
+    }
+
+    // C. Global Internal Link Interceptor (for bottom-to-top curtain navigation)
+    function setupLinkTransitions() {
+      document.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((link) => {
+        // Skip links that already have special click handlers, external, hash, or downloads
+        if (link.dataset.hasTransitionListener === "true") return;
+        link.dataset.hasTransitionListener = "true";
+
+        link.addEventListener("click", (e) => {
+          const href = link.getAttribute("href");
+          if (!href) return;
+
+          // Ignore special links
+          if (
+            href.startsWith("#") ||
+            href.startsWith("mailto:") ||
+            href.startsWith("tel:") ||
+            link.target === "_blank" ||
+            link.hasAttribute("download") ||
+            e.metaKey ||
+            e.ctrlKey ||
+            e.shiftKey ||
+            e.altKey
+          ) {
+            return;
+          }
+
+          // Check if link points to an internal page
+          const targetUrl = new URL(link.href, window.location.origin);
+          const isSameDomain = targetUrl.origin === window.location.origin;
+          const normalizePath = (p: string) => p.replace(/\/$/, "") || "/";
+          const isSamePath = normalizePath(targetUrl.pathname) === normalizePath(window.location.pathname);
+          const isForceTransition = link.id === "brand-home-link" || link.hasAttribute("data-trigger-transition");
+
+          if (isSameDomain && (!isSamePath || isForceTransition)) {
+            e.preventDefault();
+
+            // If same page but force transition (e.g. clicking brand logo on home page)
+            if (isSamePath && isForceTransition) {
+              shutter.style.display = "block";
+              shutter.style.transform = "translate3d(0, 100%, 0)";
+              void shutter.offsetHeight; // force reflow
+
+              shutter.style.transition = "transform 0.45s cubic-bezier(0.85, 0, 0.15, 1)";
+              shutter.style.transform = "translate3d(0, 0, 0)";
+
+              const onCoverComplete = () => {
+                shutter.removeEventListener("transitionend", onCoverComplete);
+                
+                // Reset scroll to top
+                window.scrollTo({ top: 0, behavior: "instant" });
+
+                // Re-trigger hero reveals
+                window.dispatchEvent(new CustomEvent("swiss:page-unveiled"));
+
+                // Smoothly wipe shutter up to reveal page
+                setTimeout(() => {
+                  executeShutterReveal();
+                }, 40);
+              };
+
+              shutter.addEventListener("transitionend", onCoverComplete);
+              return;
+            }
+
+            // Normal cross-page transition
+            sessionStorage.setItem("swiss_nav_transition", "fast");
+
+            // Make shutter visible and wipe up from bottom to cover screen (100% -> 0%)
+            shutter.style.display = "block";
+            shutter.style.transform = "translate3d(0, 100%, 0)";
+            void shutter.offsetHeight; // force reflow
+
+            shutter.style.transition = "transform 0.42s cubic-bezier(0.85, 0, 0.15, 1)";
+            shutter.style.transform = "translate3d(0, 0, 0)";
+
+            const onCoverComplete = () => {
+              shutter.removeEventListener("transitionend", onCoverComplete);
+              window.location.href = targetUrl.href;
+            };
+
+            shutter.addEventListener("transitionend", onCoverComplete);
+
+            // Navigation fallback timer
+            setTimeout(() => {
+              window.location.href = targetUrl.href;
+            }, 600);
+          }
+        });
+      });
+    }
+
+    setupLinkTransitions();
+  }
+
+  // Initialize on load and on Astro view changes
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupPageTransition);
+  } else {
+    setupPageTransition();
+  }
+</script>
