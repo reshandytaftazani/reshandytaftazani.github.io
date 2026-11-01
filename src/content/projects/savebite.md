@@ -18,6 +18,7 @@ metrics:
     detail: "Role-based access control protecting food donors, beneficiaries, and drivers"
 githubUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite"
 runCommand: "python manage.py runserver --settings=savebite.settings"
+featured: true
 ---
 
 ## 1. Problem Context & Purpose

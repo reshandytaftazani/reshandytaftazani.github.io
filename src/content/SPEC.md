@@ -49,12 +49,12 @@
 
 ## 4. Multi-Page Architecture Roadmap
 
-### Phase 1: Dedicated Project Case Studies (Current Focus)
+### Phase 1: Dedicated Project Case Studies [COMPLETED]
 - **Route:** `/projects/[slug]`
-- **Scope:** 4 Deep-Dark Technical Blueprint case studies (`leakguard-ml`, `axiomserve`, `synthdist-engine`, `hexaml-core`).
+- **Scope:** 3 Deep-Dark Technical Blueprint case studies (`modelarena`, `finance-tracker`, `savebite`).
 - **Integration:** Two-tier card triggers on landing page (Title/Card -> `/projects/[slug]`, `[SPEC]` -> Quick modal, `[SOURCE ↗]` -> GitHub).
 
-### Phase 2: Printable Swiss Technical CV (`/resume`)
+### Phase 2: Printable Swiss Technical CV (`/resume`) [COMPLETED]
 - **Route:** `/resume`
 - **Scope:** Clean, distraction-free, print-optimized (`@media print` cleanly formatted to single/dual A4 sheet) curriculum vitae.
 - **Features:** 
@@ -62,6 +62,7 @@
   - Plain text ATS-friendly copy button.
   - Structured academic coursework at Universitas Indonesia (2025—Present).
   - Systems & MLE skills matrix, verified open-source contributions.
+  - Seamless navigation integration across Navbar (desktop & mobile drawer) and Hero action badges.
 
 ### Phase 3: Technical Field Notes & Engineering Journal (`/notes`)
 - **Route:** `/notes` and `/notes/[slug]`

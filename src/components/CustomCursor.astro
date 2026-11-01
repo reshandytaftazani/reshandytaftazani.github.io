@@ -42,12 +42,25 @@
 
       let scale = 1;
       if (isClicking) {
-        scale = isHovering ? 0.35 : 0.7;
+        scale = isHovering ? 1.05 : 0.75;
       } else if (isHovering) {
-        scale = 0.5;
+        scale = 1.4;
       }
 
       cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) scale(${scale})`;
+
+      // When hovering interactive elements, expand into an open precision targeting ring
+      // with a dual-contrast hairline so underlying button text is 100% legible
+      // and the cursor remains visible on dark, light, and orange backgrounds alike
+      if (isHovering) {
+        cursor.style.backgroundColor = "transparent";
+        cursor.style.border = "2px solid var(--color-accent)";
+        cursor.style.boxShadow = "0 0 0 1px rgba(0, 0, 0, 0.8), 0 0 12px rgba(255, 69, 0, 0.4)";
+      } else {
+        cursor.style.backgroundColor = "var(--color-accent)";
+        cursor.style.border = "none";
+        cursor.style.boxShadow = "none";
+      }
 
       rafId = requestAnimationFrame(render);
     }
@@ -104,14 +117,25 @@
     // Interactive element hover detection with robust event delegation
     function onMouseOver(e: MouseEvent) {
       const target = e.target as HTMLElement | null;
-      if (target && target.closest("a, button, [data-project-card], [role='button'], [data-open-spec], input, textarea")) {
+      if (target && target.closest("input, textarea")) {
+        cursor.style.opacity = "0";
+        return;
+      }
+      if (target && target.closest("a, button, [data-project-card], [role='button'], [data-open-spec]")) {
         isHovering = true;
       }
     }
 
     function onMouseOut(e: MouseEvent) {
       const related = e.relatedTarget as HTMLElement | null;
-      if (!related || !related.closest("a, button, [data-project-card], [role='button'], [data-open-spec], input, textarea")) {
+      if (related && related.closest("input, textarea")) {
+        cursor.style.opacity = "0";
+        return;
+      }
+      if (isVisible) {
+        cursor.style.opacity = "1";
+      }
+      if (!related || !related.closest("a, button, [data-project-card], [role='button'], [data-open-spec]")) {
         isHovering = false;
       }
     }

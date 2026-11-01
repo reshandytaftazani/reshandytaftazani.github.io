@@ -18,6 +18,7 @@ metrics:
     detail: "Atomic transaction rollback hooks defending against partial updates"
 githubUrl: "https://github.com/reshandytaftazani/finance-tracker"
 runCommand: "python -m ledger.cli sync --audit --verify-invariants"
+featured: true
 ---
 
 ## 1. Problem Context & Architectural Motivation

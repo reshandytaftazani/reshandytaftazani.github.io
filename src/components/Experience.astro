@@ -63,10 +63,30 @@ const education = {
           <span>{education.period}</span>
         </div>
 
-        <!-- Live Telemetry Status Pill -->
-        <div class="inline-flex items-center gap-2 mt-4 px-3.5 py-1.5 rounded-full bg-neutral-200/70 border border-neutral-300 font-mono text-[11px] font-bold text-background select-none shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-          <span>{education.status}</span>
+        <!-- Live Telemetry Status Pill with Tactile Swiss Micro-Interactions -->
+        <div 
+          id="academic-status-pill"
+          role="button"
+          tabindex="0"
+          class="group/pill inline-flex items-center gap-1.5 mt-4 px-3.5 py-1.5 rounded-full bg-neutral-200/70 hover:bg-white border border-neutral-300 hover:border-accent font-mono text-[11px] font-bold text-background select-none shadow-2xs hover:shadow-[0_4px_16px_rgba(255,69,0,0.18)] transition-all duration-200 cursor-pointer hover:-translate-y-0.5 active:scale-95"
+          title="Click to verify enrollment status (Universitas Indonesia)"
+          aria-label="Academic Enrollment Status: Active"
+        >
+          <!-- Dual-Ring Radar Ping Beacon -->
+          <span class="relative flex h-2 w-2 mr-0.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75 group-hover/pill:opacity-100"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-accent group-hover/pill:scale-125 transition-transform duration-200"></span>
+          </span>
+
+          <!-- Left Expanding Swiss Bracket -->
+          <span class="font-mono text-accent opacity-0 -translate-x-1 group-hover/pill:opacity-100 group-hover/pill:translate-x-0 transition-all duration-200 text-xs">[</span>
+
+          <span id="academic-status-label" class="tracking-wider group-hover/pill:text-accent transition-colors duration-200">
+            {education.status}
+          </span>
+
+          <!-- Right Expanding Swiss Bracket -->
+          <span class="font-mono text-accent opacity-0 translate-x-1 group-hover/pill:opacity-100 group-hover/pill:translate-x-0 transition-all duration-200 text-xs">]</span>
         </div>
       </div>
 
@@ -164,3 +184,43 @@ const education = {
   </div>
 
 </section>
+
+<script>
+  function setupAcademicPill() {
+    const pill = document.getElementById("academic-status-pill");
+    const label = document.getElementById("academic-status-label");
+    if (!pill || !label) return;
+
+    let timeoutId: number | null = null;
+    const defaultText = "ACTIVE ENROLLMENT";
+
+    function triggerConfirmation() {
+      if (timeoutId) window.clearTimeout(timeoutId);
+      
+      label.textContent = "VERIFIED // CS @ UI ✓";
+      label.classList.add("text-accent");
+      pill.classList.add("border-accent", "bg-white", "shadow-[0_4px_18px_rgba(255,69,0,0.22)]");
+
+      timeoutId = window.setTimeout(() => {
+        label.textContent = defaultText;
+        label.classList.remove("text-accent");
+        pill.classList.remove("border-accent", "bg-white", "shadow-[0_4px_18px_rgba(255,69,0,0.22)]");
+      }, 2200);
+    }
+
+    pill.addEventListener("click", triggerConfirmation);
+    pill.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        triggerConfirmation();
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupAcademicPill);
+  } else {
+    setupAcademicPill();
+  }
+  document.addEventListener("astro:page-load", setupAcademicPill);
+</script>

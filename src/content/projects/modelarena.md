@@ -18,6 +18,7 @@ metrics:
     detail: "Simultaneous multi-model evaluation across transformer & GPT-2 variants"
 githubUrl: "https://github.com/reshandytaftazani/modelarena"
 runCommand: "python main.py --arena --agents 4 --reallocate-interval 50"
+featured: true
 ---
 
 ## 1. Problem Context & Architectural Motivation

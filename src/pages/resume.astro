@@ -1,0 +1,737 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const personalInfo = {
+  name: "RESHANDY TAFTAZANI AULYA",
+  role: "Machine Learning & Software Systems Engineer",
+  institution: "Universitas Indonesia (Fasilkom UI)",
+  location: "Depok, West Java, Indonesia",
+  email: "reshandy.taftazani@ui.ac.id",
+  github: "https://github.com/reshandytaftazani",
+  githubDisplay: "github.com/reshandytaftazani",
+  linkedin: "https://linkedin.com/in/reshandy-taftazani-aulya",
+  linkedinDisplay: "linkedin.com/in/reshandy-taftazani-aulya",
+  portfolio: "https://reshandytaftazani.github.io",
+  portfolioDisplay: "reshandytaftazani.github.io",
+  status: "ACTIVE ENROLLMENT // CLASS OF 2025",
+  docId: "DOC-REF: RTA-CV-2026",
+};
+
+const education = {
+  institution: "Universitas Indonesia",
+  faculty: "Faculty of Computer Science (Fasilkom UI)",
+  degree: "Bachelor of Science in Computer Science (Undergraduate)",
+  period: "2025 — Present",
+  location: "Depok, West Java, Indonesia",
+  status: "Active Undergraduate Enrollment",
+  coursework: [
+    { num: "01", name: "Data Structures & Algorithms", code: "CS-DSA" },
+    { num: "02", name: "Computer Systems & Architecture", code: "CS-SYS" },
+    { num: "03", name: "Discrete Mathematics & Logic", code: "MATH-DISC" },
+    { num: "04", name: "Object-Oriented Programming", code: "CS-OOP" },
+    { num: "05", name: "Linear Algebra & Calculus", code: "MATH-LINALG" },
+    { num: "06", name: "Software Engineering Foundations", code: "CS-SE" },
+  ],
+};
+
+const projects = [
+  {
+    title: "ModelArena",
+    subtitle: "Dynamic Resource Allocation & Evolutionary Multi-Agent Training Framework",
+    role: "Lead ML & Systems Researcher",
+    timeline: "2025 — Active R&D",
+    status: "ACTIVE R&D // 20/28 TASKS (71.4%)",
+    category: "MACHINE LEARNING & SYSTEMS",
+    techStack: ["Python 3.12", "PyTorch", "Hugging Face Transformers", "CUDA", "Multi-Agent Systems", "Evolutionary Search"],
+    repoUrl: "https://github.com/reshandytaftazani/modelarena",
+    caseStudyUrl: "/projects/modelarena",
+    highlights: [
+      "Conceived and implemented an evolutionary multi-agent tournament runtime that dynamically reallocates GPU shared memory (Shm) buffers and compute quotas based on real-time loss delta trajectories instead of static training allocations.",
+      "Architected decoupled agent workers and central tournament arbiter communicating over shared IPC memory, accelerating high-learning-trajectory models with up to +40% memory quota while gracefully throttling stagnating topologies.",
+      "Engineered benchmarking harness for simultaneous multi-model evaluation across transformer and GPT-2 architectural variants with automated telemetry logging.",
+    ],
+  },
+  {
+    title: "Finance Tracker",
+    subtitle: "Defensive Personal Accounting Engine & Transaction Ledger",
+    role: "Fullstack Systems & Data Engineer",
+    timeline: "2025 — Stable Production",
+    status: "STABLE // PRODUCTION_VERIFIED",
+    category: "SYSTEMS & DATA ENGINEERING",
+    techStack: ["FastAPI", "Python 3.12", "SQLite (WAL Mode)", "PostgreSQL", "Pydantic v2", "Docker", "Pytest"],
+    repoUrl: "https://github.com/reshandytaftazani/finance-tracker",
+    caseStudyUrl: "/projects/finance-tracker",
+    highlights: [
+      "Enforced strict double-entry ledger invariants ($0.00 discrepancy guarantee) using fixed-point integer/decimal arithmetic, completely defending against IEEE 754 floating-point rounding errors and fractional cent drift.",
+      "Architected clean hexagonal service boundaries with atomic transaction rollback hooks and SQLite Write-Ahead Logging (WAL), sustaining sub-5ms indexed analytical queries across 50,000+ transactions with 100% ACID test validation.",
+      "Engineered automated ingestion CLI and defensive Pydantic v2 runtime contracts validating multi-currency transaction streams against malformed or asymmetric entries.",
+    ],
+  },
+  {
+    title: "SaveBite",
+    subtitle: "Surplus Food Rescue & Distribution Platform",
+    role: "Backend & Systems Contributor (Team Capstone)",
+    timeline: "2025 — Coursework Capstone",
+    status: "COMPLETED // PBP FASILKOM UI 2025",
+    category: "DISTRIBUTED PLATFORM & WEB",
+    techStack: ["Django REST Framework", "Python 3.12", "Flutter", "PostgreSQL", "JSON Web Tokens", "CSRF Defense"],
+    repoUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite",
+    caseStudyUrl: "/projects/savebite",
+    highlights: [
+      "Engineered reliable REST backend services coordinating commercial food donors, NGOs, and volunteer couriers to eliminate urban food waste with real-time expiration window tracking.",
+      "Architected role-based access control (RBAC), CSRF protection, and session verification separating food donors, beneficiaries, and volunteer logistics across mobile and web clients.",
+      "Optimized relational database queries and food manifest distribution endpoints, enabling low-latency multi-platform synchronization with Flutter mobile applications.",
+    ],
+  },
+];
+
+const skillMatrix = [
+  {
+    group: "Languages & Runtimes",
+    code: "LANG",
+    skills: "Python 3.12 (AsyncIO, Typing, C-Extensions), C / C++ (Memory safety, pointer semantics, high-perf routines), TypeScript, JavaScript, SQL (PostgreSQL, SQLite WAL), Bash / Shell Scripting.",
+  },
+  {
+    group: "ML & Distributed Systems",
+    code: "MLE",
+    skills: "PyTorch, Hugging Face Transformers, CUDA fundamentals, scikit-learn, NumPy, Pandas (Vectorized compute), ONNX Runtime, Multi-Agent Systems, Dynamic Resource Allocation.",
+  },
+  {
+    group: "Systems & Infrastructure",
+    code: "SYS",
+    skills: "FastAPI, Django REST Framework, Linux / Unix (Signals SIGINT/TERM, IPC, Sockets, Process Management), Docker (Multi-stage builds, Distroless), Git (Trunk-based workflow), CI/CD (GitHub Actions).",
+  },
+  {
+    group: "Architecture & Verification",
+    code: "ARCH",
+    skills: "Hexagonal Architecture (Ports & Adapters), Double-Entry Accounting Invariants, Zero Data Leakage Pipelines, Defensive Programming, Test-Driven Development (Pytest, Fixture Isolation, Chaos Injections), Pydantic v2 Schema Contracts.",
+  },
+];
+
+// ATS Plain Text Representation for Clipboard Copy
+const plainTextATS = `RESHANDY TAFTAZANI AULYA
+Machine Learning & Software Systems Engineer
+Location: Depok, West Java, Indonesia
+Email: reshandy.taftazani@ui.ac.id
+GitHub: https://github.com/reshandytaftazani
+LinkedIn: https://linkedin.com/in/reshandy-taftazani-aulya
+Portfolio: https://reshandytaftazani.github.io
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+Computer Science undergraduate at Universitas Indonesia (Fasilkom UI, Class of 2025)
+specializing in Machine Learning Engineering (MLE) and Software Systems. Engineering
+philosophy is centered on zero data leakage in training pipelines, defensive software
+invariants, clean hexagonal architectures, atomic database invariants, and deterministic
+verification harnesses. Active builder across multi-agent training runtimes, double-entry
+transaction engines, and high-throughput Python/C++ pipelines.
+
+================================================================================
+EDUCATION
+================================================================================
+Universitas Indonesia — Faculty of Computer Science (Fasilkom UI)
+Bachelor of Science in Computer Science (Undergraduate)
+Period: 2025 — Present | Location: Depok, West Java, Indonesia
+Status: Active Undergraduate Enrollment (Class of 2025)
+Core Coursework:
+- Data Structures & Algorithms (Core Theory)
+- Computer Systems & Architecture (Hardware & POSIX OS Foundations)
+- Discrete Mathematics & Logic (Formal Foundations)
+- Object-Oriented Programming (Software Design Patterns)
+- Linear Algebra & Calculus (Mathematical Modeling)
+- Software Engineering Foundations (Clean Code & System Verification)
+
+================================================================================
+FLAGSHIP SYSTEMS & ENGINEERING PROJECTS
+================================================================================
+1. ModelArena: Dynamic Resource Allocation & Multi-Agent Training Framework
+   Role: Lead ML & Systems Researcher | 2025 — Active R&D
+   Status: 20/28 Tasks Completed (71.4% milestone progress)
+   Tech Stack: Python 3.12, PyTorch, Hugging Face Transformers, CUDA, Multi-Agent Systems, Evolutionary Search
+   Repository: https://github.com/reshandytaftazani/modelarena
+   Case Study: https://reshandytaftazani.github.io/projects/modelarena
+   - Conceived and implemented an evolutionary multi-agent tournament runtime that
+     dynamically reallocates GPU shared memory (Shm) and compute quotas based on
+     real-time loss delta trajectory instead of static allocations.
+   - Designed decoupled worker-arbiter architecture using inter-process communication
+     (IPC) memory buffers, rewarding high-trajectory agents with up to +40% memory
+     quota while gracefully throttling stagnating topologies.
+   - Built evaluation harnesses for simultaneous multi-model benchmarks across
+     transformer and GPT-2 architectural variants with automated telemetry logging.
+
+2. Finance Tracker: Defensive Personal Accounting Engine & Transaction Ledger
+   Role: Fullstack Systems & Data Engineer | 2025 — Stable Production Verified
+   Status: Stable // Production Verified (100% ACID test pass)
+   Tech Stack: FastAPI, Python 3.12, SQLite (WAL Mode), PostgreSQL, Pydantic v2, Docker, Pytest
+   Repository: https://github.com/reshandytaftazani/finance-tracker
+   Case Study: https://reshandytaftazani.github.io/projects/finance-tracker
+   - Enforced strict double-entry ledger invariants ($0.00 balance discrepancy)
+     using fixed-point integer/decimal arithmetic, defending against IEEE 754
+     floating-point rounding errors and fractional cent drift.
+   - Architected hexagonal service boundaries with atomic transaction rollback
+     hooks and SQLite Write-Ahead Logging (WAL), achieving sub-5ms indexed
+     analytical queries across 50,000+ transactions with 100% ACID test validation.
+   - Built defensive CLI ingestion pipelines enforcing strict Pydantic v2 runtime
+     contracts against malformed multi-currency data streams.
+
+3. SaveBite: Surplus Food Rescue & Distribution Platform
+   Role: Backend & Systems Contributor | 2025 (PBP Fasilkom UI Coursework Capstone)
+   Status: Completed // PBP Fasilkom UI Coursework Capstone 2025
+   Tech Stack: Django REST Framework, Python 3.12, Flutter, PostgreSQL, JSON Web Tokens
+   Repository: https://github.com/PBP-D-Kelompok-8/SaveBite
+   Case Study: https://reshandytaftazani.github.io/projects/savebite
+   - Engineered backend REST services coordinating commercial food donors, NGOs,
+     and couriers to eliminate urban food waste with real-time expiration window tracking.
+   - Implemented role-based access control (RBAC), CSRF protection, and session
+     verification separating food donors, beneficiaries, and volunteer logistics.
+   - Optimized relational queries and manifest distribution endpoints, enabling
+     low-latency mobile and web synchronization across Flutter clients.
+
+================================================================================
+TECHNICAL SKILLS MATRIX
+================================================================================
+Languages & Runtimes:
+  Python 3.12 (AsyncIO, Typing, C-Extensions), C / C++ (Memory safety, pointer
+  semantics), TypeScript, JavaScript, SQL (PostgreSQL, SQLite WAL), Bash / Shell.
+
+Machine Learning & Distributed Systems:
+  PyTorch, Hugging Face Transformers, CUDA fundamentals, scikit-learn, NumPy,
+  Pandas (Vectorized Compute), ONNX Runtime, Multi-Agent Systems, Dynamic
+  Resource Allocation.
+
+Systems & Infrastructure:
+  FastAPI, Django REST Framework, Linux / Unix (Signals SIGINT/TERM, IPC, Sockets,
+  Process Management), Docker (Multi-stage builds, Distroless), Git (Trunk-based
+  workflow, Atomic commits), CI/CD (GitHub Actions), REST API Architecture.
+
+Architecture & Methodology:
+  Hexagonal Architecture (Ports & Adapters), Double-Entry Accounting Invariants,
+  Zero Data Leakage Pipelines, Defensive Programming, Test-Driven Development
+  (Pytest, Fixture Isolation, Chaos Injections), Pydantic v2 Schema Contracts.`;
+---
+
+<Layout 
+  title="Reshandy Taftazani Aulya — Curriculum Vitae | ML & Systems Engineer"
+  description="Printable Swiss Technical CV of Reshandy Taftazani Aulya. Computer Science undergraduate at Universitas Indonesia (Fasilkom UI). Machine Learning Engineering & Software Systems."
+>
+  <!-- Hidden ATS Text Store for Clipboard copy -->
+  <textarea id="ats-plain-text" class="hidden" aria-hidden="true" readonly>{plainTextATS}</textarea>
+
+  <!-- Screen Sticky Quick Action Bar (Suppressed on Print) -->
+  <header class="no-print sticky top-0 z-40 w-full border-b border-[#262626] bg-[#0a0a0a]/95 backdrop-blur-md text-foreground">
+    <div class="mx-auto flex max-w-[120rem] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+      
+      <!-- Left: Return to Home / ESC -->
+      <a 
+        href="/" 
+        id="cv-back-home-link"
+        class="group inline-flex items-center gap-1.5 sm:gap-2 font-mono text-xs font-bold text-neutral hover:text-white transition-colors"
+        title="Return to Homepage (or press ESC)"
+      >
+        <span class="text-accent group-hover:-translate-x-1 transition-transform duration-200">←</span>
+        <span class="hidden sm:inline">BACK TO HOME</span>
+        <span class="sm:hidden">HOME</span>
+        <span class="hidden md:inline-block text-[10px] text-neutral-dark group-hover:text-neutral font-mono border border-[#333] px-1 py-0.5 rounded-xs">ESC</span>
+      </a>
+
+      <!-- Center: Technical Document Telemetry (Desktop) -->
+      <div class="hidden lg:flex items-center gap-2 font-mono text-[11px] text-neutral-dark uppercase tracking-wider select-none">
+        <span class="text-foreground font-bold">{personalInfo.docId}</span>
+        <span>//</span>
+        <span class="text-accent font-semibold">SWISS_TECHNICAL_SPEC</span>
+        <span>//</span>
+        <span class="text-neutral">A4_OPTIMIZED</span>
+      </div>
+
+      <!-- Right: Action Buttons (Print & Copy ATS) -->
+      <div class="flex items-center gap-2 sm:gap-3 font-mono text-xs">
+        
+        <!-- Copy Plain Text (ATS) -->
+        <button 
+          type="button" 
+          id="copy-ats-button"
+          class="group inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xs border border-neutral-dark/60 hover:border-accent bg-[#161616] hover:bg-accent text-neutral hover:text-black font-bold transition-all duration-200 cursor-pointer shadow-2xs active:scale-95 select-none"
+          title="Copy formatted plain text (ATS-friendly) to clipboard"
+          aria-label="Copy plain text ATS resume to clipboard"
+        >
+          <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:-translate-x-0.5">[</span>
+          <span id="copy-ats-text" class="tracking-wider group-hover:text-black">COPY PLAIN TEXT (ATS)</span>
+          <span class="text-accent group-hover:text-black font-bold text-xs">📋</span>
+          <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:translate-x-0.5">]</span>
+        </button>
+
+        <!-- Print / Save PDF -->
+        <button 
+          type="button" 
+          id="print-cv-button"
+          class="group inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xs border border-accent bg-accent text-black hover:bg-white hover:border-white font-bold transition-all duration-200 cursor-pointer shadow-xs active:scale-95 select-none"
+          title="Print document or Save as PDF (Ctrl + P)"
+          aria-label="Print or Save Resume as PDF"
+        >
+          <span class="tracking-wider">PRINT / SAVE PDF</span>
+          <span class="font-bold text-xs transition-transform duration-200 group-hover:-translate-y-0.5">⎙</span>
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Canvas Inspection Bench (Dark Outer Backdrop framing the Swiss Document on screen) -->
+  <main class="min-h-screen bg-[#0e0e0e] text-[#111111] py-8 sm:py-12 md:py-16 px-3 sm:px-6 lg:px-8 flex justify-center items-start print:p-0 print:m-0 print:bg-white">
+    
+    <!-- Printable Swiss Technical CV Sheet (A4 Proportion: 210mm wide on screen, exact A4 layout in print) -->
+    <article 
+      id="cv-document" 
+      class="relative w-full max-w-[210mm] bg-[#ffffff] text-[#0a0a0a] p-6 sm:p-10 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-[#2b2b2b] print:border-none print:shadow-none print:p-0 print:m-0 print:w-full print:max-w-none"
+    >
+      <!-- Swiss Technical Corner Crosshairs (Screen visual cue; hidden on print) -->
+      <span class="no-print absolute top-2 left-2 font-mono text-[10px] text-neutral-400 select-none" aria-hidden="true">+</span>
+      <span class="no-print absolute top-2 right-2 font-mono text-[10px] text-neutral-400 select-none" aria-hidden="true">+</span>
+      <span class="no-print absolute bottom-2 left-2 font-mono text-[10px] text-neutral-400 select-none" aria-hidden="true">+</span>
+      <span class="no-print absolute bottom-2 right-2 font-mono text-[10px] text-neutral-400 select-none" aria-hidden="true">+</span>
+
+      <!-- 1. HEADER & IDENTITY SPECIFICATION -->
+      <header class="cv-section border-b-2 border-black pb-5">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div class="font-mono text-[10.5px] font-bold text-accent tracking-widest uppercase mb-1.5 flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse print:hidden" aria-hidden="true"></span>
+              <span>CURRICULUM VITAE // TECHNICAL SPECIFICATION</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-none text-black uppercase">
+              {personalInfo.name}<span class="text-accent print:text-black">.</span>
+            </h1>
+            <p class="mt-2 text-sm sm:text-base font-bold font-mono tracking-tight text-neutral-800">
+              {personalInfo.role}
+            </p>
+          </div>
+
+          <!-- Document Metadata Stamp -->
+          <div class="border border-neutral-300 bg-neutral-50 print:bg-transparent px-3.5 py-2 rounded-xs font-mono text-[10.5px] text-neutral-600 shrink-0 space-y-0.5 md:text-right shadow-2xs print:shadow-none">
+            <div class="font-bold text-black">{personalInfo.docId}</div>
+            <div>STATUS: <span class="font-bold text-black">UNDERGRADUATE // ACTIVE</span></div>
+            <div>CAMPUS: <span class="font-bold text-black">UI DEPOK (UTC+7)</span></div>
+          </div>
+        </div>
+
+        <!-- Contact & Telemetry Matrix (Swiss Hairline Grid Table - 2 Spacious Columns) -->
+        <div class="mt-5 border border-neutral-300 divide-y divide-neutral-300 font-mono text-xs">
+          <!-- Row 1: Location & Institutional Email -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-neutral-300">
+            <div class="p-3 bg-neutral-50/50 print:bg-transparent">
+              <span class="text-neutral-500 block text-[9.5px] uppercase tracking-wider font-semibold mb-0.5">LOCATION</span>
+              <span class="font-bold text-black text-xs sm:text-[12.5px] tracking-tight">{personalInfo.location}</span>
+            </div>
+            <div class="p-3 bg-neutral-50/50 print:bg-transparent">
+              <span class="text-neutral-500 block text-[9.5px] uppercase tracking-wider font-semibold mb-0.5">EMAIL (INSTITUTIONAL)</span>
+              <a href={`mailto:${personalInfo.email}`} class="font-bold text-black hover:text-accent underline underline-offset-2 decoration-neutral-300 text-xs sm:text-[12.5px] tracking-tight transition-colors">
+                {personalInfo.email}
+              </a>
+            </div>
+          </div>
+
+          <!-- Row 2: Code Repository & Professional Network -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-neutral-300">
+            <div class="p-3 bg-neutral-50/50 print:bg-transparent">
+              <span class="text-neutral-500 block text-[9.5px] uppercase tracking-wider font-semibold mb-0.5">CODE REPOSITORY</span>
+              <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" class="font-bold text-black hover:text-accent underline underline-offset-2 decoration-neutral-300 text-xs sm:text-[12.5px] tracking-tight transition-colors">
+                {personalInfo.githubDisplay}
+              </a>
+            </div>
+            <div class="p-3 bg-neutral-50/50 print:bg-transparent">
+              <span class="text-neutral-500 block text-[9.5px] uppercase tracking-wider font-semibold mb-0.5">PROFESSIONAL NETWORK</span>
+              <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" class="font-bold text-black hover:text-accent underline underline-offset-2 decoration-neutral-300 text-xs sm:text-[12.5px] tracking-tight transition-colors">
+                {personalInfo.linkedinDisplay}
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- 2. EXECUTIVE PROFILE & ARCHITECTURAL ETHOS -->
+      <section class="cv-section pt-5 pb-5 border-b border-neutral-200">
+        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-3 font-mono">
+          <div class="flex items-center gap-2">
+            <span class="text-accent print:text-black font-bold text-xs">[01]</span>
+            <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
+              EXECUTIVE PROFILE &amp; SYSTEMS FOCUS
+            </h2>
+          </div>
+          <span class="text-[10px] text-accent print:text-black font-semibold">ZERO_DATA_LEAKAGE</span>
+        </div>
+        <p class="text-[13px] sm:text-sm text-neutral-800 leading-relaxed font-normal">
+          Computer Science undergraduate at <strong class="text-black font-semibold">Universitas Indonesia (Fasilkom UI, Class of 2025)</strong> specializing in Machine Learning Engineering (MLE) and high-throughput Software Systems. Engineering philosophy is centered on zero data leakage in training pipelines, defensive software invariants, clean hexagonal architectures, atomic database invariants, and deterministic verification harnesses. Active builder across multi-agent training runtimes, double-entry transaction engines, and high-performance Python/C++ pipelines.
+        </p>
+      </section>
+
+      <!-- 3. EDUCATION & ACADEMIC FOUNDATIONS -->
+      <section class="cv-section pt-5 pb-5 border-b border-neutral-200">
+        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-3.5 font-mono">
+          <div class="flex items-center gap-2">
+            <span class="text-accent print:text-black font-bold text-xs">[02]</span>
+            <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
+              EDUCATION &amp; ACADEMIC FOUNDATIONS
+            </h2>
+          </div>
+          <span class="text-[10px] text-neutral-500 font-semibold">CAMPUS: UI_DEPOK</span>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+            <div>
+              <h3 class="text-base sm:text-lg font-bold text-black tracking-tight leading-tight">
+                {education.institution}
+              </h3>
+              <p class="text-xs sm:text-[13px] font-semibold text-neutral-700">
+                {education.faculty} — <span class="text-black font-bold">{education.degree}</span>
+              </p>
+            </div>
+            <div class="font-mono text-[11px] text-neutral-600 sm:text-right shrink-0">
+              <span class="font-bold text-black">{education.period}</span>
+              <span class="text-neutral-400 block sm:inline sm:ml-1">• {education.location}</span>
+            </div>
+          </div>
+
+          <!-- Academic Coursework Matrix -->
+          <div class="pt-1">
+            <span class="font-mono text-[10px] font-bold text-neutral-600 uppercase tracking-wider block mb-1.5">
+              RELEVANT CURRICULAR COURSEWORK &amp; THEORY:
+            </span>
+            <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
+              {education.coursework.map((course) => (
+                <div class="inline-flex items-center gap-1.5 bg-neutral-100 print:bg-transparent px-2.5 py-1 rounded-xs border border-neutral-200 print:border-neutral-300">
+                  <span class="text-accent print:text-black font-bold text-[9px]">■</span>
+                  <span class="text-neutral-900 font-medium">{course.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. FLAGSHIP SYSTEMS & ENGINEERING PROJECTS -->
+      <section class="cv-section pt-5 pb-5 border-b border-neutral-200">
+        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-4 font-mono">
+          <div class="flex items-center gap-2">
+            <span class="text-accent print:text-black font-bold text-xs">[03]</span>
+            <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
+              FLAGSHIP SYSTEMS &amp; VERIFIED PROJECTS
+            </h2>
+          </div>
+          <span class="text-[10px] text-neutral-500 font-semibold">[03 PRODUCTION_UNITS]</span>
+        </div>
+
+        <div class="space-y-6">
+          {projects.map((proj, idx) => (
+            <div class="cv-item space-y-2 pb-5 border-b border-neutral-200 last:border-b-0 last:pb-0">
+              <!-- Item Header -->
+              <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                <div class="flex flex-wrap items-baseline gap-2">
+                  <span class="font-mono text-xs font-bold text-accent print:text-black">0{idx + 1}.</span>
+                  <h3 class="text-base sm:text-[17px] font-bold text-black tracking-tight">
+                    {proj.title}
+                  </h3>
+                  <span class="text-xs text-neutral-600 font-medium hidden md:inline">— {proj.subtitle}</span>
+                </div>
+                <div class="font-mono text-[10.5px] sm:text-[11px] text-neutral-600 sm:text-right shrink-0">
+                  <span class="font-bold text-black">{proj.timeline}</span>
+                  <span class="text-accent print:text-black font-bold ml-1.5">[{proj.status}]</span>
+                </div>
+              </div>
+
+              <!-- Meta Row: Role, Tech Stack & Links -->
+              <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-[10.5px] sm:text-[11px] text-neutral-600">
+                <div>
+                  <span class="text-neutral-500 uppercase text-[10px]">ROLE:</span> <strong class="text-black">{proj.role}</strong>
+                </div>
+                <div class="flex items-center gap-3">
+                  <a href={proj.repoUrl} target="_blank" rel="noopener noreferrer" class="text-black font-bold hover:text-accent underline underline-offset-2 decoration-neutral-300">
+                    REPOSITORY ↗
+                  </a>
+                  <span>•</span>
+                  <a href={proj.caseStudyUrl} class="text-black font-bold hover:text-accent underline underline-offset-2 decoration-neutral-300">
+                    CASE STUDY SPEC ↗
+                  </a>
+                </div>
+              </div>
+
+              <!-- Tech Stack Badges -->
+              <div class="flex flex-wrap gap-1 pt-0.5">
+                {proj.techStack.map((tech) => (
+                  <span class="font-mono text-[10.5px] px-2 py-0.5 bg-neutral-100 print:bg-transparent text-neutral-800 border border-neutral-200 print:border-neutral-300 rounded-xs font-medium">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <!-- Rigorous Bullet Points -->
+              <ul class="mt-1 space-y-1.5 text-[12.5px] sm:text-[13px] text-neutral-800 leading-relaxed list-none pl-0">
+                {proj.highlights.map((bullet) => (
+                  <li class="flex items-start gap-2">
+                    <span class="text-accent print:text-black font-bold select-none shrink-0 mt-[3px] text-[10px]">▸</span>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- 5. TECHNICAL SKILLS MATRIX -->
+      <section class="cv-section pt-5 pb-5 border-b border-neutral-200">
+        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-3.5 font-mono">
+          <div class="flex items-center gap-2">
+            <span class="text-accent print:text-black font-bold text-xs">[04]</span>
+            <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
+              TECHNICAL SKILLS MATRIX
+            </h2>
+          </div>
+          <span class="text-[10px] text-neutral-500 font-semibold">[04 SYSTEM DOMAINS]</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          {skillMatrix.map((item) => (
+            <div class="bg-neutral-50 print:bg-transparent p-3 rounded-xs border border-neutral-200 print:border-neutral-300">
+              <div class="flex items-center justify-between font-mono text-[10.5px] font-bold border-b border-neutral-200 pb-1.5 mb-2">
+                <span class="text-black uppercase tracking-wide">{item.group}</span>
+                <span class="text-accent print:text-black font-semibold">[{item.code}]</span>
+              </div>
+              <p class="text-[12px] text-neutral-800 leading-relaxed font-mono">
+                {item.skills}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- 6. CORE ARCHITECTURAL PRINCIPLES & STANDARDS -->
+      <section class="cv-section pt-5">
+        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-3 font-mono">
+          <div class="flex items-center gap-2">
+            <span class="text-accent print:text-black font-bold text-xs">[05]</span>
+            <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
+              VERIFICATION ETHOS &amp; ENGINEERING STANDARDS
+            </h2>
+          </div>
+          <span class="text-[10px] text-accent print:text-black font-semibold">HIGH_INTEGRITY</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-mono text-xs text-neutral-800">
+          <div class="border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
+            <span class="font-bold text-black block text-[10.5px] uppercase tracking-wider mb-1">INVARIANT VERIFICATION</span>
+            <span class="text-neutral-700 text-[11px] leading-relaxed block">Strict double-entry accounting invariants and atomic rollback hooks defending against floating-point drift.</span>
+          </div>
+          <div class="border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
+            <span class="font-bold text-black block text-[10.5px] uppercase tracking-wider mb-1">ZERO DATA LEAKAGE</span>
+            <span class="text-neutral-700 text-[11px] leading-relaxed block">Strict point-in-time joins, tombstone guards, and complete separation between training and test distributions.</span>
+          </div>
+          <div class="border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
+            <span class="font-bold text-black block text-[10.5px] uppercase mb-1">DECOUPLED CORES</span>
+            <span class="text-neutral-700 text-[11px] leading-relaxed block">Hexagonal architecture with pure domain logic fully isolated from database drivers and external adapters.</span>
+          </div>
+        </div>
+
+        <!-- Document Sign-off Footer -->
+        <div class="mt-6 pt-3 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-2 font-mono text-[10px] text-neutral-500">
+          <div>
+            <span>DOC: RESHANDY_TAFTAZANI_AULYA_CV.PDF // REVISED NOVEMBER 2026</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span>PRINT ENGINE: SWISS_A4</span>
+            <span>•</span>
+            <a href="https://reshandytaftazani.github.io" class="text-black font-bold hover:text-accent">
+              reshandytaftazani.github.io
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <!-- Interactive Scripts: ESC to home, Copy Plain Text (ATS), Print Trigger -->
+  <script>
+    function setupResumeInteractions() {
+      // 1. ESC Key returns to Homepage
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          window.location.href = "/";
+        }
+      });
+
+      // 2. Print Button Trigger
+      const printBtn = document.getElementById("print-cv-button");
+      if (printBtn) {
+        printBtn.addEventListener("click", () => {
+          window.print();
+        });
+      }
+
+      // 3. Copy Plain Text (ATS) to Clipboard with tactile state feedback
+      const copyBtn = document.getElementById("copy-ats-button");
+      const copyTextEl = document.getElementById("copy-ats-text");
+      const plainTextStore = document.getElementById("ats-plain-text") as HTMLTextAreaElement | null;
+
+      if (copyBtn && copyTextEl && plainTextStore) {
+        copyBtn.addEventListener("click", () => {
+          const content = plainTextStore.value;
+          
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(content).then(showCopiedState).catch(() => fallbackCopy(content));
+          } else {
+            fallbackCopy(content);
+          }
+        });
+
+        function showCopiedState() {
+          if (!copyTextEl || !copyBtn) return;
+          const originalText = copyTextEl.textContent;
+          copyTextEl.textContent = "COPIED TO CLIPBOARD ✓";
+          copyBtn.classList.add("border-accent", "bg-accent", "text-black");
+          
+          setTimeout(() => {
+            copyTextEl.textContent = originalText;
+            copyBtn.classList.remove("border-accent", "bg-accent", "text-black");
+          }, 2500);
+        }
+
+        function fallbackCopy(text: string) {
+          try {
+            plainTextStore.classList.remove("hidden");
+            plainTextStore.focus();
+            plainTextStore.select();
+            document.execCommand("copy");
+            plainTextStore.classList.add("hidden");
+            showCopiedState();
+          } catch (err) {
+            console.error("Fallback clipboard copy failed:", err);
+          }
+        }
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setupResumeInteractions);
+    } else {
+      setupResumeInteractions();
+    }
+    document.addEventListener("astro:page-load", setupResumeInteractions);
+  </script>
+</Layout>
+
+<style is:global>
+  /* ==========================================================================
+     ISOLATED SWISS PRINT SPECIFICATION (@media print)
+     Optimized for standard A4 format (210mm x 297mm)
+     ========================================================================== */
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 12mm 12mm;
+  }
+
+  @media print {
+    /* 1. Hide Screen Navigation, Action Controls, Custom Cursor, and Visual Cues */
+    .no-print,
+    #swiss-cursor,
+    header.no-print,
+    button,
+    #mobile-menu-drawer {
+      display: none !important;
+    }
+
+    /* 2. Reset Body & Main Canvas to pure white background */
+    html, body {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      font-size: 9.5pt !important;
+      line-height: 1.35 !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    main {
+      padding: 0 !important;
+      margin: 0 !important;
+      background-color: #ffffff !important;
+      min-height: auto !important;
+    }
+
+    /* 3. Document Container: Expand cleanly to 100% A4 width without frame borders or shadows */
+    #cv-document {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+
+    /* 4. Link & URL Formatting: Suppress browser URL footers or appended link text */
+    a {
+      color: #000000 !important;
+      text-decoration: none !important;
+    }
+
+    a[href]::after {
+      content: none !important;
+    }
+
+    /* 5. Page Break Controls: Prevent awkward breaks across project items or sections */
+    .cv-section {
+      break-inside: auto;
+    }
+
+    .cv-item {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      margin-bottom: 8pt !important;
+    }
+
+    h1, h2, h3, h4 {
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+    }
+
+    /* 6. Typography Refinements for Print */
+    h1 {
+      font-size: 24pt !important;
+      line-height: 1.05 !important;
+    }
+
+    h2 {
+      font-size: 10pt !important;
+    }
+
+    h3 {
+      font-size: 11pt !important;
+    }
+
+    p, li, div {
+      color: #111111 !important;
+    }
+
+    /* Border hairiness on print */
+    .border-b-2 {
+      border-bottom-width: 1.5pt !important;
+      border-color: #000000 !important;
+    }
+
+    .border-b {
+      border-bottom-width: 0.5pt !important;
+      border-color: #cccccc !important;
+    }
+
+    .border-t {
+      border-top-width: 0.5pt !important;
+      border-color: #cccccc !important;
+    }
+  }
+</style>

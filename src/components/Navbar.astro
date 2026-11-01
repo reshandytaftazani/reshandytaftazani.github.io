@@ -67,6 +67,19 @@ const navLinks = [
               </a>
             </li>
           ))}
+          <!-- CV Action Link (Printable Swiss Technical Resume) -->
+          <li class="reveal-init pl-1" style={`transition-delay: ${100 + navLinks.length * 50}ms;`}>
+            <a 
+              href="/resume" 
+              class="group relative inline-flex items-center gap-1 px-2.5 py-1 rounded-xs border border-current/30 hover:border-accent bg-current/5 hover:bg-accent text-foreground hover:text-black font-mono font-bold text-caption transition-all duration-200 active:scale-95 select-none"
+              title="Curriculum Vitae / Printable Swiss Technical CV"
+            >
+              <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:-translate-x-0.5">[</span>
+              <span class="tracking-wider">CV</span>
+              <span class="text-accent group-hover:text-black font-bold transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+              <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:translate-x-0.5">]</span>
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -137,6 +150,18 @@ const navLinks = [
           </a>
         </li>
       ))}
+      <li class="border-b border-grid-line-dark/60 pb-3">
+        <a 
+          href="/resume" 
+          class="mobile-nav-link group flex items-baseline justify-between text-display-sm font-bold tracking-tight text-foreground hover:text-accent transition-all duration-200"
+        >
+          <div class="flex items-baseline gap-3">
+            <span class="text-caption font-mono text-accent">[06]</span>
+            <span class="group-hover:translate-x-2 transition-transform duration-200">CURRICULUM VITAE</span>
+          </div>
+          <span class="text-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200 font-mono text-sm">↗</span>
+        </a>
+      </li>
     </ul>
   </nav>
 
@@ -147,7 +172,9 @@ const navLinks = [
       <span>DEPOK, INDONESIA // <span id="mobile-live-clock" class="text-foreground tabular-nums">--:--:-- WIB</span></span>
     </div>
 
-    <div class="flex items-center gap-4 text-xs font-semibold">
+    <div class="flex items-center gap-3 sm:gap-4 text-xs font-semibold">
+      <a href="/resume" class="text-accent hover:underline font-mono font-bold">CV ↗</a>
+      <span>•</span>
       <a href="https://github.com/reshandytaftazani" target="_blank" rel="noopener noreferrer" class="text-neutral hover:text-accent transition-colors">GITHUB ↗</a>
       <span>•</span>
       <a href="https://linkedin.com/in/reshandy-taftazani-aulya" target="_blank" rel="noopener noreferrer" class="text-neutral hover:text-accent transition-colors">LINKEDIN ↗</a>

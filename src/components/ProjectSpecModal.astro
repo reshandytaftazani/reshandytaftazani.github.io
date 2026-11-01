@@ -152,6 +152,14 @@ const projectSpecs: ProjectSpec[] = [
           <span class="text-foreground font-bold tracking-wider" id="spec-modal-header-tag">[SPEC_SHEET // MLE_SYSTEMS]</span>
           <span class="text-neutral-dark">•</span>
           <span class="text-accent font-semibold" id="spec-modal-status">ACTIVE</span>
+          <span class="text-neutral-dark hidden sm:inline">•</span>
+          <a 
+            href="/projects" 
+            class="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-neutral-400 hover:text-accent font-mono transition-colors tracking-wide underline underline-offset-4 decoration-neutral-700 hover:decoration-accent"
+            title="Browse complete engineering projects directory"
+          >
+            <span>[ALL PROJECTS DIRECTORY ↗]</span>
+          </a>
         </div>
 
         <!-- Tactile Close Button -->
@@ -255,7 +263,17 @@ const projectSpecs: ProjectSpec[] = [
           PRESS <kbd class="px-1.5 py-0.5 bg-black border border-neutral-dark/40 text-foreground rounded-xs">ESC</kbd> TO CLOSE
         </div>
         
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
+          <a 
+            href="/projects"
+            class="group inline-flex items-center gap-2 px-4 py-2.5 rounded-sm bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white font-bold tracking-wider transition-all duration-200 border border-neutral-700/60 hover:border-neutral-500"
+            title="Browse complete engineering projects directory and archive"
+          >
+            <span class="text-accent group-hover:scale-110 transition-transform duration-200">⊞</span>
+            <span>ALL PROJECTS</span>
+            <span class="text-neutral-500 group-hover:text-accent transition-colors duration-200 font-bold">→</span>
+          </a>
+
           <a 
             id="spec-modal-blueprint-link"
             href="#"
@@ -272,7 +290,7 @@ const projectSpecs: ProjectSpec[] = [
             rel="noopener noreferrer"
             class="group inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-accent text-black hover:bg-white hover:text-black font-bold tracking-wider transition-all duration-200 shadow-sm"
           >
-            <span>VIEW REPOSITORY ON GITHUB</span>
+            <span>VIEW REPOSITORY</span>
             <span class="text-black font-bold transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
           </a>
         </div>
@@ -336,15 +354,17 @@ const projectSpecs: ProjectSpec[] = [
       // Benchmarks
       if (benchmarksEl) {
         benchmarksEl.innerHTML = spec.benchmarks
-          .map(
-            (b) => `
-          <div class="bg-black border border-grid-line-dark p-3.5 space-y-1">
-            <div class="text-[10px] uppercase text-neutral-dark font-mono font-semibold">${b.label}</div>
-            <div class="text-section font-bold text-accent font-mono tracking-tight">${b.value}</div>
+          .map((b) => {
+            const isLong = b.value.length > 10;
+            const valueSizeClass = isLong ? "text-base sm:text-lg" : "text-xl sm:text-2xl";
+            return `
+          <div class="bg-black border border-grid-line-dark p-3.5 space-y-1.5 flex flex-col justify-between overflow-hidden">
+            <div class="text-[10px] uppercase text-neutral-dark font-mono font-semibold tracking-wider truncate" title="${b.label}">${b.label}</div>
+            <div class="${valueSizeClass} font-bold text-accent font-mono tracking-tight leading-tight my-0.5 truncate" title="${b.value}">${b.value}</div>
             <div class="text-[11px] text-neutral font-mono leading-tight">${b.detail}</div>
           </div>
-        `
-          )
+        `;
+          })
           .join("");
       }
 
