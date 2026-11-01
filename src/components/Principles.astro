@@ -1,24 +1,30 @@
 ---
-// Principles.astro (Daniele Buser Swiss High-Density Grid with grounded copy & tactile micro-interactions)
-const principles = [
+// Principles.astro (Sticky Stage Scrollytelling & Interactive Invariant Sandbox)
+// High-craft Swiss Brutalist implementation: Single focused principle at a time,
+// desktop scroll-driven sticky transition + direct interactive step navigation,
+// calibrated vertical proportion to fit 100% within the viewport without clipping.
+
+const principlesData = [
   {
-    code: "01",
+    step: "01",
     tag: "TEMPORAL_INTEGRITY",
     title: "Zero Data Leakage by Design",
     description:
-      "Cross-validation leakage and lookahead bias produce deceptively high metrics that fail in real-world deployment. We enforce explicit temporal partition boundaries before executing any feature transformations.",
+      "Cross-validation leakage and lookahead bias produce deceptively high metrics that collapse in production. We enforce explicit temporal partition boundaries before executing any feature transformations.",
     bullets: [
       "Point-in-time joins preventing target signal contamination in time-series data.",
       "Deterministic hashing strategies for reproducible train-validation splits.",
       "Automated boundary assertions that fail immediately upon partition violations.",
     ],
-    codeSnippet: `assert partition.max_timestamp < eval_window.min_timestamp, \\
-    "LeakageDetected: lookahead contamination in split"`,
+    noteUrl: "/notes/eliminating-lookahead-bias",
+    noteLabel: "NOTE #02: ELIMINATING LOOKAHEAD BIAS",
+    projectUrl: "/projects/leakguard-ml",
+    projectLabel: "LEAKGUARD-ML ↗",
   },
   {
-    code: "02",
+    step: "02",
     tag: "DEFENSIVE_CHAOS",
-    title: "Defensive Verification & TDD",
+    title: "Defensive Verification & Chaos",
     description:
       "Testing should go beyond typical happy paths. We verify system resilience under unexpected OS process signals, interrupted workloads, and edge-case inputs through property-based tests.",
     bullets: [
@@ -26,13 +32,13 @@ const principles = [
       "Clean process supervision with signal traps on SIGINT and SIGTERM.",
       "Defensive assertions against unexpected input shapes and null embeddings.",
     ],
-    codeSnippet: `def test_worker_interrupt_leaves_no_zombies():
-    proc = spawn_worker(task=heavy_inference)
-    proc.send_signal(signal.SIGINT)
-    assert proc.wait(timeout=1.0) == 0`,
+    noteUrl: "/notes/posix-signals-async-python",
+    noteLabel: "NOTE #01: POSIX SIGNAL TRAPS",
+    projectUrl: "/projects/modelarena",
+    projectLabel: "MODELARENA ↗",
   },
   {
-    code: "03",
+    step: "03",
     tag: "DOMAIN_ISOLATION",
     title: "Clean Architecture & Contracts",
     description:
@@ -42,70 +48,1109 @@ const principles = [
       "Hexagonal architecture separating inference routines from network adapters.",
       "Dependency inversion enabling fast, reproducible local test suites.",
     ],
-    codeSnippet: `class InferenceRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid", strict=True)
-    embeddings: Annotated[list[float], Field(min_length=128, max_length=128)]`,
+    noteUrl: "/notes/hexagonal-architecture-feature-stores",
+    noteLabel: "NOTE #03: HEXAGONAL ML STORES",
+    projectUrl: "/projects/savebite",
+    projectLabel: "SAVEBITE ↗",
   },
 ];
 ---
 
-<section id="principles" class="relative z-10 flex w-full flex-col pt-16 pb-36" aria-labelledby="principles-heading">
+<!-- SCROLL TRACK WRAPPER (Desktop: 240vh for scroll progression; Mobile: auto) -->
+<section 
+  id="principles" 
+  class="relative z-10 w-full min-h-auto lg:min-h-[240vh] pt-12 pb-16" 
+  aria-labelledby="principles-heading"
+>
   
-  <!-- Section Heading (Daniele Buser Swiss Style) -->
-  <div class="reveal-init flex items-center justify-between border-b border-grid-line-light pb-4">
-    <div class="flex items-center gap-3">
-      <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="principles-heading">
-        ENGINEERING PRINCIPLES
-      </h2>
-      <span class="text-caption font-mono text-neutral-dark font-semibold">
-        [03 CORE TENETS]
-      </span>
+  <!-- PINNED STAGE CONTAINER (Sticky on Desktop, Natural Flow on Mobile) -->
+  <div class="lg:sticky lg:top-20 w-full flex flex-col justify-start">
+    
+    <!-- Section Header (Daniele Buser Swiss High-Density Header) -->
+    <div class="reveal-init flex flex-col sm:flex-row sm:items-center justify-between border-b border-grid-line-light pb-2.5 gap-2">
+      <div class="flex items-center gap-3">
+        <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="principles-heading">
+          ENGINEERING PRINCIPLES
+        </h2>
+        <span class="text-caption font-mono text-neutral-dark font-semibold">
+          [03 INVARIANTS // FOCUSED STAGE]
+        </span>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <span class="hidden sm:inline-block font-mono text-[11px] text-neutral-dark">
+          STAGE_TELEMETRY: <span id="principles-active-tag" class="text-accent font-semibold">TEMPORAL_INTEGRITY</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-mono bg-neutral-900 border border-grid-line-dark text-neutral-dark uppercase">
+          <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+          <span id="principles-step-counter">01 / 03</span>
+        </span>
+      </div>
     </div>
 
-    <span class="hidden sm:inline-block font-mono text-[11px] text-neutral-dark">
-      PARADIGM: <span class="text-accent font-semibold">DEFENSIVE_SYSTEMS</span>
-    </span>
-  </div>
-
-  <!-- 3-Column Grid in bg-card-dark with micro-interactions -->
-  <div class="mt-8 grid w-full grid-cols-12 gap-6 lg:gap-8">
-    {principles.map((p, idx) => (
+    <!-- HYBRID STEPPER NAVIGATION (Direct Jump Buttons & Visual Progress Gauge) -->
+    <div class="mt-4 flex flex-col space-y-1.5">
       <div 
-        class="group reveal-init col-span-12 flex w-full flex-col lg:col-span-4 bg-card-dark p-6 sm:p-8 justify-between border border-transparent hover:border-neutral-dark/40 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.45)] transition-all duration-300 ease-out"
-        style={`transition-delay: ${idx * 120}ms;`}
+        class="grid grid-cols-3 border border-grid-line-dark bg-card-dark divide-x divide-grid-line-dark font-mono text-[11px]" 
+        role="tablist" 
+        aria-label="Engineering principles navigation steps"
       >
-        <div class="space-y-4">
-          <div class="flex items-center justify-between font-mono text-caption text-neutral-dark border-b border-grid-line-dark pb-3">
-            <span class="text-foreground font-bold font-mono group-hover:text-accent transition-colors duration-200">P-[{p.code}]</span>
-            <span class="uppercase tracking-wider text-accent font-semibold text-[11px] group-hover:translate-x-0.5 transition-transform duration-200">{p.tag}</span>
-          </div>
+        {principlesData.map((p, idx) => {
+          const isInitial = idx === 0;
+          return (
+            <button
+              type="button"
+              role="tab"
+              id={`principle-step-btn-${idx + 1}`}
+              aria-selected={isInitial ? "true" : "false"}
+              data-step-index={idx}
+              class={`principle-step-btn relative px-3 sm:px-4 py-2.5 text-left transition-all duration-150 cursor-pointer select-none flex items-center justify-between overflow-hidden active:scale-[0.99] ${
+                isInitial
+                  ? 'is-active bg-black text-white'
+                  : 'bg-card-dark text-neutral hover:bg-neutral-900 hover:text-white'
+              }`}
+              style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);"
+            >
+              <!-- Top Accent Indicator -->
+              <span 
+                class={`step-accent-indicator absolute inset-x-0 top-0 h-[2px] bg-accent transition-opacity duration-150 ${
+                  isInitial ? 'opacity-100' : 'opacity-0'
+                }`}
+              ></span>
 
-          <h3 class="text-section font-bold tracking-tight text-foreground group-hover:text-accent transition-colors duration-200">
-            {p.title}
-          </h3>
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="step-num font-bold text-accent">P-[{p.step}]</span>
+                <span class="step-label hidden sm:inline-block font-bold text-[10px] truncate">
+                  {p.tag}
+                </span>
+              </div>
 
-          <p class="text-body text-neutral leading-relaxed">
-            {p.description}
-          </p>
-
-          <ul class="space-y-2 pt-2 border-t border-grid-line-dark text-caption text-neutral">
-            {p.bullets.map((bullet) => (
-              <li class="flex items-start gap-2">
-                <span class="text-accent font-bold mt-0.5 group-hover:scale-125 transition-transform duration-200 select-none">•</span>
-                <span class="group-hover:text-foreground/90 transition-colors duration-200">{bullet}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <!-- Code contract representation with subtle hover focus & copyable affordance -->
-        <div class="mt-6 pt-4 border-t border-grid-line-dark">
-          <div class="bg-black p-3.5 border border-grid-line-dark group-hover:border-neutral-dark/50 font-mono text-caption text-neutral overflow-x-auto leading-tight transition-colors duration-200">
-            <code class="select-all">{p.codeSnippet}</code>
-          </div>
-        </div>
+              <span class="step-dot text-accent text-[9px] font-bold">
+                {isInitial ? '●' : '○'}
+              </span>
+            </button>
+          );
+        })}
       </div>
-    ))}
+
+      <!-- Linear Progress Gauge Line -->
+      <div class="w-full h-[2px] bg-neutral-900 overflow-hidden relative" aria-hidden="true">
+        <div 
+          id="principles-progress-bar" 
+          class="h-full bg-accent transition-all duration-200"
+          style="width: 33.333%;"
+        ></div>
+      </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- MASTER 2-COLUMN INTERACTIVE STAGE (PHILOSOPHY + DEDICATED SIMULATOR)    -->
+    <!-- Calibrated height: fits 100% within viewport, never clipped at bottom   -->
+    <!-- ======================================================================= -->
+    <div 
+      id="principles-stage-card" 
+      class="mt-4 relative bg-card-dark border border-grid-line-dark p-5 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+    >
+      <!-- Scanline Laser Calibration Beam -->
+      <div 
+        id="stage-scanline-laser" 
+        class="pointer-events-none absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 z-30" 
+        aria-hidden="true"
+      ></div>
+
+      <!-- 3 Principles Content Panels (Grid-based, Only Active is Displayed) -->
+      {principlesData.map((p, idx) => {
+        const isDefault = idx === 0;
+        return (
+          <div 
+            id={`principle-panel-${idx + 1}`}
+            class={`principle-panel w-full grid-cols-12 gap-6 lg:gap-8 items-start transition-opacity duration-150 ${
+              isDefault ? 'grid is-active' : 'hidden'
+            }`}
+            data-panel-index={idx}
+          >
+            
+            <!-- SISI KIRI (5 KOLOM): ARCHITECTURAL IDENTITY & PROOF HOOKS -->
+            <div class="w-full col-span-12 lg:col-span-5 flex flex-col justify-between space-y-4">
+              <div class="space-y-3">
+                <!-- Tag Header -->
+                <div class="flex items-center justify-between font-mono text-caption text-neutral-dark border-b border-grid-line-dark pb-2">
+                  <span class="text-foreground font-bold font-mono text-[13px]">
+                    PRINCIPLE <span class="text-accent">P-[{p.step}]</span>
+                  </span>
+                  <span class="uppercase tracking-wider text-accent font-semibold text-[10px]">
+                    {p.tag}
+                  </span>
+                </div>
+
+                <!-- Title & Core Copy -->
+                <div>
+                  <h3 class="text-[1.25rem] lg:text-[1.4rem] font-bold tracking-tight text-foreground leading-tight">
+                    {p.title}
+                  </h3>
+                  <p class="text-[12px] sm:text-[13px] text-neutral leading-relaxed mt-2">
+                    {p.description}
+                  </p>
+                </div>
+
+                <!-- Invariant Bullets -->
+                <ul class="space-y-1.5 pt-2 border-t border-grid-line-dark text-[11px] sm:text-[12px] text-neutral">
+                  {p.bullets.map((bullet) => (
+                    <li class="flex items-start gap-2">
+                      <span class="text-accent font-bold mt-0.5 select-none text-[11px]">•</span>
+                      <span class="leading-snug">{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <!-- Verified Case Study & Technical Notes Hooks -->
+              <div class="pt-3 border-t border-grid-line-dark space-y-1.5 font-mono text-[10px]">
+                <div class="text-[9px] uppercase text-neutral-dark tracking-wider select-none font-semibold">
+                  // VERIFIED_IMPLEMENTATION_PROOF:
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <a 
+                    href={p.noteUrl}
+                    class="flex-1 flex items-center justify-between px-2.5 py-1.5 bg-black hover:bg-neutral-900 border border-grid-line-dark hover:border-accent text-neutral-200 hover:text-white transition-colors duration-150"
+                  >
+                    <span class="truncate">{p.noteLabel}</span>
+                    <span class="text-accent text-[10px]">↗</span>
+                  </a>
+                  <a 
+                    href={p.projectUrl}
+                    class="flex items-center justify-between px-2.5 py-1.5 bg-black hover:bg-accent border border-grid-line-dark hover:border-accent text-accent hover:text-black font-bold transition-all duration-150"
+                  >
+                    <span>{p.projectLabel}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- SISI KANAN (7 KOLOM): WIDE DEDICATED SIMULATION CANVAS -->
+            <div class="w-full col-span-12 lg:col-span-7 flex flex-col space-y-3">
+              
+              {/* ======================================================= */}
+              {/* CANVAS FOR PRINCIPLE 01 (ZERO DATA LEAKAGE)             */}
+              {/* ======================================================= */}
+              {idx === 0 && (
+                <div class="space-y-3">
+                  <!-- Control Header -->
+                  <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
+                    <span class="font-mono text-[9px] sm:text-[10px] uppercase text-neutral-dark font-semibold tracking-wider">
+                      INTERACTIVE_CANVAS // PURGE_EMBARGO_SPLITTER
+                    </span>
+                    <span 
+                      id="p1-status-badge" 
+                      class="font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
+                    >
+                      <span id="p1-badge-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span id="p1-badge-text">PASS: ZERO_LEAKAGE (+9d GAP)</span>
+                    </span>
+                  </div>
+
+                  <!-- Scrubber Control Box -->
+                  <div class="bg-black p-3 border border-grid-line-dark space-y-2 font-mono text-[10px]">
+                    <div class="flex items-center justify-between text-neutral-dark text-[9px] uppercase pb-1 border-b border-grid-line-dark/60">
+                      <span>SCRUB TEMPORAL CUTOFF BOUNDARY (t)</span>
+                      <span id="p1-slider-val-label" class="text-accent font-bold">CUTOFF: 2024-03-01 (45%)</span>
+                    </div>
+
+                    <!-- Range Slider Input -->
+                    <div class="py-0.5">
+                      <input 
+                        id="p1-time-slider" 
+                        type="range" 
+                        min="20" 
+                        max="80" 
+                        value="45" 
+                        step="1"
+                        class="w-full h-1.5 bg-neutral-800 rounded-none appearance-none cursor-pointer accent-[#ff4500] focus:outline-none"
+                        aria-label="Scrub temporal train-validation cutoff timestamp"
+                      />
+                    </div>
+
+                    <!-- Quick Preset Selectors -->
+                    <div class="flex items-center justify-between gap-2 pt-1 border-t border-grid-line-dark/40 text-[9px]">
+                      <span class="text-neutral-dark">PRESETS:</span>
+                      <div class="flex items-center gap-2">
+                        <button 
+                          id="p1-btn-preset-purge" 
+                          type="button" 
+                          class="py-0.5 px-2 bg-neutral-900 hover:bg-neutral-800 border border-emerald-500/40 text-emerald-400 font-mono tracking-wider transition-colors duration-150 active:scale-[0.98] cursor-pointer"
+                        >
+                          [STRICT PURGE (9d GAP)]
+                        </button>
+                        <button 
+                          id="p1-btn-preset-leak" 
+                          type="button" 
+                          class="py-0.5 px-2 bg-neutral-900 hover:bg-neutral-800 border border-rose-500/40 text-rose-400 font-mono tracking-wider transition-colors duration-150 active:scale-[0.98] cursor-pointer"
+                        >
+                          [NAIVE OVERLAP (+5d LEAK)]
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Wide Timeline Range Visualizer -->
+                  <div class="bg-black p-3 border border-grid-line-dark font-mono text-[10px] space-y-1.5">
+                    <div class="flex items-center justify-between text-neutral-dark text-[9px] uppercase pb-1 border-b border-grid-line-dark/60">
+                      <span>t0: 2024-01-01</span>
+                      <span id="p1-timeline-split-label" class="text-accent font-bold">GAP: +9 DAYS (EMBARGO)</span>
+                      <span>t_end: 2024-04-30</span>
+                    </div>
+
+                    <!-- Multi-Bar Visualizer -->
+                    <div class="relative w-full h-7 bg-neutral-900 border border-grid-line-dark flex overflow-hidden">
+                      <div 
+                        id="p1-train-bar" 
+                        class="h-full bg-neutral-700 text-foreground flex items-center justify-center font-bold text-[9px] border-r border-background transition-all duration-75"
+                        style="width: 45%;"
+                      >
+                        <span id="p1-train-label" class="truncate px-1.5">TRAIN [45%]</span>
+                      </div>
+
+                      <div 
+                        id="p1-embargo-bar" 
+                        class="h-full bg-emerald-950/70 text-emerald-400 border-r border-background flex items-center justify-center font-bold text-[8px] transition-all duration-75"
+                        style="width: 10%;"
+                      >
+                        <span id="p1-embargo-label" class="truncate px-0.5">GAP 9d</span>
+                      </div>
+
+                      <div 
+                        id="p1-eval-bar" 
+                        class="h-full bg-neutral-800 text-neutral flex items-center justify-center font-bold text-[9px] transition-all duration-75"
+                        style="width: 45%;"
+                      >
+                        <span id="p1-eval-label" class="truncate px-1.5">EVAL [45%]</span>
+                      </div>
+                    </div>
+
+                    <!-- Live Sample Count Callout -->
+                    <div id="p1-callout" class="flex items-center justify-between text-[10px] text-emerald-400 pt-0.5 transition-colors duration-150">
+                      <span class="flex items-center gap-1 font-mono">
+                        <span id="p1-callout-icon">✓</span>
+                        <span id="p1-callout-text">1,420 / 1,420 samples uncontaminated. Point-in-time verified.</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Live Code Assert Output Console -->
+                  <div class="bg-black p-2.5 border border-grid-line-dark font-mono text-caption text-neutral overflow-x-auto leading-tight">
+                    <div class="text-[9px] text-neutral-dark mb-0.5 select-none flex items-center justify-between">
+                      <span># LIVE_ASSERTION_MONITOR:</span>
+                      <span id="p1-assert-status" class="text-emerald-400 text-[9px]">ASSERT_PASS ✓</span>
+                    </div>
+                    <code id="p1-assert-code" class="text-neutral text-[10px] block select-all whitespace-pre font-mono leading-relaxed">assert partition.max_timestamp &lt; eval_window.min_timestamp, \
+    "LeakageDetected: lookahead contamination in split"
+# [PASS] 2024-03-01 &lt; 2024-03-10 (+9d temporal gap maintained) ✓</code>
+                  </div>
+                </div>
+              )}
+
+              {/* ======================================================= */}
+              {/* CANVAS FOR PRINCIPLE 02 (DEFENSIVE VERIFICATION & CHAOS)*/}
+              {/* ======================================================= */}
+              {idx === 1 && (
+                <div class="space-y-3">
+                  <!-- Control Header -->
+                  <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
+                    <span class="font-mono text-[9px] sm:text-[10px] uppercase text-neutral-dark font-semibold tracking-wider">
+                      INTERACTIVE_CANVAS // POSIX_SIGNAL_SUPERVISOR
+                    </span>
+                    <span 
+                      id="p2-status-badge" 
+                      class="font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
+                    >
+                      <span id="p2-badge-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span id="p2-badge-text">PID 40921: RUNNING (ACTIVE)</span>
+                    </span>
+                  </div>
+
+                  <!-- Signal Selector Matrix -->
+                  <div class="grid grid-cols-3 gap-2">
+                    <button 
+                      id="p2-btn-sigterm"
+                      type="button"
+                      class="p-2 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                    >
+                      <span class="block text-accent font-bold text-[11px]">SIGTERM (15)</span>
+                      <span class="text-[9px] text-neutral-dark block mt-0.5">DRAIN 12/12</span>
+                    </button>
+                    
+                    <button 
+                      id="p2-btn-sigint"
+                      type="button"
+                      class="p-2 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                    >
+                      <span class="block text-accent font-bold text-[11px]">SIGINT (2)</span>
+                      <span class="text-[9px] text-neutral-dark block mt-0.5">FLUSH CKPT</span>
+                    </button>
+                    
+                    <button 
+                      id="p2-btn-sigkill"
+                      type="button"
+                      class="p-2 bg-black border border-grid-line-dark hover:border-rose-500 text-foreground hover:text-rose-400 font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                    >
+                      <span class="block text-rose-500 font-bold text-[11px]">SIGKILL (9)</span>
+                      <span class="text-[9px] text-neutral-dark block mt-0.5">REAP TEST</span>
+                    </button>
+                  </div>
+
+                  <!-- Streaming Terminal Window -->
+                  <div class="bg-black p-3 border border-grid-line-dark font-mono text-[10px] space-y-1.5 min-h-[130px] max-h-[130px] flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-neutral-dark text-[9px] uppercase pb-1 border-b border-grid-line-dark/60 select-none">
+                      <span>TTY: /DEV/PTS/2 // BUS: SHM</span>
+                      <span>MEM: 142MB RSS</span>
+                      <span id="p2-zombie-count" class="text-emerald-400 font-bold">ZOMBIES: 0</span>
+                    </div>
+
+                    <div id="p2-terminal-lines" class="space-y-1 text-[10px] text-neutral overflow-y-auto max-h-[75px] leading-relaxed">
+                      <div class="text-neutral-dark">$ spawn_worker(task=heavy_inference, pid=40921)</div>
+                      <div class="text-foreground flex items-center gap-1.5">
+                        <span class="text-emerald-400">●</span>
+                        <span>[RUNNING] Ingesting inference queue... 12/12 items allocated in memory</span>
+                      </div>
+                      <div class="text-neutral-dark">// Ready for OS interrupt chaos injection...</div>
+                    </div>
+
+                    <div class="pt-1 border-t border-grid-line-dark/50 flex items-center justify-between text-[9px] text-neutral-dark select-none">
+                      <span id="p2-terminal-status" class="flex items-center gap-1 text-emerald-400">
+                        <span>●</span> LISTENING FOR SIGNALS
+                      </span>
+                      <span id="p2-exit-code" class="text-neutral-dark font-mono">EXIT_CODE: --</span>
+                    </div>
+                  </div>
+
+                  <!-- Code contract representation -->
+                  <div class="bg-black p-2 border border-grid-line-dark font-mono text-caption text-neutral overflow-x-auto leading-tight">
+                    <div class="text-[9px] text-neutral-dark mb-0.5 select-none"># DEFENSIVE_SUPERVISOR_TEST:</div>
+                    <code class="text-neutral text-[10px] block select-all whitespace-pre font-mono">def test_worker_interrupt_leaves_no_zombies():
+    proc = spawn_worker(task=heavy_inference)
+    proc.send_signal(signal.SIGINT)
+    assert proc.wait(timeout=1.0) == 0</code>
+                  </div>
+                </div>
+              )}
+
+              {/* ======================================================= */}
+              {/* CANVAS FOR PRINCIPLE 03 (DOMAIN ISOLATION & CONTRACTS)  */}
+              {/* ======================================================= */}
+              {idx === 2 && (
+                <div class="space-y-3">
+                  <!-- Control Header -->
+                  <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
+                    <span class="font-mono text-[9px] sm:text-[10px] uppercase text-neutral-dark font-semibold tracking-wider">
+                      INTERACTIVE_CANVAS // PYDANTIC_V2_STRICT_CORE
+                    </span>
+                    <span 
+                      id="p3-status-badge" 
+                      class="font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
+                    >
+                      <span id="p3-badge-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span id="p3-badge-text">PASS: 200_VALIDATED</span>
+                    </span>
+                  </div>
+
+                  <!-- Multi-Fault Injection Buttons -->
+                  <div class="grid grid-cols-3 gap-2">
+                    <button 
+                      id="p3-btn-extra"
+                      type="button"
+                      class="p-2 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                    >
+                      <span class="block text-accent font-bold text-[11px]">+ EXTRA_PARAM</span>
+                      <span class="text-[9px] text-neutral-dark block mt-0.5">EXTRA="FORBID"</span>
+                    </button>
+                    
+                    <button 
+                      id="p3-btn-dim"
+                      type="button"
+                      class="p-2 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                    >
+                      <span class="block text-accent font-bold text-[11px]">+ DIM_MISMATCH</span>
+                      <span class="text-[9px] text-neutral-dark block mt-0.5">64 vs 128 ITEMS</span>
+                    </button>
+                    
+                    <button 
+                      id="p3-btn-null"
+                      type="button"
+                      class="p-2 bg-black border border-grid-line-dark hover:border-rose-500 text-foreground hover:text-rose-400 font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                    >
+                      <span class="block text-rose-500 font-bold text-[11px]">+ NULL_PAYLOAD</span>
+                      <span class="text-[9px] text-neutral-dark block mt-0.5">STRICT=TRUE</span>
+                    </button>
+                  </div>
+
+                  <!-- Reset to Valid Payload -->
+                  <button 
+                    id="p3-btn-reset"
+                    type="button"
+                    class="w-full py-1.5 px-2 bg-neutral-900 hover:bg-neutral-800 border border-grid-line-dark text-neutral-200 hover:text-white font-mono text-[10px] font-bold tracking-wider transition-colors duration-150 active:scale-[0.99] cursor-pointer text-center"
+                  >
+                    [RESET TO STRICT VALID PAYLOAD (200 OK)]
+                  </button>
+
+                  <!-- Input Buffer JSON Payload Display -->
+                  <div class="bg-black p-2.5 border border-grid-line-dark font-mono text-[10px] space-y-1">
+                    <div class="flex items-center justify-between text-neutral-dark text-[9px] uppercase pb-0.5 border-b border-grid-line-dark/60 select-none">
+                      <span>INCOMING_JSON_BUFFER</span>
+                      <span id="p3-payload-type" class="text-accent font-bold">VALID_JSON_SCHEMA</span>
+                    </div>
+
+                    <div class="text-[10px] text-neutral overflow-x-auto leading-relaxed">
+                      <pre id="p3-payload-display" class="font-mono whitespace-pre text-neutral-dark">&#123;
+  <span id="p3-embeddings-line">"embeddings": [0.182, -0.429, ... 128 items],</span>
+  <span id="p3-extra-line" class="hidden text-rose-400 bg-rose-950/40 px-1 font-bold">"extra_param": "malicious_injection", // [FORBIDDEN]</span>
+&#125;</pre>
+                    </div>
+                  </div>
+
+                  <!-- Real Pydantic V2 Validation Output -->
+                  <div class="bg-black p-2.5 border border-grid-line-dark font-mono text-caption text-neutral overflow-x-auto leading-tight min-h-[75px]">
+                    <div class="text-[9px] text-neutral-dark mb-0.5 select-none flex items-center justify-between">
+                      <span># PYDANTIC_V2_RUST_CORE_RESPONSE:</span>
+                      <span id="p3-eval-latency" class="text-accent text-[9px]">LATENCY: 0.04ms</span>
+                    </div>
+                    <code id="p3-response-code" class="text-emerald-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed">InferenceRequest(embeddings=[128 items])
+Status: 200 OK — Strict schema verified via Rust core ✓</code>
+                  </div>
+                </div>
+              )}
+
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
   </div>
 
 </section>
+
+<!-- ========================================================================= -->
+<!-- STYLES: SCANLINE LASER & STAGE TRANSITION ANIMATIONS                      -->
+<!-- ========================================================================= -->
+<style>
+  @keyframes stageScanlineSweep {
+    0% {
+      top: 0%;
+      opacity: 1;
+    }
+    60% {
+      opacity: 0.85;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes stagePanelSlideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .principle-panel.is-active {
+    animation: stagePanelSlideIn 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  #stage-scanline-laser.is-sweeping {
+    animation: stageScanlineSweep 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .principle-panel.is-active,
+    #stage-scanline-laser.is-sweeping {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<!-- ========================================================================= -->
+<!-- CLIENT-SIDE SCRIPT: SCROLLYTELLING ORCHESTRATOR & SIMULATORS              -->
+<!-- ========================================================================= -->
+<script>
+  import { playClick, playSuccess, playViolation } from '../utils/audio';
+
+  function initPrinciplesScrollytelling() {
+    const section = document.getElementById('principles');
+    const stepBtns = document.querySelectorAll<HTMLButtonElement>('.principle-step-btn');
+    const panels = document.querySelectorAll<HTMLElement>('.principle-panel');
+    const laser = document.getElementById('stage-scanline-laser');
+    const progressBar = document.getElementById('principles-progress-bar');
+    const counterBadge = document.getElementById('principles-step-counter');
+    const activeTagLabel = document.getElementById('principles-active-tag');
+
+    const stepTags = ['TEMPORAL_INTEGRITY', 'DEFENSIVE_CHAOS', 'DOMAIN_ISOLATION'];
+    let currentStepIndex = 0;
+    let isManualClickLock = false;
+    let manualLockTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    function triggerScanline() {
+      if (!laser) return;
+      laser.classList.remove('is-sweeping');
+      void laser.offsetWidth; // Force reflow
+      laser.classList.add('is-sweeping');
+    }
+
+    function setActivePrinciple(stepIdx: number, shouldPlaySound = true) {
+      if (stepIdx === currentStepIndex && panels[stepIdx]?.classList.contains('is-active')) {
+        return;
+      }
+      currentStepIndex = stepIdx;
+      if (shouldPlaySound) {
+        playClick(1200 + stepIdx * 100);
+      }
+      triggerScanline();
+
+      // 1. Update Step Buttons
+      stepBtns.forEach((btn, idx) => {
+        const isTarget = idx === stepIdx;
+        const accentIndicator = btn.querySelector('.step-accent-indicator');
+        const dot = btn.querySelector('.step-dot');
+
+        btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+
+        if (isTarget) {
+          btn.classList.add('is-active', 'bg-black', 'text-white');
+          btn.classList.remove('bg-card-dark', 'text-neutral');
+          if (accentIndicator) accentIndicator.classList.replace('opacity-0', 'opacity-100');
+          if (dot) dot.textContent = '●';
+        } else {
+          btn.classList.remove('is-active', 'bg-black', 'text-white');
+          btn.classList.add('bg-card-dark', 'text-neutral');
+          if (accentIndicator) accentIndicator.classList.replace('opacity-100', 'opacity-0');
+          if (dot) dot.textContent = '○';
+        }
+      });
+
+      // 2. Update Progress Bar & Counters
+      if (progressBar) {
+        const pct = ((stepIdx + 1) / 3) * 100;
+        progressBar.style.width = `${pct}%`;
+      }
+      if (counterBadge) {
+        counterBadge.textContent = `0${stepIdx + 1} / 03`;
+      }
+      if (activeTagLabel) {
+        activeTagLabel.textContent = stepTags[stepIdx] || '';
+      }
+
+      // 3. Update Panels with Grid Layout
+      panels.forEach((panel, idx) => {
+        if (idx === stepIdx) {
+          panel.classList.remove('hidden');
+          panel.classList.add('grid', 'is-active');
+        } else {
+          panel.classList.add('hidden');
+          panel.classList.remove('grid', 'is-active');
+        }
+      });
+    }
+
+    // Direct Click Stepper Handler (Hybrid Navigation)
+    stepBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetIdx = parseInt(btn.dataset.stepIndex || '0', 10);
+        isManualClickLock = true;
+        if (manualLockTimeout) clearTimeout(manualLockTimeout);
+        manualLockTimeout = setTimeout(() => {
+          isManualClickLock = false;
+        }, 700);
+
+        setActivePrinciple(targetIdx, true);
+
+        // On desktop, also sync scroll position inside the track
+        if (window.innerWidth >= 1024 && section) {
+          const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+          const sectionHeight = section.offsetHeight;
+          const targetScrollY = sectionTop + (targetIdx / 3) * (sectionHeight - window.innerHeight * 0.7);
+          window.scrollTo({
+            top: targetScrollY,
+            behavior: 'smooth',
+          });
+        }
+      });
+    });
+
+    // Desktop Scroll-Driven Observer
+    function handleScroll() {
+      if (window.innerWidth < 1024 || !section || isManualClickLock) return;
+
+      const rect = section.getBoundingClientRect();
+      const sectionHeight = section.offsetHeight;
+      const viewportHeight = window.innerHeight;
+
+      // Calculate scroll progress within section track (0 to 1)
+      const scrolled = -rect.top;
+      const maxScroll = sectionHeight - viewportHeight;
+
+      if (scrolled >= 0 && scrolled <= maxScroll) {
+        const progress = scrolled / maxScroll;
+        let step = 0;
+        if (progress > 0.66) {
+          step = 2;
+        } else if (progress > 0.33) {
+          step = 1;
+        }
+        if (step !== currentStepIndex) {
+          setActivePrinciple(step, true);
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // =======================================================================
+    // SIMULATOR 01: ZERO DATA LEAKAGE (TIMELINE RANGE SCRUBBER)
+    // =======================================================================
+    const p1Slider = document.getElementById('p1-time-slider') as HTMLInputElement | null;
+    const p1SliderLabel = document.getElementById('p1-slider-val-label');
+    const p1BtnPresetPurge = document.getElementById('p1-btn-preset-purge');
+    const p1BtnPresetLeak = document.getElementById('p1-btn-preset-leak');
+    const p1StatusBadge = document.getElementById('p1-status-badge');
+    const p1BadgeDot = document.getElementById('p1-badge-dot');
+    const p1BadgeText = document.getElementById('p1-badge-text');
+    const p1TrainBar = document.getElementById('p1-train-bar');
+    const p1TrainLabel = document.getElementById('p1-train-label');
+    const p1EmbargoBar = document.getElementById('p1-embargo-bar');
+    const p1EmbargoLabel = document.getElementById('p1-embargo-label');
+    const p1EvalBar = document.getElementById('p1-eval-bar');
+    const p1EvalLabel = document.getElementById('p1-eval-label');
+    const p1Callout = document.getElementById('p1-callout');
+    const p1CalloutIcon = document.getElementById('p1-callout-icon');
+    const p1CalloutText = document.getElementById('p1-callout-text');
+    const p1AssertStatus = document.getElementById('p1-assert-status');
+    const p1AssertCode = document.getElementById('p1-assert-code');
+    const p1SplitLabel = document.getElementById('p1-timeline-split-label');
+
+    let lastSliderAudio = 0;
+
+    function updateP1Cutoff(cutoffVal: number, playAudio = true) {
+      if (playAudio) {
+        const now = performance.now();
+        if (now - lastSliderAudio > 40) {
+          playClick(1000 + cutoffVal * 8, 0.012, 0.025);
+          lastSliderAudio = now;
+        }
+      }
+
+      const isPurged = cutoffVal <= 50;
+      const trainPct = cutoffVal;
+      const evalStart = 55;
+
+      if (isPurged) {
+        const gapDays = Math.round(((evalStart - trainPct) / 10) * 9);
+        const embargoPct = Math.max(0, evalStart - trainPct);
+        const evalPct = 100 - evalStart;
+
+        if (p1SliderLabel) {
+          p1SliderLabel.textContent = `CUTOFF: 2024-03-01 (${trainPct}%)`;
+          p1SliderLabel.className = 'text-accent font-bold';
+        }
+
+        if (p1StatusBadge) {
+          p1StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+        }
+        if (p1BadgeDot) p1BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+        if (p1BadgeText) p1BadgeText.textContent = `PASS: ZERO_LEAKAGE (+${gapDays}d GAP)`;
+        if (p1SplitLabel) p1SplitLabel.textContent = `EMBARGO BUFFER: +${gapDays} DAYS`;
+
+        if (p1TrainBar) {
+          p1TrainBar.style.width = `${trainPct}%`;
+          p1TrainBar.className = 'h-full bg-neutral-700 text-foreground flex items-center justify-center font-bold text-[9px] border-r border-background transition-all duration-75';
+        }
+        if (p1TrainLabel) p1TrainLabel.textContent = `TRAIN [${trainPct}%]`;
+
+        if (p1EmbargoBar) {
+          p1EmbargoBar.style.width = `${embargoPct}%`;
+          p1EmbargoBar.className = 'h-full bg-emerald-950/70 text-emerald-400 border-r border-background flex items-center justify-center font-bold text-[8px] transition-all duration-75';
+        }
+        if (p1EmbargoLabel) p1EmbargoLabel.textContent = `GAP ${gapDays}d`;
+
+        if (p1EvalBar) {
+          p1EvalBar.style.width = `${evalPct}%`;
+          p1EvalBar.className = 'h-full bg-neutral-800 text-neutral flex items-center justify-center font-bold text-[9px] transition-all duration-75';
+        }
+        if (p1EvalLabel) p1EvalLabel.textContent = `EVAL [${evalPct}%]`;
+
+        if (p1Callout) p1Callout.className = 'flex items-center justify-between text-[10px] text-emerald-400 pt-0.5 transition-colors duration-150';
+        if (p1CalloutIcon) p1CalloutIcon.textContent = '✓';
+        if (p1CalloutText) p1CalloutText.textContent = '1,420 / 1,420 samples uncontaminated. Point-in-time verified.';
+
+        if (p1AssertStatus) {
+          p1AssertStatus.textContent = 'ASSERT_PASS ✓';
+          p1AssertStatus.className = 'text-emerald-400 text-[9px]';
+        }
+
+        if (p1AssertCode) {
+          p1AssertCode.className = 'text-neutral text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+          p1AssertCode.textContent = `assert partition.max_timestamp < eval_window.min_timestamp, \\
+    "LeakageDetected: lookahead contamination in split"
+# [PASS] 2024-03-01 < 2024-03-10 (+${gapDays}d temporal gap maintained) ✓`;
+        }
+      } else {
+        const leakDays = Math.round(((trainPct - evalStart) / 10) * 12) + 1;
+        const leakedRows = Math.round(leakDays * 56.8);
+
+        if (p1SliderLabel) {
+          p1SliderLabel.textContent = `OVERLAP: +${leakDays}d CONTAMINATED (${trainPct}%)`;
+          p1SliderLabel.className = 'text-rose-400 font-bold';
+        }
+
+        if (p1StatusBadge) {
+          p1StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+        }
+        if (p1BadgeDot) p1BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+        if (p1BadgeText) p1BadgeText.textContent = `FAIL: LOOKAHEAD_VIOLATION (+${leakDays}d)`;
+        if (p1SplitLabel) p1SplitLabel.textContent = `OVERLAP: +${leakDays}d TARGET CONTAMINATION`;
+
+        if (p1TrainBar) {
+          p1TrainBar.style.width = `${trainPct}%`;
+          p1TrainBar.className = 'h-full bg-rose-950 text-rose-300 flex items-center justify-center font-bold text-[9px] border-r border-rose-500 transition-all duration-75';
+        }
+        if (p1TrainLabel) p1TrainLabel.textContent = `TRAIN [${trainPct}%] LEAKING`;
+
+        if (p1EmbargoBar) {
+          p1EmbargoBar.style.width = '0%';
+          p1EmbargoBar.className = 'hidden';
+        }
+
+        const remainingEval = Math.max(20, 100 - trainPct);
+        if (p1EvalBar) {
+          p1EvalBar.style.width = `${remainingEval}%`;
+          p1EvalBar.className = 'h-full bg-neutral-900 text-rose-400/80 flex items-center justify-center font-bold text-[9px] transition-all duration-75';
+        }
+        if (p1EvalLabel) p1EvalLabel.textContent = `EVAL [${remainingEval}%]`;
+
+        if (p1Callout) p1Callout.className = 'flex items-center justify-between text-[10px] text-rose-400 font-bold pt-0.5 transition-colors duration-150';
+        if (p1CalloutIcon) p1CalloutIcon.textContent = '✗';
+        if (p1CalloutText) p1CalloutText.textContent = `VIOLATION: ${leakedRows} test labels leaked into training window!`;
+
+        if (p1AssertStatus) {
+          p1AssertStatus.textContent = 'ASSERTION_ERROR ✗';
+          p1AssertStatus.className = 'text-rose-400 text-[9px] font-bold';
+        }
+
+        if (p1AssertCode) {
+          p1AssertCode.className = 'text-rose-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+          p1AssertCode.textContent = `assert partition.max_timestamp < eval_window.min_timestamp, \\
+    "LeakageDetected: lookahead contamination in split"
+# AssertionError: LeakageDetected!
+# train_max >= eval_min (violation: +${leakDays} days overlap)`;
+        }
+      }
+    }
+
+    p1Slider?.addEventListener('input', (e) => {
+      const val = parseInt((e.target as HTMLInputElement).value, 10);
+      updateP1Cutoff(val, true);
+    });
+
+    p1BtnPresetPurge?.addEventListener('click', () => {
+      if (p1Slider) p1Slider.value = '45';
+      updateP1Cutoff(45, false);
+      playSuccess();
+    });
+
+    p1BtnPresetLeak?.addEventListener('click', () => {
+      if (p1Slider) p1Slider.value = '64';
+      updateP1Cutoff(64, false);
+      playViolation();
+    });
+
+    // =======================================================================
+    // SIMULATOR 02: POSIX SIGNAL MATRIX
+    // =======================================================================
+    const p2BtnSigterm = document.getElementById('p2-btn-sigterm');
+    const p2BtnSigint = document.getElementById('p2-btn-sigint');
+    const p2BtnSigkill = document.getElementById('p2-btn-sigkill');
+    const p2StatusBadge = document.getElementById('p2-status-badge');
+    const p2BadgeDot = document.getElementById('p2-badge-dot');
+    const p2BadgeText = document.getElementById('p2-badge-text');
+    const p2TerminalLines = document.getElementById('p2-terminal-lines');
+    const p2TerminalStatus = document.getElementById('p2-terminal-status');
+    const p2ExitCode = document.getElementById('p2-exit-code');
+    const p2ZombieCount = document.getElementById('p2-zombie-count');
+
+    let isP2Busy = false;
+    let currentWorkerPid = 40921;
+
+    function appendTerminalLine(html: string) {
+      if (!p2TerminalLines) return;
+      p2TerminalLines.innerHTML += html;
+      p2TerminalLines.scrollTop = p2TerminalLines.scrollHeight;
+    }
+
+    p2BtnSigterm?.addEventListener('click', () => {
+      if (isP2Busy) return;
+      isP2Busy = true;
+      playClick(750);
+
+      if (p2StatusBadge) {
+        p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-accent/40 bg-accent/10 text-accent font-bold flex items-center gap-1.5 transition-all duration-150';
+      }
+      if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-accent animate-ping';
+      if (p2BadgeText) p2BadgeText.textContent = `PID ${currentWorkerPid}: SIGTERM (15)`;
+      if (p2TerminalStatus) {
+        p2TerminalStatus.className = 'flex items-center gap-1 text-accent';
+        p2TerminalStatus.innerHTML = '<span>⚡</span> TRAP TRIGGERED';
+      }
+
+      appendTerminalLine(`<div class="text-accent flex items-center gap-1 pt-1 border-t border-grid-line-dark/40 font-bold">
+        <span>⚡</span> [SIG] kill -15 ${currentWorkerPid} (SIGTERM) dispatched
+      </div>`);
+
+      setTimeout(() => {
+        playViolation();
+        appendTerminalLine(`<div class="text-neutral-200">
+          [INTERRUPT] Received SIGTERM... Draining batch (12/12)...
+        </div>`);
+
+        setTimeout(() => {
+          playSuccess();
+          appendTerminalLine(`<div class="text-emerald-400 font-bold flex items-center gap-1">
+            <span>✓</span> Process exited with code 0 (No zombies)
+          </div>`);
+
+          if (p2StatusBadge) {
+            p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+          }
+          if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+          if (p2BadgeText) p2BadgeText.textContent = 'PASS: ZERO_ZOMBIES (CODE 0)';
+          if (p2ExitCode) {
+            p2ExitCode.className = 'text-emerald-400 font-bold';
+            p2ExitCode.textContent = 'EXIT_CODE: 0 ✓';
+          }
+          if (p2TerminalStatus) {
+            p2TerminalStatus.className = 'flex items-center gap-1 text-emerald-400';
+            p2TerminalStatus.innerHTML = '<span>✓</span> SUPERVISOR DRAINED';
+          }
+          isP2Busy = false;
+        }, 280);
+      }, 280);
+    });
+
+    p2BtnSigint?.addEventListener('click', () => {
+      if (isP2Busy) return;
+      isP2Busy = true;
+      playClick(850);
+
+      if (p2StatusBadge) {
+        p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-accent/40 bg-accent/10 text-accent font-bold flex items-center gap-1.5 transition-all duration-150';
+      }
+      if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-accent animate-ping';
+      if (p2BadgeText) p2BadgeText.textContent = `PID ${currentWorkerPid}: SIGINT (2)`;
+
+      appendTerminalLine(`<div class="text-accent flex items-center gap-1 pt-1 border-t border-grid-line-dark/40 font-bold">
+        <span>⚡</span> [SIG] KeyboardInterrupt (SIGINT) received
+      </div>`);
+
+      setTimeout(() => {
+        playViolation();
+        appendTerminalLine(`<div class="text-neutral-200">
+          [INTERRUPT] Flushing model checkpoint to /tmp/ckpt_epoch12.pt...
+        </div>`);
+
+        setTimeout(() => {
+          playSuccess();
+          appendTerminalLine(`<div class="text-emerald-400 font-bold flex items-center gap-1">
+            <span>✓</span> Checkpoint synced. Clean shutdown with exit code 130
+          </div>`);
+
+          if (p2StatusBadge) {
+            p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+          }
+          if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+          if (p2BadgeText) p2BadgeText.textContent = 'PASS: STATE_PRESERVED (CODE 130)';
+          if (p2ExitCode) {
+            p2ExitCode.className = 'text-emerald-400 font-bold';
+            p2ExitCode.textContent = 'EXIT_CODE: 130 ✓';
+          }
+          isP2Busy = false;
+        }, 280);
+      }, 280);
+    });
+
+    p2BtnSigkill?.addEventListener('click', () => {
+      if (isP2Busy) return;
+      isP2Busy = true;
+      playViolation();
+
+      if (p2StatusBadge) {
+        p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+      }
+      if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+      if (p2BadgeText) p2BadgeText.textContent = `PID ${currentWorkerPid}: KILLED (SIGKILL 9)`;
+
+      appendTerminalLine(`<div class="text-rose-400 flex items-center gap-1 pt-1 border-t border-grid-line-dark/40 font-bold">
+        <span>✗</span> [CHAOS] kill -9 ${currentWorkerPid} unmaskable signal delivered
+      </div>`);
+
+      setTimeout(() => {
+        appendTerminalLine(`<div class="text-rose-300">
+          [SUPERVISOR] Process ${currentWorkerPid} dropped unexpectedly. Reaping PID...
+        </div>`);
+
+        setTimeout(() => {
+          playSuccess();
+          currentWorkerPid += 1;
+          appendTerminalLine(`<div class="text-emerald-400 font-bold flex items-center gap-1">
+            <span>✓</span> Supervisor respawned new worker PID ${currentWorkerPid} (Zero zombie leaks)
+          </div>`);
+
+          if (p2StatusBadge) {
+            p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+          }
+          if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+          if (p2BadgeText) p2BadgeText.textContent = `RESPAWNED: PID ${currentWorkerPid} (ACTIVE)`;
+          if (p2ExitCode) {
+            p2ExitCode.className = 'text-rose-400';
+            p2ExitCode.textContent = 'EXIT_CODE: 137 (KILLED)';
+          }
+          if (p2ZombieCount) {
+            p2ZombieCount.textContent = 'ZOMBIES: 0';
+          }
+          isP2Busy = false;
+        }, 280);
+      }, 280);
+    });
+
+    // =======================================================================
+    // SIMULATOR 03: MULTI-FAULT CONTRACT INJECTION
+    // =======================================================================
+    const p3BtnExtra = document.getElementById('p3-btn-extra');
+    const p3BtnDim = document.getElementById('p3-btn-dim');
+    const p3BtnNull = document.getElementById('p3-btn-null');
+    const p3BtnReset = document.getElementById('p3-btn-reset');
+    const p3StatusBadge = document.getElementById('p3-status-badge');
+    const p3BadgeDot = document.getElementById('p3-badge-dot');
+    const p3BadgeText = document.getElementById('p3-badge-text');
+    const p3PayloadType = document.getElementById('p3-payload-type');
+    const p3EmbeddingsLine = document.getElementById('p3-embeddings-line');
+    const p3ExtraLine = document.getElementById('p3-extra-line');
+    const p3ResponseCode = document.getElementById('p3-response-code');
+    const p3EvalLatency = document.getElementById('p3-eval-latency');
+
+    function resetP3Valid() {
+      playSuccess();
+      if (p3StatusBadge) {
+        p3StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+      }
+      if (p3BadgeDot) p3BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+      if (p3BadgeText) p3BadgeText.textContent = 'PASS: 200_VALIDATED';
+      if (p3PayloadType) {
+        p3PayloadType.textContent = 'VALID_JSON_SCHEMA';
+        p3PayloadType.className = 'text-accent font-bold';
+      }
+      if (p3EmbeddingsLine) {
+        p3EmbeddingsLine.className = 'text-neutral-dark';
+        p3EmbeddingsLine.textContent = '"embeddings": [0.182, -0.429, ... 128 items],';
+      }
+      if (p3ExtraLine) p3ExtraLine.className = 'hidden';
+      if (p3EvalLatency) p3EvalLatency.textContent = 'LATENCY: 0.04ms';
+
+      if (p3ResponseCode) {
+        p3ResponseCode.className = 'text-emerald-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+        p3ResponseCode.textContent = `InferenceRequest(embeddings=[128 items])
+Status: 200 OK — Strict schema verified via Rust core ✓`;
+      }
+    }
+
+    p3BtnExtra?.addEventListener('click', () => {
+      playViolation();
+      if (p3StatusBadge) {
+        p3StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+      }
+      if (p3BadgeDot) p3BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+      if (p3BadgeText) p3BadgeText.textContent = 'FAIL: EXTRA_FORBIDDEN';
+      if (p3PayloadType) {
+        p3PayloadType.textContent = 'ILLEGAL_EXTRA_FIELD';
+        p3PayloadType.className = 'text-rose-400 font-bold';
+      }
+      if (p3EmbeddingsLine) {
+        p3EmbeddingsLine.className = 'text-neutral-dark';
+        p3EmbeddingsLine.textContent = '"embeddings": [0.182, -0.429, ... 128 items],';
+      }
+      if (p3ExtraLine) p3ExtraLine.className = 'inline text-rose-400 bg-rose-950/40 px-1 font-bold';
+      if (p3EvalLatency) p3EvalLatency.textContent = 'LATENCY: 0.02ms (REJECTED)';
+
+      if (p3ResponseCode) {
+        p3ResponseCode.className = 'text-rose-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+        p3ResponseCode.textContent = `ValidationError: 1 validation error for InferenceRequest
+extra_param
+  Extra inputs are not permitted [type=extra_forbidden, input_value='malicious_injection', input_type=str]`;
+      }
+    });
+
+    p3BtnDim?.addEventListener('click', () => {
+      playViolation();
+      if (p3StatusBadge) {
+        p3StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+      }
+      if (p3BadgeDot) p3BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+      if (p3BadgeText) p3BadgeText.textContent = 'FAIL: DIMENSION_MISMATCH';
+      if (p3PayloadType) {
+        p3PayloadType.textContent = 'DEGENERATE_VECTOR_LENGTH';
+        p3PayloadType.className = 'text-rose-400 font-bold';
+      }
+      if (p3ExtraLine) p3ExtraLine.className = 'hidden';
+      if (p3EmbeddingsLine) {
+        p3EmbeddingsLine.className = 'inline text-rose-400 bg-rose-950/40 px-1 font-bold';
+        p3EmbeddingsLine.textContent = '"embeddings": [0.182, -0.429, ... 64 items ONLY], // [TOO_SHORT]';
+      }
+      if (p3EvalLatency) p3EvalLatency.textContent = 'LATENCY: 0.02ms (REJECTED)';
+
+      if (p3ResponseCode) {
+        p3ResponseCode.className = 'text-rose-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+        p3ResponseCode.textContent = `ValidationError: 1 validation error for InferenceRequest
+embeddings
+  List should have at least 128 items after validation, not 64 [type=too_short, input_length=64]`;
+      }
+    });
+
+    p3BtnNull?.addEventListener('click', () => {
+      playViolation();
+      if (p3StatusBadge) {
+        p3StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+      }
+      if (p3BadgeDot) p3BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+      if (p3BadgeText) p3BadgeText.textContent = 'FAIL: NULL_TYPE_VIOLATION';
+      if (p3PayloadType) {
+        p3PayloadType.textContent = 'INVALID_NULL_TYPE';
+        p3PayloadType.className = 'text-rose-400 font-bold';
+      }
+      if (p3ExtraLine) p3ExtraLine.className = 'hidden';
+      if (p3EmbeddingsLine) {
+        p3EmbeddingsLine.className = 'inline text-rose-400 bg-rose-950/40 px-1 font-bold';
+        p3EmbeddingsLine.textContent = '"embeddings": null, // [STRICT_TYPE_VIOLATION]';
+      }
+      if (p3EvalLatency) p3EvalLatency.textContent = 'LATENCY: 0.01ms (REJECTED)';
+
+      if (p3ResponseCode) {
+        p3ResponseCode.className = 'text-rose-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+        p3ResponseCode.textContent = `ValidationError: 1 validation error for InferenceRequest
+embeddings
+  Input should be a valid list [type=list_type, input_value=None, input_type=NoneType]`;
+      }
+    });
+
+    p3BtnReset?.addEventListener('click', resetP3Valid);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPrinciplesScrollytelling);
+  } else {
+    initPrinciplesScrollytelling();
+  }
+  document.addEventListener('astro:page-load', initPrinciplesScrollytelling);
+</script>
