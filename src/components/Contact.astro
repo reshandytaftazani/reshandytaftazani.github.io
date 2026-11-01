@@ -78,7 +78,7 @@
             >
               <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:-translate-x-0.5">[</span>
               <span id="copy-btn-label" class="text-foreground group-hover:text-black tracking-wider transition-colors duration-200">COPY ADDRESS</span>
-              <span id="copy-btn-icon" class="text-accent group-hover:text-black font-bold text-xs transition-transform duration-200">📋</span>
+              <span id="copy-btn-icon" class="inline-flex items-center text-accent group-hover:text-black transition-transform duration-200" aria-hidden="true"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="1" ry="1"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
               <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:translate-x-0.5">]</span>
             </button>
             
@@ -158,14 +158,14 @@
           if (resetTimeout) clearTimeout(resetTimeout);
 
           label.textContent = "COPIED TO CLIPBOARD";
-          icon.textContent = "✓";
+          icon.innerHTML = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
           copyBtn.classList.remove("bg-card-dark", "text-neutral");
           copyBtn.classList.add("bg-accent", "text-black", "border-accent");
           if (srFeedback) srFeedback.textContent = "Email address copied to clipboard";
 
           resetTimeout = setTimeout(() => {
             label.textContent = "COPY ADDRESS";
-            icon.textContent = "📋";
+            icon.innerHTML = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="1" ry="1"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
             copyBtn.classList.remove("bg-accent", "text-black", "border-accent");
             copyBtn.classList.add("bg-card-dark", "text-neutral");
             if (srFeedback) srFeedback.textContent = "";

@@ -148,12 +148,13 @@ const categories = ["ALL", "MACHINE LEARNING", "SYSTEMS & DATA", "PLATFORM & WEB
                 {proj.id === 'modelarena' && (
                   <button 
                     type="button"
-                    class="group/sim inline-flex items-center gap-1 px-2.5 py-1 rounded-xs bg-[#ff4500] hover:bg-white text-black font-mono font-bold text-[11px] tracking-wider transition-all duration-200 cursor-pointer select-none active:scale-95 shadow-2xs"
+                    class="group/sim inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs bg-[#ff4500] hover:bg-white text-black font-mono font-bold text-[11px] tracking-wider transition-all duration-200 cursor-pointer select-none active:scale-95 shadow-2xs"
                     onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/projects/modelarena#interactive-simulator';"
                     title="Run live in-browser VRAM simulation"
                     aria-label="Open live VRAM simulation for ModelArena"
                   >
-                    <span>⚡ SIM</span>
+                    <span class="text-[9px]">►</span>
+                    <span>SIM</span>
                   </button>
                 )}
 

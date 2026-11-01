@@ -21,7 +21,7 @@
         id="arena-step-btn"
         class="px-3 py-1 rounded-xs bg-[#ff4500] hover:bg-white text-black font-bold text-[11px] transition-all cursor-pointer shadow-sm active:scale-95"
       >
-        STEP ROUND ↵
+        STEP ROUND →
       </button>
 
       <button 
@@ -29,7 +29,7 @@
         id="arena-autoplay-btn"
         class="px-2.5 py-1 rounded-xs bg-[#161616] hover:bg-[#ff4500] text-neutral-300 hover:text-black border border-[#2a2a2a] hover:border-[#ff4500] font-bold text-[11px] transition-colors cursor-pointer"
       >
-        AUTO-RUN ▶
+        AUTO-RUN [►]
       </button>
 
       <button 
@@ -185,7 +185,7 @@
     <div id="arena-terminal-log" class="space-y-1 text-neutral-400 h-24 overflow-y-auto leading-relaxed select-text font-mono text-[10.5px]">
       <div>[RUNTIME] Initialized 4 heterogeneous workers over shared IPC ring-buffer.</div>
       <div>[ARBITER] Quota allocator listening on /dev/shm/arena_vram_sock.</div>
-      <div class="text-white">[READY] Press "STEP ROUND ↵" or "AUTO-RUN ▶" to observe dynamic reallocation.</div>
+      <div class="text-white">[READY] Press "STEP ROUND →" or "AUTO-RUN [►]" to observe dynamic reallocation.</div>
     </div>
   </div>
 
@@ -316,14 +316,14 @@
 
     function startAutoplay() {
       isAutoplaying = true;
-      autoplayBtn.textContent = "PAUSE ⏸";
+      autoplayBtn.textContent = "PAUSE [||]";
       autoplayBtn.className = "px-2.5 py-1 rounded-xs bg-[#ff4500] text-black font-bold text-[11px] transition-colors cursor-pointer";
       timer = window.setInterval(stepTournament, 1200);
     }
 
     function stopAutoplay() {
       isAutoplaying = false;
-      autoplayBtn.textContent = "AUTO-RUN ▶";
+      autoplayBtn.textContent = "AUTO-RUN [►]";
       autoplayBtn.className = "px-2.5 py-1 rounded-xs bg-[#161616] hover:bg-[#ff4500] text-neutral-300 hover:text-black border border-[#2a2a2a] hover:border-[#ff4500] font-bold text-[11px] transition-colors cursor-pointer";
       if (timer) clearInterval(timer);
       timer = null;
