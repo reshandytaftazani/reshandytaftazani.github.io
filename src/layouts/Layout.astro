@@ -15,7 +15,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth bg-[#0a0a0a]">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,20 +40,20 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
 
-    <!-- Favicon: Clean terminal prompt SVG -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230B0F19'/><path d='M8 10L14 16L8 22M16 22H24' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+    <!-- Favicon: Clean terminal prompt SVG with Vermilion Red accent -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230a0a0a'/><path d='M8 10L14 16L8 22M16 22H24' stroke='%23ea3829' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
 
-    <!-- Fonts: Inter & JetBrains Mono -->
+    <!-- Fonts: Inter Display & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-[#0B0F19] text-slate-400 font-sans antialiased selection:bg-emerald-500/20 selection:text-emerald-300 min-h-screen flex flex-col relative overflow-x-hidden">
+  <body class="bg-[#0a0a0a] text-zinc-400 font-sans antialiased selection:bg-[#ea3829]/25 selection:text-[#ff9e94] min-h-screen flex flex-col relative overflow-x-hidden">
     <!-- Blueprint grid background (Matthieu Givelet architectural style) -->
-    <div class="fixed inset-0 pointer-events-none -z-10 opacity-[0.04] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    <div class="fixed inset-0 pointer-events-none -z-10 opacity-[0.035] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:48px_48px]"></div>
     
-    <!-- Subtle top ambient glow -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[380px] bg-emerald-500/[0.035] blur-[150px] pointer-events-none -z-10"></div>
+    <!-- Subtle top ambient aura in vermilion -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[350px] bg-[#ea3829]/[0.028] blur-[160px] pointer-events-none -z-10"></div>
     
     <slot />
 
@@ -73,7 +73,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         });
       }
 
-      // Initialize on load and on view changes
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initSpotlight);
       } else {

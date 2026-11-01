@@ -2,71 +2,70 @@
 // Hero.astro
 ---
 
-<section id="about" class="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden">
+<section id="about" class="relative pt-16 pb-20 md:pt-28 md:pb-32 overflow-hidden">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
       
-      <!-- Left Column: Copy & Actions -->
+      <!-- Left Column: High-Impact Swiss Typography & Actions -->
       <div class="lg:col-span-7 space-y-6">
         
-        <!-- Animated Availability Badge & Location -->
+        <!-- Live Status Pill & Swiss Coordinate Chip -->
         <div class="flex flex-wrap items-center gap-2">
-          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#ea3829]/10 border border-[#ea3829]/30 text-[#ff6b5e] text-xs font-mono">
             <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ea3829] opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-[#ea3829]"></span>
             </span>
             <span>Available for MLE &amp; Systems Engineering Roles</span>
           </div>
 
-          <!-- Swiss micro-location badge -->
-          <div class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-[11px] font-mono text-slate-400">
+          <div class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full bg-zinc-950 border border-[#222226] text-[11px] font-mono text-zinc-400">
             <span>Depok, Indonesia (UI CS)</span>
           </div>
         </div>
 
-        <!-- Name & Headline -->
+        <!-- Name & Headline (Daniele Buser Large-Scale Swiss Grotesque) -->
         <div class="space-y-3">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-100">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
             Reshandy Taftazani Aulya
           </h1>
-          <p class="text-xl sm:text-2xl font-mono text-emerald-400 font-medium tracking-tight">
+          <p class="text-xl sm:text-2xl font-mono text-[#ea3829] font-semibold tracking-tight">
             Machine Learning &amp; Software Systems Engineer
           </p>
         </div>
 
         <!-- Bio / Context -->
-        <p class="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl">
-          Undergraduate in Computer Science at <a href="https://cs.ui.ac.id/" target="_blank" rel="noopener noreferrer" class="text-slate-100 font-medium underline underline-offset-4 decoration-emerald-500/60 hover:text-emerald-400 transition-colors">Universitas Indonesia</a>. 
+        <p class="text-base sm:text-lg text-zinc-300 leading-relaxed max-w-2xl font-normal">
+          Undergraduate in Computer Science at <a href="https://cs.ui.ac.id/" target="_blank" rel="noopener noreferrer" class="text-white font-medium underline underline-offset-4 decoration-[#ea3829]/60 hover:text-[#ff8577] transition-colors">Universitas Indonesia</a>. 
           Architecting reproducible, leak-free machine learning pipelines and local-first software systems with defensive engineering, strict type contracts, and verifiable evaluation protocols.
         </p>
 
-        <!-- Focus Pills (Daniele Buser Swiss Tag Format) -->
+        <!-- Focus Tags (Swiss Precision Micro-Tags) -->
         <div class="flex flex-wrap gap-2 pt-1 font-mono text-xs">
-          <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
-            <span class="text-emerald-400 font-bold">#</span>
+          <span class="px-2.5 py-1 rounded bg-[#121214] border border-[#222226] text-zinc-300 flex items-center gap-1.5">
+            <span class="text-[#ea3829] font-bold">#</span>
             <span>Zero Data Leakage</span>
           </span>
-          <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
-            <span class="text-emerald-400 font-bold">#</span>
+          <span class="px-2.5 py-1 rounded bg-[#121214] border border-[#222226] text-zinc-300 flex items-center gap-1.5">
+            <span class="text-[#ea3829] font-bold">#</span>
             <span>Clean Architecture &amp; TDD</span>
           </span>
-          <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
-            <span class="text-emerald-400 font-bold">#</span>
+          <span class="px-2.5 py-1 rounded bg-[#121214] border border-[#222226] text-zinc-300 flex items-center gap-1.5">
+            <span class="text-[#ea3829] font-bold">#</span>
             <span>Pydantic v2 Contracts</span>
           </span>
-          <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
-            <span class="text-emerald-400 font-bold">#</span>
+          <span class="px-2.5 py-1 rounded bg-[#121214] border border-[#222226] text-zinc-300 flex items-center gap-1.5">
+            <span class="text-[#ea3829] font-bold">#</span>
             <span>High-Performance Compute</span>
           </span>
         </div>
 
         <!-- CTA Buttons -->
         <div class="flex flex-wrap items-center gap-3 pt-3">
-          <!-- Primary CTA: Explore Projects -->
+          <!-- Primary CTA in Vermilion Red -->
           <a
             href="#projects"
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-emerald-500 text-emerald-950 font-mono font-bold text-sm hover:bg-emerald-400 active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(16,185,129,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded bg-[#ea3829] text-white font-mono font-bold text-sm hover:bg-[#ff453a] active:scale-[0.98] transition-all shadow-[0_0_25px_rgba(234,56,41,0.25)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ea3829]"
           >
             <span>Explore Projects</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,13 +78,13 @@
             href="https://github.com/reshandytaftazani"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-emerald-300 hover:border-emerald-500/50 font-mono text-sm active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded bg-zinc-950 border border-[#27272a] text-zinc-200 hover:text-white hover:border-[#ea3829]/60 font-mono text-sm active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ea3829]"
           >
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
             </svg>
             <span>View GitHub</span>
-            <span class="text-slate-500">↗</span>
+            <span class="text-zinc-500">↗</span>
           </a>
 
           <!-- LinkedIn CTA -->
@@ -93,36 +92,36 @@
             href="https://linkedin.com/in/reshandy-taftazani-aulya"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-slate-900/90 border border-slate-800 text-slate-200 hover:text-emerald-300 hover:border-emerald-500/50 font-mono text-sm active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded bg-zinc-950 border border-[#27272a] text-zinc-200 hover:text-white hover:border-[#ea3829]/60 font-mono text-sm active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ea3829]"
           >
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
             </svg>
             <span>Connect on LinkedIn</span>
-            <span class="text-slate-500">↗</span>
+            <span class="text-zinc-500">↗</span>
           </a>
         </div>
 
       </div>
 
-      <!-- Right Column: Interactive Terminal Showcase (Daniele Buser Swiss Craft) -->
+      <!-- Right Column: Interactive Cockpit Terminal (Daniele Buser x Matthieu Givelet) -->
       <div class="lg:col-span-5">
-        <div class="spotlight-card relative rounded-lg border border-slate-800 bg-slate-900/80 backdrop-blur-md shadow-2xl overflow-hidden font-mono text-xs">
+        <div class="spotlight-card relative rounded-lg border border-[#222226] bg-[#121214]/90 backdrop-blur-md shadow-2xl overflow-hidden font-mono text-xs">
           
           <!-- Terminal Title & Tab Selector Bar -->
-          <div class="flex items-center justify-between px-3 py-2.5 bg-slate-900 border-b border-slate-800">
+          <div class="flex items-center justify-between px-3.5 py-2.5 bg-[#0e0e10] border-b border-[#222226]">
             <div class="flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-rose-500/70"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-500/70"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/70"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ea3829]/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-zinc-600"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-zinc-700"></span>
             </div>
 
-            <!-- Interactive Tab Buttons -->
+            <!-- Interactive Tab Buttons in Vermilion Accent -->
             <div class="flex items-center gap-1 text-[11px]">
               <button
                 type="button"
                 id="tab-btn-verify"
-                class="term-tab px-2 py-0.5 rounded text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 transition-colors"
+                class="term-tab px-2.5 py-0.5 rounded text-[#ff8577] bg-[#ea3829]/15 border border-[#ea3829]/40 transition-colors"
                 data-tab="verify"
               >
                 verify.py
@@ -130,7 +129,7 @@
               <button
                 type="button"
                 id="tab-btn-contracts"
-                class="term-tab px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 transition-colors"
+                class="term-tab px-2.5 py-0.5 rounded text-zinc-400 hover:text-white transition-colors"
                 data-tab="contracts"
               >
                 contracts.ts
@@ -138,7 +137,7 @@
               <button
                 type="button"
                 id="tab-btn-bench"
-                class="term-tab px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 transition-colors"
+                class="term-tab px-2.5 py-0.5 rounded text-zinc-400 hover:text-white transition-colors"
                 data-tab="bench"
               >
                 bench.log
@@ -147,45 +146,45 @@
           </div>
 
           <!-- Dynamic Tab Content Views -->
-          <div class="p-4 space-y-2.5 text-slate-300 min-h-[220px] select-text leading-relaxed">
+          <div class="p-4 space-y-2.5 text-zinc-300 min-h-[220px] select-text leading-relaxed">
             
             <!-- View 1: Verify Tab -->
             <div id="view-verify" class="term-view space-y-2">
-              <div class="flex items-center gap-2 text-slate-400 text-[11px]">
-                <span class="text-emerald-400 font-bold">$</span>
+              <div class="flex items-center gap-2 text-zinc-400 text-[11px]">
+                <span class="text-[#ea3829] font-bold">$</span>
                 <span>mlesys verify --partition-check=strict</span>
               </div>
               <div class="space-y-1.5 pt-1 text-[11.5px]">
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400 font-bold">[PASS]</span>
-                  <span class="text-slate-200">partition_boundary:</span>
-                  <span class="text-emerald-300">0.00% cross-fold leakage</span>
+                  <span class="text-[#ea3829] font-bold">[PASS]</span>
+                  <span class="text-zinc-200">partition_boundary:</span>
+                  <span class="text-white font-semibold">0.00% cross-fold leakage</span>
                 </div>
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400 font-bold">[PASS]</span>
-                  <span class="text-slate-200">tombstone_guards:</span>
-                  <span class="text-slate-400">temporal point-in-time verified</span>
+                  <span class="text-[#ea3829] font-bold">[PASS]</span>
+                  <span class="text-zinc-200">tombstone_guards:</span>
+                  <span class="text-zinc-400">temporal point-in-time verified</span>
                 </div>
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400 font-bold">[PASS]</span>
-                  <span class="text-slate-200">contracts:</span>
-                  <span class="text-slate-400">Pydantic v2 strict schema check</span>
+                  <span class="text-[#ea3829] font-bold">[PASS]</span>
+                  <span class="text-zinc-200">contracts:</span>
+                  <span class="text-zinc-400">Pydantic v2 strict schema check</span>
                 </div>
                 <div class="flex items-start gap-2">
-                  <span class="text-emerald-400 font-bold">[PASS]</span>
-                  <span class="text-slate-200">signals:</span>
-                  <span class="text-slate-400">SIGINT / SIGTERM zero-zombie handler</span>
+                  <span class="text-[#ea3829] font-bold">[PASS]</span>
+                  <span class="text-zinc-200">signals:</span>
+                  <span class="text-zinc-400">SIGINT / SIGTERM zero-zombie handler</span>
                 </div>
               </div>
             </div>
 
             <!-- View 2: Contracts Tab -->
             <div id="view-contracts" class="term-view hidden space-y-2">
-              <div class="flex items-center gap-2 text-slate-400 text-[11px]">
-                <span class="text-emerald-400 font-bold">$</span>
+              <div class="flex items-center gap-2 text-zinc-400 text-[11px]">
+                <span class="text-[#ea3829] font-bold">$</span>
                 <span>cat schemas/inference_contract.py</span>
               </div>
-              <div class="rounded bg-slate-950 p-2.5 border border-slate-800 text-[11px] text-slate-300 overflow-x-auto">
+              <div class="rounded bg-black p-2.5 border border-[#222226] text-[11px] text-zinc-300 overflow-x-auto">
                 <pre class="leading-tight"><code>class PredictPayload(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     tensor_id: UUID4
@@ -196,33 +195,33 @@
 
             <!-- View 3: Benchmark Tab -->
             <div id="view-bench" class="term-view hidden space-y-2">
-              <div class="flex items-center gap-2 text-slate-400 text-[11px]">
-                <span class="text-emerald-400 font-bold">$</span>
+              <div class="flex items-center gap-2 text-zinc-400 text-[11px]">
+                <span class="text-[#ea3829] font-bold">$</span>
                 <span>pytest tests/perf/ --benchmark-only</span>
               </div>
               <div class="space-y-1.5 pt-1 text-[11.5px]">
                 <div class="flex items-center justify-between">
-                  <span class="text-slate-400">Inference (ONNX/C++):</span>
-                  <span class="text-emerald-300 font-bold">p99 = 3.82ms</span>
+                  <span class="text-zinc-400">Inference (ONNX/C++):</span>
+                  <span class="text-[#ff8577] font-bold">p99 = 3.82ms</span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-slate-400">Throughput:</span>
-                  <span class="text-emerald-300 font-bold">14,250 req/sec</span>
+                  <span class="text-zinc-400">Throughput:</span>
+                  <span class="text-white font-bold">14,250 req/sec</span>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-slate-400">Fuzz Resilience:</span>
-                  <span class="text-emerald-300 font-bold">10,000 cases (0 unhandled)</span>
+                  <span class="text-zinc-400">Fuzz Resilience:</span>
+                  <span class="text-[#ff8577] font-bold">10,000 cases (0 unhandled)</span>
                 </div>
               </div>
             </div>
 
             <!-- Pipeline status summary bar -->
-            <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+            <div class="mt-4 pt-3 border-t border-[#222226] flex items-center justify-between text-[11px] text-zinc-400">
               <div class="flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span class="text-emerald-400 font-medium">Deterministic verification</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#ea3829]"></span>
+                <span class="text-[#ff8577] font-medium">Deterministic verification</span>
               </div>
-              <span class="text-slate-500 font-mono">100% reproducible</span>
+              <span class="text-zinc-500 font-mono">100% reproducible</span>
             </div>
 
           </div>
@@ -235,7 +234,6 @@
 </section>
 
 <script>
-  // Interactive Terminal Tab Switcher
   const tabs = document.querySelectorAll('.term-tab');
   const views = document.querySelectorAll('.term-view');
 
@@ -243,15 +241,13 @@
     tab.addEventListener('click', () => {
       const target = tab.getAttribute('data-tab');
       
-      // Update Tab Styles
       tabs.forEach((t) => {
-        t.classList.remove('text-emerald-400', 'bg-emerald-500/15', 'border', 'border-emerald-500/30');
-        t.classList.add('text-slate-400');
+        t.classList.remove('text-[#ff8577]', 'bg-[#ea3829]/15', 'border', 'border-[#ea3829]/40');
+        t.classList.add('text-zinc-400');
       });
-      tab.classList.remove('text-slate-400');
-      tab.classList.add('text-emerald-400', 'bg-emerald-500/15', 'border', 'border-emerald-500/30');
+      tab.classList.remove('text-zinc-400');
+      tab.classList.add('text-[#ff8577]', 'bg-[#ea3829]/15', 'border', 'border-[#ea3829]/40');
 
-      // Update View Visibility
       views.forEach((v) => {
         v.classList.add('hidden');
       });

@@ -11,34 +11,34 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #0b0f19;
-  color: #94a3b8;
+  background-color: #0a0a0a;
+  color: #a1a1aa;
 }
 
 ::selection {
-  background-color: rgba(16, 185, 129, 0.25);
-  color: #6ee7b7;
+  background-color: rgba(234, 56, 41, 0.28);
+  color: #ff9e94;
 }
 
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0f19;
+  background: #0a0a0a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: #222226;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #333338;
 }
 
-/* Swiss / Daniele Buser Spotlight card interaction */
+/* Swiss / Daniele Buser x Matthieu Givelet Spotlight card interaction */
 .spotlight-card {
   position: relative;
   overflow: hidden;
@@ -49,8 +49,8 @@ html {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    500px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
-    rgba(16, 185, 129, 0.09),
+    520px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(234, 56, 41, 0.11),
     transparent 65%
   );
   opacity: 0;
@@ -61,4 +61,19 @@ html {
 
 .spotlight-card:hover::before {
   opacity: 1;
+}
+
+/* Architectural blueprint corner crosshairs */
+.crosshair-corner {
+  position: relative;
+}
+
+.crosshair-corner::after {
+  content: "+";
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.15);
+  pointer-events: none;
 }

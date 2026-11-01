@@ -55,58 +55,58 @@ class InferenceRequest(BaseModel):
 ];
 ---
 
-<section id="principles" class="py-20 border-t border-slate-800/80 bg-slate-950/40 relative">
+<section id="principles" class="py-24 border-t border-[#222226] bg-[#0a0a0a] relative">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <!-- Section Header (Daniele Buser Swiss Layout) -->
-    <div class="space-y-3 mb-14">
-      <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
-        <span>// Core Engineering Tenets</span>
+    <!-- Section Header (Daniele Buser Swiss Scale) -->
+    <div class="space-y-3 mb-16">
+      <div class="inline-flex items-center gap-2 font-mono text-xs text-[#ea3829] uppercase tracking-widest font-semibold">
+        <span>// 01 ENGINEERING TENETS</span>
       </div>
-      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-100">
+      <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
         Engineering Principles
       </h2>
-      <p class="text-slate-400 max-w-2xl text-base sm:text-lg leading-relaxed">
+      <p class="text-zinc-400 max-w-2xl text-base sm:text-lg leading-relaxed">
         High signal, low noise. Foundational systems principles governing data integrity, fault boundaries, and architectural isolation.
       </p>
     </div>
 
-    <!-- Cards Grid with Spotlight Effect -->
+    <!-- Cards Grid with Vermilion Spotlight Aura -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {principles.map((item) => (
-        <div class="spotlight-card group flex flex-col justify-between rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-900/85 hover:border-emerald-500/40 p-6 transition-all duration-200">
+        <div class="spotlight-card group flex flex-col justify-between rounded-lg border border-[#222226] bg-[#111113] hover:bg-[#141416] hover:border-[#ea3829]/50 p-6 sm:p-7 transition-all duration-200">
           <div class="space-y-4 relative z-10">
             
-            <!-- Header with Index Tag -->
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+            <!-- Header with Large Swiss Index -->
+            <div class="flex items-center justify-between border-b border-[#222226] pb-3">
+              <span class="text-xs font-mono text-[#ff8577] font-semibold bg-[#ea3829]/15 px-2.5 py-0.5 rounded border border-[#ea3829]/30">
                 P-[{item.code}]
               </span>
-              <span class="text-[10.5px] font-mono text-slate-500 tracking-wider">
+              <span class="text-[10.5px] font-mono text-zinc-500 tracking-wider">
                 {item.tag}
               </span>
             </div>
 
             <!-- Title & Tagline -->
             <div>
-              <h3 class="text-lg font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
+              <h3 class="text-xl font-bold text-white group-hover:text-[#ff9e94] transition-colors">
                 {item.title}
               </h3>
-              <p class="text-xs font-mono text-slate-400 mt-1">
+              <p class="text-xs font-mono text-zinc-400 mt-1">
                 {item.tagline}
               </p>
             </div>
 
             <!-- Description -->
-            <p class="text-sm text-slate-300 leading-relaxed">
+            <p class="text-sm text-zinc-300 leading-relaxed font-normal">
               {item.description}
             </p>
 
             <!-- Bullets -->
-            <ul class="space-y-2 pt-2 border-t border-slate-800/60">
+            <ul class="space-y-2 pt-2 border-t border-[#222226]">
               {item.bullets.map((bullet) => (
-                <li class="flex items-start gap-2 text-xs text-slate-300">
-                  <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <li class="flex items-start gap-2 text-xs text-zinc-300">
+                  <svg class="w-3.5 h-3.5 text-[#ea3829] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                   </svg>
                   <span class="leading-normal">{bullet}</span>
@@ -115,9 +115,9 @@ class InferenceRequest(BaseModel):
             </ul>
           </div>
 
-          <!-- Code Snippet Box with Copy Button -->
-          <div class="mt-6 pt-4 border-t border-slate-800/80 relative z-10">
-            <div class="relative rounded bg-[#0B0F19] p-3 font-mono text-[11px] text-slate-300 border border-slate-800/90 overflow-x-auto">
+          <!-- Code Snippet Box in Stark Dark with Vermilion Accent -->
+          <div class="mt-6 pt-4 border-t border-[#222226] relative z-10">
+            <div class="relative rounded bg-[#070708] p-3 font-mono text-[11px] text-zinc-300 border border-[#222226] overflow-x-auto">
               <pre class="leading-tight"><code>{item.codeSnippet}</code></pre>
             </div>
           </div>

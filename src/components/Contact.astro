@@ -2,55 +2,55 @@
 // Contact.astro
 ---
 
-<section id="contact" class="py-20 border-t border-slate-800/80 relative">
+<section id="contact" class="py-24 border-t border-[#222226] bg-[#0a0a0a] relative">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
       
       <!-- Left Column: Copy & Details -->
-      <div class="lg:col-span-7 space-y-5">
-        <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
-          <span>// Communication Channels</span>
+      <div class="lg:col-span-7 space-y-6">
+        <div class="inline-flex items-center gap-2 font-mono text-xs text-[#ea3829] uppercase tracking-widest font-semibold">
+          <span>// 04 DIRECT COMMUNICATION</span>
         </div>
         
-        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-100">
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
           Get in Touch
         </h2>
 
-        <p class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-xl">
+        <p class="text-zinc-300 text-base sm:text-lg leading-relaxed max-w-xl font-normal">
           Interested in discussing machine learning engineering, systems reliability, or research collaborations? I am always open to high-signal technical conversations and prospective engineering roles.
         </p>
 
         <!-- Academic Affiliation Callout (Swiss Clean Card) -->
-        <div class="p-4 rounded-lg bg-slate-900/60 border border-slate-800 max-w-xl">
-          <div class="text-xs font-mono text-slate-400 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span class="font-semibold text-slate-200">Academic Affiliation</span>
+        <div class="p-4 rounded-lg bg-[#111113] border border-[#222226] max-w-xl">
+          <div class="text-xs font-mono text-zinc-400 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#ea3829]"></span>
+            <span class="font-semibold text-zinc-200">Academic Affiliation</span>
           </div>
-          <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
-            Faculty of Computer Science, <a href="https://cs.ui.ac.id/" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline">Universitas Indonesia</a> (Depok, West Java, Indonesia).
+          <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed font-sans">
+            Faculty of Computer Science, <a href="https://cs.ui.ac.id/" target="_blank" rel="noopener noreferrer" class="text-white hover:text-[#ff8577] underline decoration-[#ea3829]/60">Universitas Indonesia</a> (Depok, West Java, Indonesia).
           </p>
         </div>
       </div>
 
-      <!-- Right Column: Direct Contact Action Cards with Spotlight Effect -->
+      <!-- Right Column: Direct Contact Action Cards with Spotlight Aura -->
       <div class="lg:col-span-5 space-y-3">
         
         <!-- Email Direct Card with 1-Click Copy -->
-        <div class="spotlight-card group p-4 rounded-lg border border-slate-800 bg-slate-900/60 hover:border-emerald-500/50 transition-all duration-150">
+        <div class="spotlight-card group p-4 rounded-lg border border-[#222226] bg-[#111113] hover:border-[#ea3829]/50 transition-all duration-150">
           <div class="flex items-center justify-between relative z-10">
             <a
               href="mailto:reshandy.taftazani@ui.ac.id"
               class="flex items-center gap-3.5 focus-visible:outline-none"
             >
-              <div class="p-2.5 rounded-md bg-slate-800 text-emerald-400 group-hover:bg-emerald-500/10 transition-colors">
+              <div class="p-2.5 rounded bg-zinc-950 text-[#ea3829] group-hover:bg-[#ea3829]/15 transition-colors border border-[#222226]">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
               <div>
-                <div class="text-xs font-mono text-slate-400">Direct Email</div>
-                <div class="text-sm font-mono font-medium text-slate-200 group-hover:text-emerald-300 transition-colors">
+                <div class="text-xs font-mono text-zinc-500">Direct Email</div>
+                <div class="text-sm font-mono font-medium text-zinc-200 group-hover:text-white transition-colors">
                   reshandy.taftazani@ui.ac.id
                 </div>
               </div>
@@ -59,14 +59,14 @@
             <button
               type="button"
               id="copy-email-btn"
-              class="p-2 text-slate-400 hover:text-emerald-300 hover:bg-slate-800 rounded transition-colors text-xs font-mono"
+              class="p-2 text-zinc-400 hover:text-[#ff8577] hover:bg-zinc-800 rounded transition-colors text-xs font-mono"
               title="Copy email address"
               aria-label="Copy email address to clipboard"
             >
               <svg id="copy-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
-              <span id="copy-text" class="hidden text-[10px] text-emerald-400">COPIED</span>
+              <span id="copy-text" class="hidden text-[10px] text-[#ff8577] font-bold">COPIED</span>
             </button>
           </div>
         </div>
@@ -76,22 +76,22 @@
           href="https://linkedin.com/in/reshandy-taftazani-aulya"
           target="_blank"
           rel="noopener noreferrer"
-          class="spotlight-card group flex items-center justify-between p-4 rounded-lg border border-slate-800 bg-slate-900/60 hover:border-emerald-500/50 transition-all duration-150"
+          class="spotlight-card group flex items-center justify-between p-4 rounded-lg border border-[#222226] bg-[#111113] hover:border-[#ea3829]/50 transition-all duration-150"
         >
           <div class="flex items-center gap-3.5 relative z-10">
-            <div class="p-2.5 rounded-md bg-slate-800 text-emerald-400 group-hover:bg-emerald-500/10 transition-colors">
+            <div class="p-2.5 rounded bg-zinc-950 text-[#ea3829] group-hover:bg-[#ea3829]/15 transition-colors border border-[#222226]">
               <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                 <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
               </svg>
             </div>
             <div>
-              <div class="text-xs font-mono text-slate-400">Professional Network</div>
-              <div class="text-sm font-mono font-medium text-slate-200 group-hover:text-emerald-300 transition-colors">
+              <div class="text-xs font-mono text-zinc-500">Professional Network</div>
+              <div class="text-sm font-mono font-medium text-zinc-200 group-hover:text-white transition-colors">
                 linkedin.com/in/reshandy-taftazani-aulya
               </div>
             </div>
           </div>
-          <span class="text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all relative z-10">↗</span>
+          <span class="text-zinc-500 group-hover:text-[#ea3829] group-hover:translate-x-0.5 transition-all relative z-10">↗</span>
         </a>
 
         <!-- GitHub Direct Card -->
@@ -99,22 +99,22 @@
           href="https://github.com/reshandytaftazani"
           target="_blank"
           rel="noopener noreferrer"
-          class="spotlight-card group flex items-center justify-between p-4 rounded-lg border border-slate-800 bg-slate-900/60 hover:border-emerald-500/50 transition-all duration-150"
+          class="spotlight-card group flex items-center justify-between p-4 rounded-lg border border-[#222226] bg-[#111113] hover:border-[#ea3829]/50 transition-all duration-150"
         >
           <div class="flex items-center gap-3.5 relative z-10">
-            <div class="p-2.5 rounded-md bg-slate-800 text-emerald-400 group-hover:bg-emerald-500/10 transition-colors">
+            <div class="p-2.5 rounded bg-zinc-950 text-[#ea3829] group-hover:bg-[#ea3829]/15 transition-colors border border-[#222226]">
               <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
               </svg>
             </div>
             <div>
-              <div class="text-xs font-mono text-slate-400">Code Repository</div>
-              <div class="text-sm font-mono font-medium text-slate-200 group-hover:text-emerald-300 transition-colors">
+              <div class="text-xs font-mono text-zinc-500">Code Repository</div>
+              <div class="text-sm font-mono font-medium text-zinc-200 group-hover:text-white transition-colors">
                 github.com/reshandytaftazani
               </div>
             </div>
           </div>
-          <span class="text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all relative z-10">↗</span>
+          <span class="text-zinc-500 group-hover:text-[#ea3829] group-hover:translate-x-0.5 transition-all relative z-10">↗</span>
         </a>
 
       </div>
@@ -125,7 +125,6 @@
 </section>
 
 <script>
-  // 1-Click Copy Email Script
   const copyBtn = document.getElementById('copy-email-btn');
   const copyIcon = document.getElementById('copy-icon');
   const copyText = document.getElementById('copy-text');

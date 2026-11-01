@@ -3,7 +3,8 @@
 const projects = [
   {
     status: "PRODUCTION_READY",
-    code: "SYS-01",
+    code: "01",
+    sysTag: "SYS / EVALUATION",
     title: "LeakGuard-ML",
     subtitle: "Zero-Leakage Feature Store & Split Validator",
     summary:
@@ -20,7 +21,8 @@ const projects = [
   },
   {
     status: "LOCAL_FIRST",
-    code: "SYS-02",
+    code: "02",
+    sysTag: "SYS / RUNTIME",
     title: "AxiomServe",
     subtitle: "Low-Latency Supervised Inference Runtime",
     summary:
@@ -37,7 +39,8 @@ const projects = [
   },
   {
     status: "CHAOS_VERIFIED",
-    code: "SYS-03",
+    code: "03",
+    sysTag: "SYS / TESTING",
     title: "SynthDist-Engine",
     subtitle: "Degenerate Distribution & TDD Chaos Harness",
     summary:
@@ -54,7 +57,8 @@ const projects = [
   },
   {
     status: "CLEAN_ARCH",
-    code: "SYS-04",
+    code: "04",
+    sysTag: "SYS / ARCHITECTURE",
     title: "HexaML Core",
     subtitle: "Clean Architecture Engine for ML Systems",
     summary:
@@ -72,19 +76,19 @@ const projects = [
 ];
 ---
 
-<section id="projects" class="py-20 border-t border-slate-800/80 relative">
+<section id="projects" class="py-24 border-t border-[#222226] bg-[#0a0a0a] relative">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Section Header (Daniele Buser Swiss Layout) -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16">
       <div class="space-y-3">
-        <div class="inline-flex items-center gap-2 font-mono text-xs text-emerald-400 uppercase tracking-widest">
-          <span>// Technical Portfolio</span>
+        <div class="inline-flex items-center gap-2 font-mono text-xs text-[#ea3829] uppercase tracking-widest font-semibold">
+          <span>// 02 FEATURED REPOSITORIES</span>
         </div>
-        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-100">
-          Featured Engineering Projects
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+          Selected Engineering Work
         </h2>
-        <p class="text-slate-400 max-w-2xl text-base sm:text-lg leading-relaxed">
+        <p class="text-zinc-400 max-w-2xl text-base sm:text-lg leading-relaxed">
           Production-grade systems, leak-free ML pipelines, and local-first runtimes built with clean architecture, verifiable test coverage, and strict contracts.
         </p>
       </div>
@@ -93,36 +97,36 @@ const projects = [
         href="https://github.com/reshandytaftazani"
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-emerald-400 transition-colors shrink-0"
+        class="inline-flex items-center gap-2 text-xs font-mono text-zinc-300 hover:text-[#ff8577] transition-colors shrink-0 font-medium"
       >
         <span>View all repositories on GitHub</span>
         <span>→</span>
       </a>
     </div>
 
-    <!-- Project Cards Grid (2x2) with Swiss Spotlight Hover -->
+    <!-- Architectural Split-Index Project Cards (2x2 Grid with Vermilion Aura) -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {projects.map((proj) => (
-        <article class="spotlight-card group flex flex-col justify-between rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-900/85 hover:border-emerald-500/40 p-6 sm:p-7 transition-all duration-200">
-          <div class="space-y-4 relative z-10">
+        <article class="spotlight-card group flex flex-col justify-between rounded-lg border border-[#222226] bg-[#111113] hover:bg-[#141416] hover:border-[#ea3829]/50 p-6 sm:p-8 transition-all duration-200">
+          <div class="space-y-5 relative z-10">
             
-            <!-- Header with Code & Status Badge -->
-            <div class="flex items-center justify-between gap-4">
-              <div class="flex items-center gap-2 font-mono text-xs">
-                <span class="text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
-                  {proj.code}
+            <!-- Architectural Index Header -->
+            <div class="flex items-center justify-between gap-4 border-b border-[#222226] pb-4">
+              <div class="flex items-center gap-3">
+                <span class="text-lg font-mono font-bold text-white tracking-tighter">
+                  [{proj.code}]
                 </span>
-                <span class="text-[11px] text-slate-500">
+                <span class="text-xs font-mono font-semibold text-[#ff8577] bg-[#ea3829]/15 px-2.5 py-0.5 rounded border border-[#ea3829]/30">
                   {proj.status}
                 </span>
               </div>
 
-              <!-- GitHub Direct Action Icon -->
+              <!-- GitHub Direct Action -->
               <a
                 href={proj.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="p-2 text-slate-400 hover:text-emerald-300 hover:bg-slate-800/80 rounded-md border border-slate-800 transition-colors"
+                class="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded border border-[#27272a] hover:border-[#ea3829]/50 transition-colors"
                 aria-label={`View ${proj.title} source code on GitHub`}
               >
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
@@ -133,33 +137,33 @@ const projects = [
 
             <!-- Title & Subtitle -->
             <div>
-              <h3 class="text-xl font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">
+              <h3 class="text-2xl font-bold text-white group-hover:text-[#ff9e94] transition-colors tracking-tight">
                 {proj.title}
               </h3>
-              <p class="text-xs font-mono text-emerald-400/90 mt-0.5">
+              <p class="text-xs font-mono text-[#ea3829] font-medium mt-1">
                 {proj.subtitle}
               </p>
             </div>
 
             <!-- Problem / Summary -->
-            <p class="text-sm text-slate-300 leading-relaxed">
+            <p class="text-sm text-zinc-300 leading-relaxed font-normal">
               {proj.summary}
             </p>
 
             <!-- Architecture Details Callout -->
-            <div class="rounded bg-[#0B0F19]/90 p-3.5 border border-slate-800/90">
-              <span class="text-[11px] font-mono text-slate-500 uppercase tracking-wider block mb-1">
+            <div class="rounded bg-[#070708] p-4 border border-[#222226]">
+              <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-wider block mb-1">
                 Architecture &amp; Implementation:
               </span>
-              <p class="text-xs text-slate-300 leading-relaxed font-sans">
+              <p class="text-xs text-zinc-300 leading-relaxed font-sans">
                 {proj.architecture}
               </p>
             </div>
 
             <!-- Tech Stack Pills -->
-            <div class="flex flex-wrap gap-1.5 pt-2">
+            <div class="flex flex-wrap gap-1.5 pt-1">
               {proj.techStack.map((tech) => (
-                <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800/80 border border-slate-700/60 text-slate-300">
+                <span class="px-2.5 py-1 text-[11px] font-mono rounded bg-zinc-950 border border-[#27272a] text-zinc-300">
                   {tech}
                 </span>
               ))}
@@ -167,14 +171,14 @@ const projects = [
 
           </div>
 
-          <!-- Swiss Tabular Metrics Footer Bar -->
-          <div class="mt-6 pt-4 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center relative z-10">
+          <!-- Swiss Tabular Metrics Footer in Vermilion Numerals -->
+          <div class="mt-6 pt-4 border-t border-[#222226] grid grid-cols-3 gap-2 text-center relative z-10">
             {proj.metrics.map((metric) => (
-              <div class="rounded bg-slate-950/70 p-2 border border-slate-800/80">
-                <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider truncate">
+              <div class="rounded bg-[#070708] p-2.5 border border-[#222226]">
+                <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider truncate">
                   {metric.label}
                 </div>
-                <div class="text-xs font-mono font-semibold text-emerald-400 mt-0.5 truncate">
+                <div class="text-xs font-mono font-bold text-[#ff8577] mt-0.5 truncate">
                   {metric.value}
                 </div>
               </div>
