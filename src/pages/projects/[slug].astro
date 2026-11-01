@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
 import ModelArenaVramSimulator from '../../components/ModelArenaVramSimulator.astro';
 import RooflineModelSimulator from '../../components/RooflineModelSimulator.astro';
+import ArchitectureTopologyDAG from '../../components/ArchitectureTopologyDAG.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -179,6 +180,18 @@ const { Content } = await render(project);
             </>
           )}
 
+          {(project.id === 'modelarena' || project.id === 'finance-tracker') && (
+            <a 
+              href="#architecture-dag" 
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xs bg-[#00ff66]/15 hover:bg-[#00ff66] text-[#00ff66] hover:text-black border border-[#00ff66]/40 hover:border-[#00ff66] font-bold transition-all duration-200"
+              title="Jump to Interactive Microservice Pipeline DAG Topology"
+            >
+              <span class="text-[10px]">❖</span>
+              <span>TOPOLOGY DAG</span>
+              <span class="text-xs">↓</span>
+            </a>
+          )}
+
           <!-- Quick Run CLI Micro-interaction -->
           <button 
             type="button" 
@@ -243,6 +256,22 @@ const { Content } = await render(project);
             <span>HARDWARE BENCHMARK // HARDWARE ROOFLINE MODEL</span>
           </div>
           <RooflineModelSimulator />
+        </section>
+      )}
+
+      <!-- INTERACTIVE ARCHITECTURE TOPOLOGY DAG -->
+      {(project.id === 'modelarena' || project.id === 'finance-tracker') && (
+        <section id="architecture-dag" class="border-t border-[#1f1f1f] pt-12 pb-16 scroll-mt-20">
+          <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+            <div class="flex items-center gap-2 font-mono text-xs text-[#00ff66] tracking-widest uppercase">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#00ff66] animate-pulse"></span>
+              <span>SYSTEM TOPOLOGY // MICROSERVICE PIPELINE &amp; DATAFLOW DAG</span>
+            </div>
+            <span class="font-mono text-[11px] text-neutral-500">
+              CLICK ANY NODE TO INSPECT CONTRACTS &amp; SLA
+            </span>
+          </div>
+          <ArchitectureTopologyDAG projectId={project.id} />
         </section>
       )}
 

@@ -126,8 +126,8 @@
   - Interactive precision selectors (`FP32`, `BF16`, `INT8`, `INT4 AWQ`) and calibrated $B, L$ arithmetic intensity sliders with real-time memory/compute bound detection.
 - **5.3 Dynamic Swiss OpenGraph Social Cards [COMPLETED]:**
   - High-resolution (1200x630) automated Swiss editorial preview cards with pitch-black canvas, 12-column grid guidelines, Hanken Grotesk typography, and verified metrics.
-- **5.4 Interactive Architecture Topology DAG [UPCOMING]:**
-  - Reactive SVG node-edge pipeline topology diagram with packet pulses, schema contract inspector, and latency SLA verification.
+- **5.4 Interactive Architecture Topology DAG [COMPLETED]:**
+  - Reactive SVG node-edge pipeline topology diagram with packet pulses, schema contract inspector, latency SLA verification, and live hop audit injection embedded in `/projects/modelarena#architecture-dag` and `/projects/finance-tracker#architecture-dag`.
 - **5.5 Code & Formula Deep Annotation Inspector [UPCOMING]:**
   - Interactive mathematical parameter drilldowns and line-by-line engineering justification overlays in technical dispatches.
 

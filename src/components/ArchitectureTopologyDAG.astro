@@ -1,0 +1,769 @@
+---
+// src/components/ArchitectureTopologyDAG.astro
+// Interactive Directed Acyclic Graph (DAG) Microservice Topology Visualizer
+// Zero-dependency pure SVG + client-side TypeScript telemetry inspector.
+
+interface Props {
+  projectId?: string;
+}
+
+const { projectId = 'modelarena' } = Astro.props;
+---
+
+<div 
+  id="topology-dag-root" 
+  class="relative w-full rounded-xs border border-[#1f1f1f] bg-[#0a0a0a] overflow-hidden select-none font-sans"
+  data-project={projectId}
+>
+  <!-- TOP TELEMETRY STATUS BAR -->
+  <header class="flex flex-wrap items-center justify-between border-b border-[#1f1f1f] bg-[#0f0f0f] px-4 py-3 sm:px-6">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00ff66] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#00ff66]"></span>
+        </span>
+        <span class="font-mono text-xs font-bold text-white tracking-wider uppercase">
+          SYSTEM TOPOLOGY // MICROSERVICE PIPELINE &amp; DATAFLOW DAG
+        </span>
+      </div>
+      <span class="hidden md:inline-block font-mono text-[10px] text-neutral-500 border border-[#222] px-2 py-0.5 rounded-xs">
+        PIPELINE ID: DAG-PROD-2026
+      </span>
+    </div>
+
+    <!-- Controls Toolbar -->
+    <div class="flex items-center gap-2 mt-2 sm:mt-0 font-mono text-xs">
+      <div class="flex items-center border border-[#262626] rounded-xs bg-[#141414] overflow-hidden">
+        <button 
+          id="dag-zoom-out" 
+          type="button" 
+          class="px-2.5 py-1 text-neutral-400 hover:text-white hover:bg-[#222] transition-colors cursor-pointer"
+          title="Zoom Out"
+        >
+          −
+        </button>
+        <span id="dag-zoom-level" class="px-2 py-1 text-[11px] text-neutral-300 font-semibold border-x border-[#262626] min-w-[50px] text-center">
+          100%
+        </span>
+        <button 
+          id="dag-zoom-in" 
+          type="button" 
+          class="px-2.5 py-1 text-neutral-400 hover:text-white hover:bg-[#222] transition-colors cursor-pointer"
+          title="Zoom In"
+        >
+          +
+        </button>
+        <button 
+          id="dag-zoom-reset" 
+          type="button" 
+          class="px-2 py-1 text-[10px] text-neutral-500 hover:text-[#ff4500] hover:bg-[#222] border-l border-[#262626] transition-colors cursor-pointer"
+          title="Reset Zoom"
+        >
+          ⟲
+        </button>
+      </div>
+
+      <button
+        id="dag-pulse-btn"
+        type="button"
+        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xs bg-[#ff4500]/15 hover:bg-[#ff4500] text-[#ff4500] hover:text-white border border-[#ff4500]/40 font-bold transition-all duration-150 cursor-pointer text-xs"
+        title="Trigger simulated high-frequency event packet burst"
+      >
+        <span>►</span>
+        <span>INJECT BURST</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HORIZONTAL NODE SELECTOR TABS -->
+  <div class="flex items-center gap-1 overflow-x-auto p-2 border-b border-[#181818] bg-[#0c0c0c] scrollbar-thin">
+    <button type="button" class="dag-tab-btn flex-1 min-w-[140px] px-2.5 py-1.5 rounded-xs border border-[#ff4500] bg-[#1a110d] text-left transition-colors cursor-pointer" data-node="0">
+      <span class="block font-mono text-[9px] text-[#ff4500] font-bold">HOP 01 // INGRESS</span>
+      <span class="block font-sans text-xs font-bold text-white truncate">Raw Event Ingestion</span>
+    </button>
+    <button type="button" class="dag-tab-btn flex-1 min-w-[140px] px-2.5 py-1.5 rounded-xs border border-[#222] bg-[#121212] hover:border-[#444] text-left transition-colors cursor-pointer" data-node="1">
+      <span class="block font-mono text-[9px] text-neutral-500 font-bold">HOP 02 // PURGING</span>
+      <span class="block font-sans text-xs font-bold text-neutral-300 truncate">Purge &amp; Embargo</span>
+    </button>
+    <button type="button" class="dag-tab-btn flex-1 min-w-[140px] px-2.5 py-1.5 rounded-xs border border-[#222] bg-[#121212] hover:border-[#444] text-left transition-colors cursor-pointer" data-node="2">
+      <span class="block font-mono text-[9px] text-neutral-500 font-bold">HOP 03 // VECTORIZED</span>
+      <span class="block font-sans text-xs font-bold text-neutral-300 truncate">DuckDB Engine</span>
+    </button>
+    <button type="button" class="dag-tab-btn flex-1 min-w-[140px] px-2.5 py-1.5 rounded-xs border border-[#222] bg-[#121212] hover:border-[#444] text-left transition-colors cursor-pointer" data-node="3">
+      <span class="block font-mono text-[9px] text-neutral-500 font-bold">HOP 04 // HOT STORE</span>
+      <span class="block font-sans text-xs font-bold text-neutral-300 truncate">Redis Low-Latency</span>
+    </button>
+    <button type="button" class="dag-tab-btn flex-1 min-w-[140px] px-2.5 py-1.5 rounded-xs border border-[#222] bg-[#121212] hover:border-[#444] text-left transition-colors cursor-pointer" data-node="4">
+      <span class="block font-mono text-[9px] text-neutral-500 font-bold">HOP 05 // INFERENCE</span>
+      <span class="block font-sans text-xs font-bold text-neutral-300 truncate">Triton Inference</span>
+    </button>
+    <button type="button" class="dag-tab-btn flex-1 min-w-[140px] px-2.5 py-1.5 rounded-xs border border-[#222] bg-[#121212] hover:border-[#444] text-left transition-colors cursor-pointer" data-node="5">
+      <span class="block font-mono text-[9px] text-neutral-500 font-bold">HOP 06 // FEEDBACK</span>
+      <span class="block font-sans text-xs font-bold text-neutral-300 truncate">Arbitration Telemetry</span>
+    </button>
+  </div>
+
+  <!-- MAIN SVG CANVAS CONTAINER -->
+  <div class="relative w-full overflow-x-auto bg-[#0a0a0a] p-4 sm:p-6 scrollbar-thin">
+    <div 
+      id="dag-canvas-scaler" 
+      class="min-w-[1020px] transition-transform duration-200 origin-top-left"
+    >
+      <svg 
+        id="dag-svg" 
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 1140 260" 
+        class="w-full h-auto block select-none"
+      >
+        <defs>
+          <!-- Grid Background Pattern -->
+          <pattern id="dag-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="0.75" fill="#1e1e1e" />
+          </pattern>
+
+          <!-- Marker Arrowheads -->
+          <marker id="dag-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ff4500" />
+          </marker>
+
+          <marker id="dag-arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00ff66" />
+          </marker>
+        </defs>
+
+        <!-- Canvas Background -->
+        <rect width="1140" height="260" fill="#080808" />
+        <rect width="1140" height="260" fill="url(#dag-grid)" opacity="0.8" />
+        <rect width="1140" height="260" fill="none" stroke="#1c1c1c" stroke-width="1" />
+
+        <!-- ========================================== -->
+        <!-- CONNECTING EDGES (HAIRLINE DATA PIPES) -->
+        <!-- ========================================== -->
+
+        <!-- Edge 0 -> 1 -->
+        <line x1="175" y1="95" x2="225" y2="95" stroke="#282828" stroke-width="2" />
+        <line x1="175" y1="95" x2="225" y2="95" stroke="#ff4500" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" marker-end="url(#dag-arrow)" />
+
+        <!-- Edge 1 -> 2 -->
+        <line x1="365" y1="95" x2="415" y2="95" stroke="#282828" stroke-width="2" />
+        <line x1="365" y1="95" x2="415" y2="95" stroke="#ff4500" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" marker-end="url(#dag-arrow)" />
+
+        <!-- Edge 2 -> 3 -->
+        <line x1="555" y1="95" x2="605" y2="95" stroke="#282828" stroke-width="2" />
+        <line x1="555" y1="95" x2="605" y2="95" stroke="#ff4500" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" marker-end="url(#dag-arrow)" />
+
+        <!-- Edge 3 -> 4 -->
+        <line x1="745" y1="95" x2="795" y2="95" stroke="#282828" stroke-width="2" />
+        <line x1="745" y1="95" x2="795" y2="95" stroke="#ff4500" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" marker-end="url(#dag-arrow)" />
+
+        <!-- Edge 4 -> 5 -->
+        <line x1="935" y1="95" x2="985" y2="95" stroke="#282828" stroke-width="2" />
+        <line x1="935" y1="95" x2="985" y2="95" stroke="#ff4500" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" marker-end="url(#dag-arrow)" />
+
+        <!-- Return Feedback Bus (Edge 5 -> Back to Dynamic Arbiter Loop) -->
+        <path d="M 1055 145 L 1055 210 L 105 210 L 105 145" fill="none" stroke="#222" stroke-width="1.5" stroke-dasharray="4 4" />
+        <path d="M 1055 210 L 105 210" fill="none" stroke="#00ff66" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5" marker-end="url(#dag-arrow-green)" />
+        
+        <text x="570" y="228" font-family="JetBrains Mono, monospace" font-size="10" fill="#00ff66" text-anchor="middle" font-weight="600" letter-spacing="1">
+          ◄ CLOSED-LOOP ARBITRATION BUS: REAL-TIME DYNAMIC VRAM &amp; COMPUTATION REALLOCATION ◄
+        </text>
+
+        <!-- ========================================== -->
+        <!-- ANIMATED PACKET PULSES (NATIVE SVG SMIL) -->
+        <!-- ========================================== -->
+        <!-- Hop 0 to 1 Packet -->
+        <circle cy="95" r="3" fill="#ff4500">
+          <animate attributeName="cx" from="175" to="220" dur="0.9s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;1;1;0" dur="0.9s" repeatCount="indefinite" />
+        </circle>
+
+        <!-- Hop 1 to 2 Packet -->
+        <circle cy="95" r="3" fill="#38bdf8">
+          <animate attributeName="cx" from="365" to="410" dur="0.9s" begin="0.18s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;1;1;0" dur="0.9s" begin="0.18s" repeatCount="indefinite" />
+        </circle>
+
+        <!-- Hop 2 to 3 Packet -->
+        <circle cy="95" r="3" fill="#ff4500">
+          <animate attributeName="cx" from="555" to="600" dur="0.9s" begin="0.36s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;1;1;0" dur="0.9s" begin="0.36s" repeatCount="indefinite" />
+        </circle>
+
+        <!-- Hop 3 to 4 Packet -->
+        <circle cy="95" r="3" fill="#38bdf8">
+          <animate attributeName="cx" from="745" to="790" dur="0.9s" begin="0.54s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;1;1;0" dur="0.9s" begin="0.54s" repeatCount="indefinite" />
+        </circle>
+
+        <!-- Hop 4 to 5 Packet -->
+        <circle cy="95" r="3" fill="#ff4500">
+          <animate attributeName="cx" from="935" to="980" dur="0.9s" begin="0.72s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;1;1;0" dur="0.9s" begin="0.72s" repeatCount="indefinite" />
+        </circle>
+
+        <!-- Return Bus Pulse -->
+        <circle cy="210" r="3" fill="#00ff66">
+          <animate attributeName="cx" from="1055" to="115" dur="2.4s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;1;1;1;0" dur="2.4s" repeatCount="indefinite" />
+        </circle>
+
+        <!-- Burst Packets (Triggered on Demand) -->
+        <g id="dag-burst-group" opacity="0">
+          <circle cy="95" r="4.5" fill="#ffffff">
+            <animate attributeName="cx" from="175" to="985" dur="1.2s" fill="freeze" id="burst-anim" />
+          </circle>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- 6 INTERACTIVE PIPELINE NODES -->
+        <!-- ========================================== -->
+
+        <!-- NODE 0: RAW INGESTION -->
+        <g id="dag-node-0" class="dag-node-group cursor-pointer" data-node="0" transform="translate(40, 45)">
+          <rect width="135" height="100" fill="#121212" stroke="#ff4500" stroke-width="2" class="dag-node-box transition-all" />
+          <rect width="135" height="22" fill="#1a110d" class="dag-node-header" />
+          <text x="8" y="15" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#ff4500">01 // INGRESS</text>
+          <circle cx="123" cy="11" r="3.5" fill="#00ff66" />
+          <text x="8" y="44" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#ffffff">Raw Event</text>
+          <text x="8" y="58" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#ffffff">Ingestion</text>
+          <text x="8" y="80" font-family="JetBrains Mono, monospace" font-size="9" fill="#9b9b9b">Tokio Zero-Copy</text>
+          <text x="8" y="93" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#ff4500">P99 &lt; 450μs</text>
+        </g>
+
+        <!-- NODE 1: PURGE & EMBARGO GUARD -->
+        <g id="dag-node-1" class="dag-node-group cursor-pointer" data-node="1" transform="translate(230, 45)">
+          <rect width="135" height="100" fill="#121212" stroke="#2a2a2a" stroke-width="1" class="dag-node-box transition-all" />
+          <rect width="135" height="22" fill="#171717" class="dag-node-header" />
+          <text x="8" y="15" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#9b9b9b">02 // BOUNDARY</text>
+          <circle cx="123" cy="11" r="3" fill="#00ff66" />
+          <text x="8" y="44" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">Purge &amp; Embargo</text>
+          <text x="8" y="58" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">Guard Filter</text>
+          <text x="8" y="80" font-family="JetBrains Mono, monospace" font-size="9" fill="#9b9b9b">Strict Lookahead</text>
+          <text x="8" y="93" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#38bdf8">P99 &lt; 680μs</text>
+        </g>
+
+        <!-- NODE 2: DUCKDB COLUMNAR ENGINE -->
+        <g id="dag-node-2" class="dag-node-group cursor-pointer" data-node="2" transform="translate(420, 45)">
+          <rect width="135" height="100" fill="#121212" stroke="#2a2a2a" stroke-width="1" class="dag-node-box transition-all" />
+          <rect width="135" height="22" fill="#171717" class="dag-node-header" />
+          <text x="8" y="15" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#9b9b9b">03 // ANALYTICS</text>
+          <circle cx="123" cy="11" r="3" fill="#00ff66" />
+          <text x="8" y="44" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">DuckDB Engine</text>
+          <text x="8" y="58" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">Columnar SQL</text>
+          <text x="8" y="80" font-family="JetBrains Mono, monospace" font-size="9" fill="#9b9b9b">Arrow Vectors</text>
+          <text x="8" y="93" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#38bdf8">P99 &lt; 1.85ms</text>
+        </g>
+
+        <!-- NODE 3: REDIS LOW-LATENCY CACHE -->
+        <g id="dag-node-3" class="dag-node-group cursor-pointer" data-node="3" transform="translate(610, 45)">
+          <rect width="135" height="100" fill="#121212" stroke="#2a2a2a" stroke-width="1" class="dag-node-box transition-all" />
+          <rect width="135" height="22" fill="#171717" class="dag-node-header" />
+          <text x="8" y="15" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#9b9b9b">04 // HOT STORE</text>
+          <circle cx="123" cy="11" r="3" fill="#00ff66" />
+          <text x="8" y="44" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">Redis Cache</text>
+          <text x="8" y="58" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">In-Memory</text>
+          <text x="8" y="80" font-family="JetBrains Mono, monospace" font-size="9" fill="#9b9b9b">RESP3 Pipeline</text>
+          <text x="8" y="93" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#ff4500">P99 &lt; 980μs</text>
+        </g>
+
+        <!-- NODE 4: TRITON INFERENCE WORKERS -->
+        <g id="dag-node-4" class="dag-node-group cursor-pointer" data-node="4" transform="translate(800, 45)">
+          <rect width="135" height="100" fill="#121212" stroke="#2a2a2a" stroke-width="1" class="dag-node-box transition-all" />
+          <rect width="135" height="22" fill="#171717" class="dag-node-header" />
+          <text x="8" y="15" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#9b9b9b">05 // COMPUTE</text>
+          <circle cx="123" cy="11" r="3" fill="#00ff66" />
+          <text x="8" y="44" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">Triton Inference</text>
+          <text x="8" y="58" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">Workers Pool</text>
+          <text x="8" y="80" font-family="JetBrains Mono, monospace" font-size="9" fill="#9b9b9b">CUDA TensorRT</text>
+          <text x="8" y="93" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#38bdf8">P99 &lt; 4.80ms</text>
+        </g>
+
+        <!-- NODE 5: ARBITRATION TELEMETRY -->
+        <g id="dag-node-5" class="dag-node-group cursor-pointer" data-node="5" transform="translate(990, 45)">
+          <rect width="135" height="100" fill="#121212" stroke="#2a2a2a" stroke-width="1" class="dag-node-box transition-all" />
+          <rect width="135" height="22" fill="#171717" class="dag-node-header" />
+          <text x="8" y="15" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#9b9b9b">06 // FEEDBACK</text>
+          <circle cx="123" cy="11" r="3" fill="#00ff66" />
+          <text x="8" y="44" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">Arbitration</text>
+          <text x="8" y="58" font-family="Hanken Grotesk, sans-serif" font-size="12" font-weight="800" fill="#e5e5e5">Telemetry</text>
+          <text x="8" y="80" font-family="JetBrains Mono, monospace" font-size="9" fill="#9b9b9b">ZeroMQ Loop</text>
+          <text x="8" y="93" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#00ff66">P99 &lt; 600μs</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- DYNAMIC TELEMETRY INSPECTOR PANEL -->
+  <!-- ========================================== -->
+  <div id="dag-inspector" class="border-t border-[#1f1f1f] bg-[#0d0d0d] p-5 sm:p-7">
+    <!-- Node Header Row -->
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-[#1c1c1c] pb-4 mb-6">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span id="insp-tag" class="font-mono text-xs font-bold text-[#ff4500] uppercase tracking-wider">
+            [HOP 01 // INGRESS]
+          </span>
+          <span class="text-neutral-600 font-mono text-xs">/</span>
+          <span id="insp-protocol" class="font-mono text-xs text-neutral-400">
+            Aeron IPC / Tokio Non-Blocking
+          </span>
+        </div>
+        <h3 id="insp-name" class="text-xl sm:text-2xl font-black text-white tracking-tight">
+          01. Raw Event Ingestion
+        </h3>
+      </div>
+
+      <div class="flex items-center gap-2 font-mono text-xs">
+        <span class="text-neutral-500">SLA STATUS:</span>
+        <span id="insp-live-sla-badge" class="px-2.5 py-1 rounded-xs bg-[#00ff66]/15 text-[#00ff66] border border-[#00ff66]/30 font-bold uppercase tracking-wider">
+          OPTIMAL // 118μs
+        </span>
+      </div>
+    </div>
+
+    <!-- 2-Column Inspector Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- LEFT: Schema Contract (Code Blueprint) -->
+      <div class="lg:col-span-7 flex flex-col gap-2">
+        <div class="flex items-center justify-between font-mono text-xs text-neutral-400">
+          <span class="flex items-center gap-1.5 font-bold uppercase text-neutral-300">
+            <span class="text-[#ff4500]">§</span>
+            <span>SCHEMA CONTRACT &amp; DATA BOUNDARY</span>
+          </span>
+          <span id="insp-schema-type" class="text-[11px] text-neutral-500">
+            Pydantic v2 Strict Model
+          </span>
+        </div>
+
+        <div class="relative rounded-xs border border-[#222] bg-[#080808] p-4 overflow-x-auto">
+          <pre id="insp-schema-code" class="font-mono text-xs text-neutral-300 leading-relaxed font-normal selection:bg-[#ff4500] selection:text-white">class RawEventPayload(BaseModel):
+    event_id: UUID4
+    timestamp_ns: PositiveInt  # Monotonic nanoseconds
+    source_channel: Literal["NYSE_SIP", "COINBASE_WSS", "AGENT_IPC"]
+    payload_bytes: bytes       # Uncompressed Arrow buffer
+    checksum: str              # CRC32 verification hash
+    
+    class Config:
+        extra = "forbid"
+        frozen = True</pre>
+        </div>
+      </div>
+
+      <!-- RIGHT: Latency SLA & Failure Policy Matrix -->
+      <div class="lg:col-span-5 flex flex-col gap-4">
+        
+        <!-- Latency SLA Gauge Box -->
+        <div class="rounded-xs border border-[#222] bg-[#111111] p-4">
+          <div class="flex items-center justify-between font-mono text-xs mb-2">
+            <span class="text-neutral-400 uppercase font-bold">LATENCY SLA BUDGET</span>
+            <span id="insp-sla-cap" class="text-neutral-300 font-bold">CAP &lt; 1,000μs</span>
+          </div>
+
+          <!-- Multi-tier Bar -->
+          <div class="w-full bg-[#1c1c1c] h-3 rounded-xs overflow-hidden flex mb-2 border border-[#282828]">
+            <div id="insp-sla-p50-bar" class="bg-[#38bdf8] h-full" style="width: 25%;" title="P50 Latency"></div>
+            <div id="insp-sla-p99-bar" class="bg-[#ff4500] h-full" style="width: 45%;" title="P99 Latency"></div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 font-mono text-[11px] pt-1">
+            <div>
+              <span class="text-neutral-500 block text-[9px]">P50 LATENCY</span>
+              <span id="insp-p50-val" class="font-bold text-[#38bdf8]">120μs</span>
+            </div>
+            <div>
+              <span class="text-neutral-500 block text-[9px]">P99 TARGET</span>
+              <span id="insp-p99-val" class="font-bold text-[#ff4500]">450μs</span>
+            </div>
+            <div>
+              <span class="text-neutral-500 block text-[9px]">BURST HEADROOM</span>
+              <span id="insp-headroom-val" class="font-bold text-[#00ff66]">55%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Failure Policy & Invariant Card -->
+        <div class="rounded-xs border border-[#222] bg-[#111111] p-4">
+          <span class="font-mono text-xs text-neutral-400 uppercase font-bold block mb-1">
+            DEFENSIVE FAILURE POLICY &amp; CIRCUIT BREAKER
+          </span>
+          <p id="insp-failure-policy" class="text-xs text-neutral-300 font-sans leading-relaxed mb-3">
+            Backpressure Throttling → Spillover into non-blocking local Write-Ahead Log (WAL). Zero ingress drops prior to monotonic sequencing.
+          </p>
+
+          <div class="border-t border-[#1f1f1f] pt-2">
+            <span class="font-mono text-[10px] text-neutral-500 uppercase block">CORE INVARIANT GUARANTEE:</span>
+            <span id="insp-invariant" class="font-mono text-xs text-[#00ff66] font-semibold">
+              Strict Monotonic Timestamp Ordering (Δt &gt; 0)
+            </span>
+          </div>
+        </div>
+
+        <!-- Micro-Interaction Action -->
+        <button
+          id="dag-test-node-btn"
+          type="button"
+          class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xs border border-[#333] hover:border-[#ff4500] bg-[#141414] hover:bg-[#ff4500] text-neutral-200 hover:text-black font-mono text-xs font-bold transition-all duration-150 cursor-pointer"
+        >
+          <span>⚡</span>
+          <span id="dag-test-btn-text">RUN LIVE HOP VERIFICATION &amp; AUDIT</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { playClick, playSuccess } from '../utils/audio';
+
+  interface DAGNodeData {
+    name: string;
+    tag: string;
+    protocol: string;
+    schemaType: string;
+    schemaCode: string;
+    p50: string;
+    p99: string;
+    cap: string;
+    headroom: string;
+    p50Width: string;
+    p99Width: string;
+    failurePolicy: string;
+    invariant: string;
+    liveSla: string;
+  }
+
+  const NODES: DAGNodeData[] = [
+    {
+      name: "01. Raw Event Ingestion",
+      tag: "HOP 01 // INGRESS",
+      protocol: "Aeron IPC / Tokio Non-Blocking",
+      schemaType: "Pydantic v2 Strict Model",
+      schemaCode: `class RawEventPayload(BaseModel):
+    event_id: UUID4
+    timestamp_ns: PositiveInt  # Monotonic nanoseconds
+    source_channel: Literal["NYSE_SIP", "COINBASE_WSS", "AGENT_IPC"]
+    payload_bytes: bytes       # Uncompressed Arrow buffer
+    checksum: str              # CRC32 verification hash
+    
+    class Config:
+        extra = "forbid"
+        frozen = True`,
+      p50: "120μs",
+      p99: "450μs",
+      cap: "CAP < 1,000μs",
+      headroom: "55%",
+      p50Width: "25%",
+      p99Width: "45%",
+      failurePolicy: "Backpressure Throttling → Spillover into non-blocking local Write-Ahead Log (WAL). Zero ingress drops prior to monotonic sequencing.",
+      invariant: "Strict Monotonic Timestamp Ordering (Δt > 0)",
+      liveSla: "OPTIMAL // 118μs",
+    },
+    {
+      name: "02. Purge & Embargo Guard",
+      tag: "HOP 02 // BOUNDARY",
+      protocol: "C++ PyBind11 Memory Arena",
+      schemaType: "Temporal Boundary Contract",
+      schemaCode: `class TemporalPartitionContract(BaseModel):
+    as_of_watermark: datetime
+    prediction_horizon_tau: timedelta  # Label window isolation
+    embargo_buffer_h: timedelta        # Autoregressive memory drain
+    is_purged: bool = Field(True, frozen=True)
+    leakage_check_passed: bool = True
+    
+    def assert_no_lookahead(self, feature_ts: datetime):
+        assert feature_ts <= self.as_of_watermark, "LookaheadViolation"`,
+      p50: "180μs",
+      p99: "680μs",
+      cap: "CAP < 1,200μs",
+      headroom: "43%",
+      p50Width: "30%",
+      p99Width: "56%",
+      failurePolicy: "Immediate Fail-Closed: If timestamp(t) > as_of_watermark, abort pipeline instantly with LookaheadViolationError before gradient calculation.",
+      invariant: "Zero Future State Contamination into Feature Space",
+      liveSla: "VERIFIED // 174μs",
+    },
+    {
+      name: "03. DuckDB Columnar Engine",
+      tag: "HOP 03 // VECTORIZED",
+      protocol: "In-Process Shared Memory / SIMD",
+      schemaType: "Apache Arrow RecordBatch Schema",
+      schemaCode: `# Zero-Copy Apache Arrow Columnar Schema
+arrow_schema = pa.schema([
+    ('entity_id', pa.string()),
+    ('as_of_time', pa.timestamp('us')),
+    ('feature_vector', pa.list_(pa.float32(), 128)),
+    ('temporal_weight', pa.float64()),
+    ('partition_epoch', pa.int32()),
+    ('checksum_crc32', pa.uint32())
+])`,
+      p50: "850μs",
+      p99: "1.85ms",
+      cap: "CAP < 5.0ms",
+      headroom: "63%",
+      p50Width: "35%",
+      p99Width: "37%",
+      failurePolicy: "Query Execution Timeout (5ms) → Graceful fallback to pre-aggregated cold DuckDB parquet snapshot with cached partition index.",
+      invariant: "Deterministic Reproducible Joins & Immutable Historical States",
+      liveSla: "BATCHED // 842μs",
+    },
+    {
+      name: "04. Redis Low-Latency Cache",
+      tag: "HOP 04 // HOT STORE",
+      protocol: "RESP3 Protocol / Connection Pooling",
+      schemaType: "Hot Feature Store Schema",
+      schemaCode: `class HotFeatureCacheEntry(BaseModel):
+    key: str = Field(regex=r"^feat:[a-z0-9_-]+:[0-9]+$")
+    features: List[float] = Field(..., max_items=128)
+    ttl_seconds: int = 15  # Strict TTL to prevent stale serving
+    generation_ts: int
+    compression: Literal["none", "lz4"] = "lz4"`,
+      p50: "320μs",
+      p99: "980μs",
+      cap: "CAP < 2.0ms",
+      headroom: "51%",
+      p50Width: "20%",
+      p99Width: "49%",
+      failurePolicy: "Cache-Aside Bypass: Circuit breaker diverts inference queries directly to vectorized DuckDB reader on connection drop.",
+      invariant: "P99 Hot Read Latency < 1.0ms & Guaranteed 15s TTL Expiry",
+      liveSla: "HOT // 312μs",
+    },
+    {
+      name: "05. Triton Inference Workers Pool",
+      tag: "HOP 05 // COMPUTE",
+      protocol: "CUDA IPC / POSIX /dev/shm Regions",
+      schemaType: "TensorRT Tensor IO Specification",
+      schemaCode: `class TensorInferenceIO(BaseModel):
+    model_id: str = "modelarena-v2-differentiable-arbiter"
+    input_shape: Tuple[int, int, int] = (32, 1024, 768)  # B, L, D
+    dtype: Literal["float16", "bfloat16"] = "bfloat16"
+    cuda_stream_id: int
+    output_logits_ptr: int  # Device shared pointer
+    timeout_ms: int = 25`,
+      p50: "2.10ms",
+      p99: "4.80ms",
+      cap: "CAP < 10.0ms",
+      headroom: "52%",
+      p50Width: "40%",
+      p99Width: "48%",
+      failurePolicy: "Dynamic Batch Draining on SIGTERM → Immediate failover to CPU TensorRT execution pool if CUDA OOM exception is raised.",
+      invariant: "Zero Zombie Worker Pools & Explicit GPU Context Cleanup",
+      liveSla: "ACCELERATED // 2.05ms",
+    },
+    {
+      name: "06. Arbitration Telemetry & Feedback",
+      tag: "HOP 06 // FEEDBACK",
+      protocol: "ZeroMQ PubSub / Prometheus Telemetry",
+      schemaType: "Tournament Feedback Packet",
+      schemaCode: `class ArbitrationTelemetryPacket(BaseModel):
+    cycle_id: int
+    gradient_norm: float
+    loss_delta_trajectory: float
+    vram_quota_delta_mb: int = Field(ge=-2048, le=2048)
+    sharpe_ratio: float
+    status: Literal["CONVERGED", "THROTTLED", "GRADIENT_SPIKE"]`,
+      p50: "150μs",
+      p99: "600μs",
+      cap: "CAP < 1,500μs",
+      headroom: "60%",
+      p50Width: "22%",
+      p99Width: "40%",
+      failurePolicy: "Non-blocking UDP/IPC broadcast: Invariant guarantees telemetry logging never blocks or stalls the central gradient step.",
+      invariant: "Cryptographically Replayable Training Trajectory Audit Log",
+      liveSla: "SYNCHRONIZED // 146μs",
+    },
+  ];
+
+  function setupTopologyDAG() {
+    const root = document.getElementById('topology-dag-root');
+    if (!root) return;
+
+    let activeNodeIndex = 0;
+    let zoomLevel = 1.0;
+
+    // DOM Elements
+    const canvasScaler = document.getElementById('dag-canvas-scaler');
+    const zoomLevelText = document.getElementById('dag-zoom-level');
+    const zoomInBtn = document.getElementById('dag-zoom-in');
+    const zoomOutBtn = document.getElementById('dag-zoom-out');
+    const zoomResetBtn = document.getElementById('dag-zoom-reset');
+    const pulseBtn = document.getElementById('dag-pulse-btn');
+    const burstGroup = document.getElementById('dag-burst-group');
+    const testNodeBtn = document.getElementById('dag-test-node-btn');
+    const testBtnText = document.getElementById('dag-test-btn-text');
+
+    // Inspector Elements
+    const inspTag = document.getElementById('insp-tag');
+    const inspProtocol = document.getElementById('insp-protocol');
+    const inspName = document.getElementById('insp-name');
+    const inspLiveSlaBadge = document.getElementById('insp-live-sla-badge');
+    const inspSchemaType = document.getElementById('insp-schema-type');
+    const inspSchemaCode = document.getElementById('insp-schema-code');
+    const inspSlaCap = document.getElementById('insp-sla-cap');
+    const inspSlaP50Bar = document.getElementById('insp-sla-p50-bar');
+    const inspSlaP99Bar = document.getElementById('insp-sla-p99-bar');
+    const inspP50Val = document.getElementById('insp-p50-val');
+    const inspP99Val = document.getElementById('insp-p99-val');
+    const inspHeadroomVal = document.getElementById('insp-headroom-val');
+    const inspFailurePolicy = document.getElementById('insp-failure-policy');
+    const inspInvariant = document.getElementById('insp-invariant');
+
+    // Tab buttons and SVG Node groups
+    const tabBtns = root.querySelectorAll<HTMLButtonElement>('.dag-tab-btn');
+    const nodeGroups = root.querySelectorAll<SVGGElement>('.dag-node-group');
+
+    function updateActiveNode(index: number) {
+      if (index < 0 || index >= NODES.length) return;
+      activeNodeIndex = index;
+      const data = NODES[index];
+
+      // Play subtle mechanical audio click
+      playClick(1400, 0.015, 0.03);
+
+      // Update Inspector Fields
+      if (inspTag) inspTag.textContent = `[${data.tag}]`;
+      if (inspProtocol) inspProtocol.textContent = data.protocol;
+      if (inspName) inspName.textContent = data.name;
+      if (inspLiveSlaBadge) inspLiveSlaBadge.textContent = data.liveSla;
+      if (inspSchemaType) inspSchemaType.textContent = data.schemaType;
+      if (inspSchemaCode) inspSchemaCode.textContent = data.schemaCode;
+      if (inspSlaCap) inspSlaCap.textContent = data.cap;
+      if (inspP50Val) inspP50Val.textContent = data.p50;
+      if (inspP99Val) inspP99Val.textContent = data.p99;
+      if (inspHeadroomVal) inspHeadroomVal.textContent = data.headroom;
+      if (inspFailurePolicy) inspFailurePolicy.textContent = data.failurePolicy;
+      if (inspInvariant) inspInvariant.textContent = data.invariant;
+
+      if (inspSlaP50Bar) inspSlaP50Bar.style.width = data.p50Width;
+      if (inspSlaP99Bar) inspSlaP99Bar.style.width = data.p99Width;
+
+      if (testBtnText) {
+        testBtnText.textContent = `RUN LIVE AUDIT ON HOP ${index + 1} (${data.name.split('.')[1].trim().toUpperCase()})`;
+      }
+
+      // Update Tab Buttons UI
+      tabBtns.forEach((btn, idx) => {
+        if (idx === index) {
+          btn.classList.add('border-[#ff4500]', 'bg-[#1a110d]');
+          btn.classList.remove('border-[#222]', 'bg-[#121212]');
+          const tagSpan = btn.querySelector('span:first-child');
+          const titleSpan = btn.querySelector('span:last-child');
+          if (tagSpan) tagSpan.classList.add('text-[#ff4500]');
+          if (titleSpan) titleSpan.classList.add('text-white');
+        } else {
+          btn.classList.remove('border-[#ff4500]', 'bg-[#1a110d]');
+          btn.classList.add('border-[#222]', 'bg-[#121212]');
+          const tagSpan = btn.querySelector('span:first-child');
+          const titleSpan = btn.querySelector('span:last-child');
+          if (tagSpan) tagSpan.classList.remove('text-[#ff4500]');
+          if (titleSpan) titleSpan.classList.remove('text-white');
+        }
+      });
+
+      // Update SVG Nodes UI
+      nodeGroups.forEach((group, idx) => {
+        const box = group.querySelector('.dag-node-box') as SVGRectElement | null;
+        const header = group.querySelector('.dag-node-header') as SVGRectElement | null;
+        if (!box) return;
+
+        if (idx === index) {
+          box.setAttribute('stroke', '#ff4500');
+          box.setAttribute('stroke-width', '2');
+          box.setAttribute('fill', '#1a110d');
+          if (header) header.setAttribute('fill', '#26130d');
+        } else {
+          box.setAttribute('stroke', '#282828');
+          box.setAttribute('stroke-width', '1');
+          box.setAttribute('fill', '#121212');
+          if (header) header.setAttribute('fill', '#171717');
+        }
+      });
+    }
+
+    // Attach click events to tabs
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-node') || '0', 10);
+        updateActiveNode(idx);
+      });
+    });
+
+    // Attach click events to SVG nodes
+    nodeGroups.forEach((group) => {
+      group.addEventListener('click', () => {
+        const idx = parseInt(group.getAttribute('data-node') || '0', 10);
+        updateActiveNode(idx);
+      });
+    });
+
+    // Zoom Controls
+    function setZoom(newZoom: number) {
+      zoomLevel = Math.max(0.7, Math.min(1.4, newZoom));
+      if (canvasScaler) {
+        canvasScaler.style.transform = `scale(${zoomLevel})`;
+      }
+      if (zoomLevelText) {
+        zoomLevelText.textContent = `${Math.round(zoomLevel * 100)}%`;
+      }
+    }
+
+    zoomInBtn?.addEventListener('click', () => setZoom(zoomLevel + 0.1));
+    zoomOutBtn?.addEventListener('click', () => setZoom(zoomLevel - 0.1));
+    zoomResetBtn?.addEventListener('click', () => setZoom(1.0));
+
+    // Burst Simulation Button
+    pulseBtn?.addEventListener('click', () => {
+      playSuccess();
+      if (!burstGroup) return;
+
+      burstGroup.setAttribute('opacity', '1');
+      const anim = document.getElementById('burst-anim') as unknown as { beginElement?: () => void };
+      if (anim && typeof anim.beginElement === 'function') {
+        anim.beginElement();
+      }
+
+      setTimeout(() => {
+        burstGroup.setAttribute('opacity', '0');
+      }, 1300);
+    });
+
+    // Live Hop Verification Test Trigger
+    testNodeBtn?.addEventListener('click', () => {
+      playSuccess();
+      if (!testBtnText) return;
+
+      const originalText = testBtnText.textContent;
+      testBtnText.textContent = `PASS: HOP ${activeNodeIndex + 1} AUDIT VERIFIED [0.00% DRIFT / P99 ENFORCED] ✓`;
+      testNodeBtn.classList.add('bg-[#00ff66]', 'text-black', 'border-[#00ff66]');
+
+      if (inspLiveSlaBadge) {
+        inspLiveSlaBadge.textContent = 'VERIFIED VALIDATED ✓';
+        inspLiveSlaBadge.classList.add('bg-[#00ff66]/30');
+      }
+
+      setTimeout(() => {
+        testNodeBtn.classList.remove('bg-[#00ff66]', 'text-black', 'border-[#00ff66]');
+        if (testBtnText) testBtnText.textContent = originalText;
+        if (inspLiveSlaBadge) {
+          inspLiveSlaBadge.classList.remove('bg-[#00ff66]/30');
+          inspLiveSlaBadge.textContent = NODES[activeNodeIndex].liveSla;
+        }
+      }, 2200);
+    });
+
+    // Initialize state
+    updateActiveNode(0);
+  }
+
+  // Lifecycle boot
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupTopologyDAG);
+  } else {
+    setupTopologyDAG();
+  }
+
+  document.addEventListener('astro:page-load', setupTopologyDAG);
+</script>
