@@ -308,7 +308,11 @@ const categories = [
           if (searchInput && document.activeElement === searchInput) {
             searchInput.blur();
           } else {
-            window.location.href = "/#projects";
+            if ((window as any).navigateWithCurtain) {
+              (window as any).navigateWithCurtain("/#projects");
+            } else {
+              window.location.href = "/#projects";
+            }
           }
         }
       });

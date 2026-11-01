@@ -261,6 +261,14 @@ const isLandingPage = pathname === "/" || pathname === "" || pathname.endsWith("
       shutter.style.display = "block";
       shutter.style.transform = "translate3d(0, 0, 0)";
 
+      // If arriving with a hash anchor (e.g. #interactive-simulator), ensure instant scroll alignment while covered
+      if (window.location.hash) {
+        const hashTarget = document.querySelector(window.location.hash);
+        if (hashTarget) {
+          hashTarget.scrollIntoView({ behavior: "instant" });
+        }
+      }
+
       setTimeout(() => {
         executeShutterReveal();
       }, 50);
@@ -285,8 +293,60 @@ const isLandingPage = pathname === "/" || pathname === "" || pathname.endsWith("
       shutter.addEventListener("transitionend", onDirectCovered);
     }
 
-    // C. Global Internal Link Interceptor (for bottom-to-top curtain navigation)
+    // C. Reusable Continuous Upward Wipe Navigator
+    const navigateWithCurtain = (targetHref: string) => {
+      const targetUrl = new URL(targetHref, window.location.origin);
+      const normalizePath = (p: string) => p.replace(/\/$/, "") || "/";
+      const isSamePath = normalizePath(targetUrl.pathname) === normalizePath(window.location.pathname);
+
+      // If on the same page and navigating to a hash anchor, scroll smoothly
+      if (isSamePath) {
+        if (targetUrl.hash) {
+          const el = document.querySelector(targetUrl.hash);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+          } else {
+            window.location.hash = targetUrl.hash;
+          }
+        }
+        return;
+      }
+
+      // Pre-flag destination page for instant black curtain cover before first paint
+      sessionStorage.setItem("swiss_nav_transition", "fast");
+
+      // Make shutter visible and wipe up from bottom to cover screen (100% -> 0%)
+      shutter.style.display = "block";
+      shutter.style.transform = "translate3d(0, 100%, 0)";
+      void shutter.offsetHeight; // force reflow
+
+      shutter.style.transition = "transform 0.42s cubic-bezier(0.85, 0, 0.15, 1)";
+      shutter.style.transform = "translate3d(0, 0, 0)";
+
+      let navigated = false;
+      const onCoverComplete = () => {
+        if (navigated) return;
+        navigated = true;
+        shutter.removeEventListener("transitionend", onCoverComplete);
+        window.location.href = targetUrl.href;
+      };
+
+      shutter.addEventListener("transitionend", onCoverComplete);
+
+      // Navigation fallback timer (failsafe)
+      setTimeout(() => {
+        if (navigated) return;
+        navigated = true;
+        window.location.href = targetUrl.href;
+      }, 500);
+    };
+
+    // Expose globally on window so any button, script, or component can call it
+    (window as any).navigateWithCurtain = navigateWithCurtain;
+
+    // D. Global Internal Link Interceptor (for bottom-to-top curtain navigation)
     function setupLinkTransitions() {
+      // 1. Anchor links
       document.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((link) => {
         // Skip links that already have special click handlers, external, hash, or downloads
         if (link.dataset.hasTransitionListener === "true") return;
@@ -350,27 +410,21 @@ const isLandingPage = pathname === "/" || pathname === "" || pathname.endsWith("
             }
 
             // Normal cross-page transition
-            sessionStorage.setItem("swiss_nav_transition", "fast");
+            navigateWithCurtain(targetUrl.href);
+          }
+        });
+      });
 
-            // Make shutter visible and wipe up from bottom to cover screen (100% -> 0%)
-            shutter.style.display = "block";
-            shutter.style.transform = "translate3d(0, 100%, 0)";
-            void shutter.offsetHeight; // force reflow
-
-            shutter.style.transition = "transform 0.42s cubic-bezier(0.85, 0, 0.15, 1)";
-            shutter.style.transform = "translate3d(0, 0, 0)";
-
-            const onCoverComplete = () => {
-              shutter.removeEventListener("transitionend", onCoverComplete);
-              window.location.href = targetUrl.href;
-            };
-
-            shutter.addEventListener("transitionend", onCoverComplete);
-
-            // Navigation fallback timer
-            setTimeout(() => {
-              window.location.href = targetUrl.href;
-            }, 600);
+      // 2. Elements with data-navigate-curtain (e.g. buttons)
+      document.querySelectorAll<HTMLElement>("[data-navigate-curtain]").forEach((el) => {
+        if (el.dataset.hasCurtainListener === "true") return;
+        el.dataset.hasCurtainListener = "true";
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const targetHref = el.getAttribute("data-navigate-curtain");
+          if (targetHref) {
+            navigateWithCurtain(targetHref);
           }
         });
       });

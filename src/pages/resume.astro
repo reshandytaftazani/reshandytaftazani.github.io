@@ -568,7 +568,11 @@ Architecture & Methodology:
       // 1. ESC Key returns to Homepage
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-          window.location.href = "/";
+          if ((window as any).navigateWithCurtain) {
+            (window as any).navigateWithCurtain("/");
+          } else {
+            window.location.href = "/";
+          }
         }
       });
 

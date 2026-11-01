@@ -327,7 +327,11 @@ const categories = ["ALL", ...new Set(allProjects.map((p) => p.data.category))];
       // 1. ESC Key returns to home
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-          window.location.href = "/#projects";
+          if ((window as any).navigateWithCurtain) {
+            (window as any).navigateWithCurtain("/#projects");
+          } else {
+            window.location.href = "/#projects";
+          }
         }
       });
 
