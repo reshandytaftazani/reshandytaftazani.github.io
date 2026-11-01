@@ -777,15 +777,15 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
       if (!article) return;
 
       // Enhance Math Symbols in Paragraphs and Headings
-      const mathReplacements: Array<{ pattern: RegExp; id: string; display: string }> = [
-        { pattern: /\$?\\tau\$?/g, id: "param-tau", display: "τ" },
-        { pattern: /\$h\$/g, id: "param-h", display: "h" },
-        { pattern: /\$t_\{i,0\}\$/g, id: "param-t0", display: "t_{i,0}" },
-        { pattern: /\$t_\{i,1\}\$/g, id: "param-t1", display: "t_{i,1}" },
-        { pattern: /\$y_i\$/g, id: "param-yi", display: "y_i" },
-        { pattern: /\$T_\\text\{drain\}\$/g, id: "param-tdrain", display: "T_drain" },
-        { pattern: /\$\\epsilon\$/g, id: "param-epsilon", display: "ε" },
-        { pattern: /\$\\Delta t_\\text\{ingress\\_sync\}\$/g, id: "param-ingress-sync", display: "Δt_ingress" },
+      const mathReplacements: Array<{ pattern: RegExp; id: string; symbol: string; label: string; fullTitle: string }> = [
+        { pattern: /\$?\\tau\$?/g, id: "param-tau", symbol: "τ", label: "horizon", fullTitle: "Prediction Horizon (τ)" },
+        { pattern: /\$h\$/g, id: "param-h", symbol: "h", label: "embargo", fullTitle: "Embargo Buffer Duration (h)" },
+        { pattern: /\$t_\{i,0\}\$/g, id: "param-t0", symbol: "t_{i,0}", label: "as-of time", fullTitle: "Feature Watermark (t_{i,0})" },
+        { pattern: /\$t_\{i,1\}\$/g, id: "param-t1", symbol: "t_{i,1}", label: "resolution", fullTitle: "Label Resolution (t_{i,1})" },
+        { pattern: /\$y_i\$/g, id: "param-yi", symbol: "y_i", label: "target return", fullTitle: "Target Return (y_i)" },
+        { pattern: /\$T_\\text\{drain\}\$/g, id: "param-tdrain", symbol: "T_drain", label: "max drain", fullTitle: "Max Drain Window (T_drain)" },
+        { pattern: /\$\\epsilon\$/g, id: "param-epsilon", symbol: "ε", label: "safety margin", fullTitle: "Container Safety Margin (ε)" },
+        { pattern: /\$\\Delta t_\\text\{ingress\\_sync\}\$/g, id: "param-ingress-sync", symbol: "Δt_ingress", label: "route sync", fullTitle: "Route Deprecation Window (Δt_ingress)" },
       ];
 
       const textContainers = article.querySelectorAll<HTMLElement>("p, li, blockquote");
@@ -793,11 +793,11 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
         let html = container.innerHTML;
         let modified = false;
 
-        for (const { pattern, id, display } of mathReplacements) {
+        for (const { pattern, id, symbol, label, fullTitle } of mathReplacements) {
           if (pattern.test(html)) {
-            html = html.replace(pattern, (match) => {
+            html = html.replace(pattern, () => {
               modified = true;
-              return `<button type="button" class="math-annotation-btn font-mono" data-ann-id="${id}" title="Click to inspect parameter mathematical justification"><span>${display}</span><span class="ann-icon text-[9px] text-[#ff4500]">ⓘ</span></button>`;
+              return `<button type="button" class="math-annotation-btn font-mono" data-ann-id="${id}" title="Click to inspect: ${fullTitle} — Invariant & Math Definition"><span class="sym-symbol font-bold text-[#ff4500]">${symbol}</span><span class="sym-sep text-neutral-500 font-normal">·</span><span class="sym-label text-neutral-300 text-[10px] uppercase font-semibold tracking-wider">${label}</span><span class="ann-icon text-[9px] text-[#ff4500] font-bold">ⓘ</span></button>`;
             });
           }
         }
@@ -1052,30 +1052,34 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
       color: #ff4500;
       background-color: rgba(255, 69, 0, 0.12);
       border: 1px solid rgba(255, 69, 0, 0.4);
-      padding: 0.1rem 0.4rem;
-      border-radius: 2px;
+      padding: 0.12rem 0.45rem;
+      border-radius: 3px;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      font-size: 0.88em;
+      font-size: 0.85em;
       display: inline-flex;
       align-items: center;
-      gap: 0.25rem;
-      margin: 0 0.15rem;
+      gap: 0.3rem;
+      margin: 0 0.2rem;
       cursor: pointer;
       transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
       vertical-align: baseline;
-      line-height: 1.2;
+      line-height: 1.25;
+      text-decoration: none;
     }
 
     .math-annotation-btn:hover {
-      background-color: #ff4500;
-      color: #000000;
-      border-color: #ff4500;
-      box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+      background-color: #ff4500 !important;
+      color: #000000 !important;
+      border-color: #ff4500 !important;
+      box-shadow: 0 0 12px rgba(255, 69, 0, 0.45);
     }
 
+    .math-annotation-btn:hover .sym-symbol,
+    .math-annotation-btn:hover .sym-sep,
+    .math-annotation-btn:hover .sym-label,
     .math-annotation-btn:hover .ann-icon {
-      color: #000000;
+      color: #000000 !important;
     }
 
     /* Code Line Level Justification Highlights */
