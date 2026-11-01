@@ -1,156 +1,161 @@
 ---
+// Navbar.astro (Daniele Buser exact header with Swiss micro-interactions, live clock telemetry & scrollspy)
 const navLinks = [
-  { key: "1", name: "About", href: "#about" },
-  { key: "2", name: "Principles", href: "#principles" },
-  { key: "3", name: "Projects", href: "#projects" },
-  { key: "4", name: "Skills", href: "#skills" },
-  { key: "5", name: "Contact", href: "#contact" },
+  { id: "projects", name: "PROJECTS", href: "#projects" },
+  { id: "principles", name: "PRINCIPLES", href: "#principles" },
+  { id: "skills", name: "STACK", href: "#skills" },
+  { id: "contacts", name: "CONTACTS", href: "#contacts" },
 ];
 ---
 
-<header class="sticky top-0 z-50 w-full border-b border-[#222226] bg-[#0a0a0a]/90 backdrop-blur-md transition-all duration-200">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
-      
-      <!-- Brand with coordinate marker (Swiss Graphic Hierarchy) -->
-      <div class="flex items-center gap-3">
-        <a 
-          href="#" 
-          class="group flex items-center gap-2 font-mono text-sm tracking-tight text-zinc-100 hover:text-[#ea3829] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ea3829] rounded-sm py-1 px-1.5"
-          aria-label="Reshandy Taftazani Home"
-        >
-          <span class="text-[#ea3829] group-hover:translate-x-0.5 transition-transform duration-150">&gt;</span>
-          <span class="font-bold tracking-tight text-white group-hover:text-[#ff6b5e]">reshandy.dev</span>
-          <span class="inline-block w-1.5 h-3.5 bg-[#ea3829] animate-pulse"></span>
-        </a>
-
-        <!-- Swiss style coordinate / live status chip -->
-        <div class="hidden lg:flex items-center gap-2 text-[10.5px] font-mono text-zinc-500 pl-3 border-l border-[#222226]">
-          <span class="relative flex h-1.5 w-1.5">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ea3829] opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#ea3829]"></span>
+<header class="pointer-events-none fixed top-0 left-1/2 z-30 w-full max-w-[120rem] -translate-x-1/2 p-4 sm:px-6 lg:px-8 mix-blend-difference">
+  <div class="flex w-full items-start justify-between sm:grid sm:grid-cols-6 sm:gap-4 md:grid-cols-8 lg:grid-cols-12">
+    
+    <!-- Left: Identity with hover micro-interaction -->
+    <div class="pointer-events-auto flex shrink-0 items-start sm:col-span-3 lg:col-span-4">
+      <a class="flex w-fit flex-col items-start select-none group" aria-label="Reshandy Taftazani - ML & Systems Engineer" href="#about">
+        <div class="reveal-init flex items-center gap-2">
+          <span class="text-body md:text-body-lg text-foreground leading-tight font-bold tracking-tight group-hover:tracking-normal transition-all duration-300">
+            RESHANDY TAFTAZANI
           </span>
-          <span class="text-zinc-400 font-medium">UI • CS</span>
-          <span class="text-zinc-700">|</span>
-          <span id="nav-time" class="text-zinc-300 font-semibold tracking-wider">WIB</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-accent opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" aria-hidden="true"></span>
         </div>
-      </div>
+        <p class="reveal-init text-caption md:text-body text-neutral group-hover:text-foreground transition-colors duration-300" style="transition-delay: 80ms;">
+          Machine Learning &amp; Systems
+        </p>
+      </a>
+    </div>
 
-      <!-- Desktop Navigation Menu with Keyboard Nav Hints -->
-      <nav class="hidden md:flex items-center gap-1 sm:gap-1.5" aria-label="Main Navigation">
-        {navLinks.map((link) => (
-          <a
-            href={link.href}
-            class="group px-3 py-1.5 text-xs font-mono text-zinc-400 hover:text-white hover:bg-zinc-900/80 rounded transition-all duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ea3829] flex items-center gap-1.5"
-          >
-            <span class="text-[10px] text-zinc-600 group-hover:text-[#ea3829] transition-colors">[{link.key}]</span>
-            <span class="font-medium">{link.name}</span>
-          </a>
-        ))}
+    <!-- Center: Swiss Telemetry & Live Clock (Visible on desktop) -->
+    <div class="pointer-events-auto hidden lg:flex lg:col-span-4 justify-center items-center pt-1">
+      <div class="flex items-center gap-2.5 font-mono text-[11px] tracking-wider select-none px-3 py-1 rounded-full border border-current/20 bg-current/5">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+        <span class="text-foreground font-bold tracking-widest">DEPOK</span>
+        <span class="text-neutral opacity-60">•</span>
+        <span id="nav-live-clock" class="text-foreground font-bold tracking-widest tabular-nums">--:--:-- WIB</span>
+      </div>
+    </div>
+
+    <!-- Right: Minimalist Swiss Nav with brackets & sweep underline micro-interactions -->
+    <div class="pointer-events-auto flex flex-1 justify-end sm:col-span-3 sm:col-start-4 sm:block md:col-span-5 md:col-start-4 lg:col-span-4 lg:col-start-9">
+      <nav aria-label="Main navigation" class="w-full select-none">
+        <ul class="flex w-full justify-between items-center gap-2 sm:gap-4 md:gap-6">
+          {navLinks.map((item, idx) => (
+            <li class="reveal-init" style={`transition-delay: ${100 + idx * 50}ms;`}>
+              <a 
+                data-nav-link={item.id}
+                class="nav-link group relative -my-2 inline-flex items-center py-2 text-caption md:text-body uppercase font-bold text-neutral hover:text-foreground transition-all duration-200" 
+                href={item.href}
+              >
+                <!-- Swiss expanding brackets on hover/active -->
+                <span class="bracket-left text-accent opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 font-mono text-xs select-none">[</span>
+                <span class="relative px-0.5">
+                  <span class="nav-text tracking-wide transition-colors duration-200">{item.name}</span>
+                  <!-- Swiss sweep underline -->
+                  <span 
+                    class="nav-underline absolute -bottom-0.5 left-0 w-full h-[2px] bg-current scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" 
+                    aria-hidden="true"
+                  ></span>
+                </span>
+                <span class="bracket-right text-accent opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 font-mono text-xs select-none">]</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </nav>
-
-      <!-- Right Actions: GitHub Button & Mobile Menu Toggle -->
-      <div class="flex items-center gap-3">
-        <a
-          href="https://github.com/reshandytaftazani"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-medium text-zinc-200 bg-zinc-950 border border-[#27272a] hover:border-[#ea3829]/60 hover:text-[#ff9e94] rounded transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ea3829]"
-          aria-label="GitHub Profile"
-        >
-          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-          </svg>
-          <span>GitHub</span>
-          <span class="text-zinc-500 font-normal">↗</span>
-        </a>
-
-        <!-- Mobile hamburger button -->
-        <button
-          type="button"
-          id="mobile-menu-btn"
-          class="md:hidden p-2 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ea3829]"
-          aria-expanded="false"
-          aria-controls="mobile-menu"
-          aria-label="Toggle navigation menu"
-        >
-          <svg id="menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-          </svg>
-          <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
     </div>
-  </div>
 
-  <!-- Mobile Menu Dropdown -->
-  <div id="mobile-menu" class="hidden md:hidden border-b border-[#222226] bg-[#0d0d0f] px-4 pt-2 pb-4 space-y-1">
-    {navLinks.map((link) => (
-      <a
-        href={link.href}
-        class="flex items-center justify-between px-3 py-2 text-sm font-mono text-zinc-300 hover:text-white hover:bg-zinc-900 rounded transition-colors"
-      >
-        <span>{link.name}</span>
-        <span class="text-xs text-zinc-600">[{link.key}]</span>
-      </a>
-    ))}
-    <div class="pt-2 border-t border-[#222226]">
-      <a
-        href="https://github.com/reshandytaftazani"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex items-center justify-center gap-2 w-full py-2 px-3 text-xs font-mono font-medium text-zinc-200 bg-zinc-950 border border-[#27272a] hover:border-[#ea3829]/60 rounded"
-      >
-        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-        </svg>
-        <span>GitHub Profile ↗</span>
-      </a>
-    </div>
   </div>
 </header>
 
 <script>
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-menu');
-  const iconOpen = document.getElementById('menu-icon-open');
-  const iconClose = document.getElementById('menu-icon-close');
+  function setupNavbar() {
+    // 1. Live Swiss Clock in UTC+7 (WIB)
+    function updateClock() {
+      const clockEl = document.getElementById("nav-live-clock");
+      if (!clockEl) return;
 
-  if (btn && menu && iconOpen && iconClose) {
-    btn.addEventListener('click', () => {
-      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', (!isExpanded).toString());
-      menu.classList.toggle('hidden');
-      iconOpen.classList.toggle('hidden');
-      iconClose.classList.toggle('hidden');
-    });
+      const now = new Date();
+      // Format to WIB (Asia/Jakarta)
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: "Asia/Jakarta",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      };
+      const timeStr = new Intl.DateTimeFormat("en-GB", options).format(now);
+      clockEl.textContent = `${timeStr} WIB`;
+    }
 
-    menu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        btn.setAttribute('aria-expanded', 'false');
-        menu.classList.add('hidden');
-        iconOpen.classList.remove('hidden');
-        iconClose.classList.add('hidden');
+    updateClock();
+    const clockInterval = setInterval(updateClock, 1000);
+
+    // 2. Real-time Scrollspy for Nav Links
+    const sections = ["projects", "principles", "skills", "contacts"];
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]");
+
+    function onScroll() {
+      const scrollPos = window.scrollY + 200;
+
+      let currentSectionId = "";
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            currentSectionId = id;
+          }
+        }
       });
-    });
+
+      navLinks.forEach((link) => {
+        const targetId = link.getAttribute("data-nav-link");
+        const underline = link.querySelector(".nav-underline");
+        const bLeft = link.querySelector(".bracket-left");
+        const bRight = link.querySelector(".bracket-right");
+        const text = link.querySelector(".nav-text");
+
+        if (targetId === currentSectionId) {
+          link.classList.add("is-active", "text-foreground");
+          link.classList.remove("text-neutral");
+          if (underline) underline.classList.remove("scale-x-0");
+          if (underline) underline.classList.add("scale-x-100");
+          if (bLeft) bLeft.classList.remove("opacity-0", "-translate-x-1");
+          if (bLeft) bLeft.classList.add("opacity-100", "translate-x-0");
+          if (bRight) bRight.classList.remove("opacity-0", "translate-x-1");
+          if (bRight) bRight.classList.add("opacity-100", "translate-x-0");
+        } else {
+          link.classList.remove("is-active", "text-foreground");
+          link.classList.add("text-neutral");
+          if (underline) underline.classList.add("scale-x-0");
+          if (underline) underline.classList.remove("scale-x-100");
+          if (bLeft) bLeft.classList.add("opacity-0", "-translate-x-1");
+          if (bLeft) bLeft.classList.remove("opacity-100", "translate-x-0");
+          if (bRight) bRight.classList.add("opacity-0", "translate-x-1");
+          if (bRight) bRight.classList.remove("opacity-100", "translate-x-0");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        clearInterval(clockInterval);
+        window.removeEventListener("scroll", onScroll);
+      },
+      { once: true }
+    );
   }
 
-  function updateTime() {
-    const el = document.getElementById('nav-time');
-    if (!el) return;
-    const now = new Date();
-    const timeString = new Intl.DateTimeFormat('id-ID', {
-      timeZone: 'Asia/Jakarta',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    }).format(now);
-    el.textContent = `${timeString} WIB`;
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupNavbar);
+  } else {
+    setupNavbar();
   }
-  updateTime();
-  setInterval(updateTime, 1000);
+  document.addEventListener("astro:page-load", setupNavbar);
 </script>

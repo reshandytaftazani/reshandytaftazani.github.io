@@ -1,36 +1,32 @@
 ---
-// Principles.astro
+// Principles.astro (Daniele Buser Swiss High-Density Grid with motion reveal & card micro-interactions)
 const principles = [
   {
     code: "01",
     tag: "TEMPORAL_INTEGRITY",
     title: "Zero Data Leakage by Design",
-    tagline: "Evaluation Integrity & Temporal Boundaries",
     description:
       "Cross-validation leakage and lookahead bias are catastrophic because they yield deceptively optimistic metrics that fail silently in production. We architect strict partition boundaries before computing any feature transformations.",
     bullets: [
-      "Strict temporal point-in-time joins preventing target and future signal contamination.",
-      "Deterministic cryptographic entity hashing for leak-free train/validation/test splits.",
-      "Automated tombstone guards and pipeline assertions that fail loudly on boundary violations.",
+      "Strict temporal point-in-time joins preventing target signal contamination.",
+      "Deterministic cryptographic entity hashing for leak-free splits.",
+      "Automated tombstone guards that fail loudly on boundary violations.",
     ],
-    codeSnippet: `// Tombstone guard enforcement
-assert partition.max_timestamp < eval_window.min_timestamp, \\
+    codeSnippet: `assert partition.max_timestamp < eval_window.min_timestamp, \\
     "LeakageDetected: lookahead contamination in split"`,
   },
   {
     code: "02",
     tag: "DEFENSIVE_CHAOS",
     title: "Rigorous Verification & TDD",
-    tagline: "Defensive Engineering & Process Boundaries",
     description:
       "Real-world machine learning systems operate in chaotic execution environments. Verification must go far beyond happy-path unit tests to enforce stability under OS signals, malformed inputs, and process interruption.",
     bullets: [
-      "Property-based testing against degenerate distributions and extreme covariate shifts.",
+      "Property-based testing against degenerate distributions and extreme shifts.",
       "Child process supervision with idempotent cleanup on SIGINT and SIGTERM.",
-      "Strict defensive boundaries against unhandled tensor shapes and floating point exceptions.",
+      "Defensive boundaries against unhandled tensor shapes and exceptions.",
     ],
-    codeSnippet: `// Chaos testing process boundary
-def test_worker_interrupt_leaves_no_zombies():
+    codeSnippet: `def test_worker_interrupt_leaves_no_zombies():
     proc = spawn_worker(task=heavy_inference)
     proc.send_signal(signal.SIGINT)
     assert proc.wait(timeout=1.0) == 0`,
@@ -38,92 +34,72 @@ def test_worker_interrupt_leaves_no_zombies():
   {
     code: "03",
     tag: "DOMAIN_ISOLATION",
-    title: "Clean Architecture & Explicit Contracts",
-    tagline: "Decoupled Domain & Strict Type Boundaries",
+    title: "Clean Architecture & Contracts",
     description:
       "Machine learning models are implementation details of the domain. By decoupling core business logic from framework-heavy libraries, the system remains modular, highly testable, and resilient to vendor lock-in.",
     bullets: [
-      "Rigid schema contracts validated via Pydantic V2 and TypeScript at every system boundary.",
-      "Hexagonal architecture separating inference ports from HTTP transport and storage adapters.",
-      "Dependency inversion enabling fast, reproducible local test suites without cloud fixtures.",
+      "Rigid schema contracts validated via Pydantic V2 at every boundary.",
+      "Hexagonal architecture separating inference ports from transport adapters.",
+      "Dependency inversion enabling fast, reproducible local test suites.",
     ],
-    codeSnippet: `// Strict interface contract
-class InferenceRequest(BaseModel):
+    codeSnippet: `class InferenceRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
     embeddings: Annotated[list[float], Field(min_length=128, max_length=128)]`,
   },
 ];
 ---
 
-<section id="principles" class="py-24 border-t border-[#222226] bg-[#0a0a0a] relative">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <!-- Section Header (Daniele Buser Swiss Scale) -->
-    <div class="space-y-3 mb-16">
-      <div class="inline-flex items-center gap-2 font-mono text-xs text-[#ea3829] uppercase tracking-widest font-semibold">
-        <span>// 01 ENGINEERING TENETS</span>
-      </div>
-      <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-        Engineering Principles
-      </h2>
-      <p class="text-zinc-400 max-w-2xl text-base sm:text-lg leading-relaxed">
-        High signal, low noise. Foundational systems principles governing data integrity, fault boundaries, and architectural isolation.
-      </p>
-    </div>
+<section id="principles" class="relative z-10 flex w-full flex-col pt-16 pb-36" aria-labelledby="principles-heading">
+  
+  <!-- Section Heading (Daniele Buser Swiss Style) -->
+  <div class="reveal-init flex items-center justify-between border-b border-grid-line-light pb-4">
+    <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="principles-heading">
+      ENGINEERING PRINCIPLES
+    </h2>
+    <span class="text-caption font-mono text-neutral-dark">
+      [03 CORE TENETS]
+    </span>
+  </div>
 
-    <!-- Cards Grid with Vermilion Spotlight Aura -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {principles.map((item) => (
-        <div class="spotlight-card group flex flex-col justify-between rounded-lg border border-[#222226] bg-[#111113] hover:bg-[#141416] hover:border-[#ea3829]/50 p-6 sm:p-7 transition-all duration-200">
-          <div class="space-y-4 relative z-10">
-            
-            <!-- Header with Large Swiss Index -->
-            <div class="flex items-center justify-between border-b border-[#222226] pb-3">
-              <span class="text-xs font-mono text-[#ff8577] font-semibold bg-[#ea3829]/15 px-2.5 py-0.5 rounded border border-[#ea3829]/30">
-                P-[{item.code}]
-              </span>
-              <span class="text-[10.5px] font-mono text-zinc-500 tracking-wider">
-                {item.tag}
-              </span>
-            </div>
-
-            <!-- Title & Tagline -->
-            <div>
-              <h3 class="text-xl font-bold text-white group-hover:text-[#ff9e94] transition-colors">
-                {item.title}
-              </h3>
-              <p class="text-xs font-mono text-zinc-400 mt-1">
-                {item.tagline}
-              </p>
-            </div>
-
-            <!-- Description -->
-            <p class="text-sm text-zinc-300 leading-relaxed font-normal">
-              {item.description}
-            </p>
-
-            <!-- Bullets -->
-            <ul class="space-y-2 pt-2 border-t border-[#222226]">
-              {item.bullets.map((bullet) => (
-                <li class="flex items-start gap-2 text-xs text-zinc-300">
-                  <svg class="w-3.5 h-3.5 text-[#ea3829] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span class="leading-normal">{bullet}</span>
-                </li>
-              ))}
-            </ul>
+  <!-- 3-Column Grid in bg-card-dark with micro-interactions -->
+  <div class="mt-6 grid w-full grid-cols-12 gap-6 lg:gap-8">
+    {principles.map((p, idx) => (
+      <div 
+        class="group reveal-init col-span-12 flex w-full flex-col lg:col-span-4 bg-card-dark p-6 sm:p-8 justify-between border border-transparent hover:border-neutral-dark/40 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.45)] transition-all duration-300 ease-out"
+        style={`transition-delay: ${idx * 120}ms;`}
+      >
+        <div class="space-y-4">
+          <div class="flex items-center justify-between font-mono text-caption text-neutral-dark border-b border-grid-line-dark pb-3">
+            <span class="text-foreground font-bold font-mono group-hover:text-accent transition-colors duration-200">P-[{p.code}]</span>
+            <span class="uppercase tracking-wider text-accent font-semibold text-[11px]">{p.tag}</span>
           </div>
 
-          <!-- Code Snippet Box in Stark Dark with Vermilion Accent -->
-          <div class="mt-6 pt-4 border-t border-[#222226] relative z-10">
-            <div class="relative rounded bg-[#070708] p-3 font-mono text-[11px] text-zinc-300 border border-[#222226] overflow-x-auto">
-              <pre class="leading-tight"><code>{item.codeSnippet}</code></pre>
-            </div>
+          <h3 class="text-section font-bold tracking-tight text-foreground group-hover:text-accent transition-colors duration-200">
+            {p.title}
+          </h3>
+
+          <p class="text-body text-neutral leading-relaxed">
+            {p.description}
+          </p>
+
+          <ul class="space-y-2 pt-2 border-t border-grid-line-dark text-caption text-neutral">
+            {p.bullets.map((bullet) => (
+              <li class="flex items-start gap-2">
+                <span class="text-accent font-bold mt-0.5 group-hover:scale-125 transition-transform duration-200">•</span>
+                <span class="group-hover:text-foreground/90 transition-colors duration-200">{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Code contract representation with subtle hover focus -->
+        <div class="mt-6 pt-4 border-t border-grid-line-dark">
+          <div class="bg-black p-3 border border-grid-line-dark group-hover:border-neutral-dark/40 font-mono text-caption text-neutral overflow-x-auto leading-tight transition-colors duration-200">
+            <code>{p.codeSnippet}</code>
           </div>
         </div>
-      ))}
-    </div>
-
+      </div>
+    ))}
   </div>
+
 </section>

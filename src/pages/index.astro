@@ -2,21 +2,52 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
-import Principles from '../components/Principles.astro';
 import Projects from '../components/Projects.astro';
+import Principles from '../components/Principles.astro';
 import Skills from '../components/Skills.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 ---
 
 <Layout>
+  <!-- Fixed mix-blend-difference Swiss Navigation -->
   <Navbar />
-  <main>
-    <Hero />
-    <Principles />
-    <Projects />
-    <Skills />
-    <Contact />
+
+  <!-- Main Swiss Poster Area (Light Off-White Canvas with Black Typography) -->
+  <main id="main-content" tabindex="-1" class="bg-foreground text-background flex w-full flex-1 flex-col px-4 sm:px-6 lg:px-8 focus:outline-none relative" aria-label="Reshandy Taftazani Portfolio main content">
+    <div class="relative z-0 mx-auto flex w-full max-w-[120rem] flex-col gap-0">
+      
+      <!-- 12-Column Swiss Grid lines in Light Mode -->
+      <div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <div class="grid size-full grid-cols-4 gap-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
+          <div class="relative h-full border-x border-solid border-grid-line-light"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light hidden sm:block"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light hidden sm:block"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light hidden md:block"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light hidden md:block"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light hidden lg:block"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light hidden lg:block"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light hidden xl:block"></div>
+          <div class="relative h-full border-x border-solid border-grid-line-light hidden xl:block"></div>
+        </div>
+      </div>
+
+      <Hero />
+      <Projects />
+      <Principles />
+      <Skills />
+    </div>
   </main>
-  <Footer />
+
+  <!-- Dark Deep Canvas Section: "Say Hello." & Footer -->
+  <Contact />
+  
+  <div class="w-full bg-background">
+    <div class="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-8">
+      <Footer />
+    </div>
+  </div>
 </Layout>

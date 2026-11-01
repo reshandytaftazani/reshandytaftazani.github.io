@@ -1,124 +1,115 @@
 ---
-// Skills.astro
+// Skills.astro (Daniele Buser Swiss Modular Stack Grid with motion reveals & high-visibility micro-interactions)
 const skillGroups = [
   {
     index: "01",
     category: "Languages",
     code: "LANG",
-    description: "Core languages for systems, pipelines, and type-safe computation.",
     badge: "100%_TYPED",
+    description: "Core languages for systems, pipelines, and type-safe computation.",
     skills: [
-      { name: "Python", detail: "AsyncIO, Typing, C-Extensions, Metaclasses" },
-      { name: "C / C++", detail: "Memory safety, Systems tooling, High-perf routines" },
-      { name: "TypeScript", detail: "Strict compiler, Generics, End-to-end schemas" },
-      { name: "SQL", detail: "PostgreSQL, Window functions, Index optimization" },
-      { name: "Bash / POSIX", detail: "Process automation, Pipe composition, OS tooling" },
+      { name: "Python", detail: "AsyncIO, Typing, C-Extensions" },
+      { name: "C / C++", detail: "Memory safety, High-perf routines" },
+      { name: "TypeScript", detail: "Strict compiler, Generics" },
+      { name: "SQL", detail: "PostgreSQL, Window functions" },
+      { name: "Bash", detail: "Process pipes, Kernel tooling" },
     ],
   },
   {
     index: "02",
     category: "ML & Data Systems",
     code: "MLE",
-    description: "Leak-free feature pipelines and reproducible model execution.",
     badge: "LEAK_FREE",
+    description: "Leak-free feature pipelines and reproducible model execution.",
     skills: [
-      { name: "PyTorch", detail: "Custom architectures, Autograd hooks, Tensor compute" },
-      { name: "scikit-learn", detail: "Leak-free pipelines, Estimators, CV protocols" },
-      { name: "NumPy & Pandas", detail: "Vectorized compute, Memory layout, Array optimization" },
-      { name: "Pipeline Design", detail: "Tombstone guards, Point-in-time temporal joins" },
-      { name: "ONNX Runtime", detail: "Graph optimization, Quantization, Local inference" },
+      { name: "PyTorch", detail: "Custom architectures, Autograd hooks" },
+      { name: "scikit-learn", detail: "Leak-free pipelines, Estimators" },
+      { name: "NumPy / Pandas", detail: "Vectorized compute, Memory layout" },
+      { name: "Pipeline Design", detail: "Tombstone guards, Point-in-time" },
+      { name: "ONNX Runtime", detail: "Graph optimization, Quantization" },
     ],
   },
   {
     index: "03",
-    category: "Systems & Architecture",
+    category: "Systems Architecture",
     code: "ARCH",
-    description: "Decoupled domain cores, explicit contracts, and container runtimes.",
     badge: "HEXAGONAL",
+    description: "Decoupled domain cores, explicit contracts, and container runtimes.",
     skills: [
-      { name: "FastAPI", detail: "Asynchronous I/O, Lifespan hooks, High throughput" },
-      { name: "Clean Architecture", detail: "Hexagonal / Ports & Adapters, Domain isolation" },
-      { name: "Pydantic V2", detail: "Strict mode, Rust core validator, JSON Schema" },
-      { name: "Linux / OS", detail: "Signals (SIGINT/TERM), IPC, File descriptors, Procfs" },
-      { name: "Docker", detail: "Multi-stage builds, Distroless images, Minimal footprints" },
+      { name: "FastAPI", detail: "Asynchronous I/O, High throughput" },
+      { name: "Clean Architecture", detail: "Hexagonal / Ports & Adapters" },
+      { name: "Pydantic V2", detail: "Strict mode, Rust core validator" },
+      { name: "Linux / OS", detail: "Signals (SIGINT/TERM), IPC, Sockets" },
+      { name: "Docker", detail: "Multi-stage builds, Distroless images" },
     ],
   },
   {
     index: "04",
     category: "Testing & DevOps",
     code: "TEST",
-    description: "Defensive verification, deterministic tests, and automated releases.",
     badge: "VERIFIED_CI",
+    description: "Defensive verification, deterministic tests, and automated releases.",
     skills: [
-      { name: "Pytest & TDD", detail: "Fixtures, Parametrization, Strict test isolation" },
-      { name: "Verification Suites", detail: "Process interruption tests, Degenerate distributions" },
-      { name: "Git", detail: "Trunk-based workflow, Atomic commits, Cryptographic history" },
-      { name: "CI/CD Actions", detail: "Automated linting, Test matrices, GitHub Pages deployment" },
-      { name: "Defensive Programming", detail: "Invariant enforcement, Assertion guards, Crash safety" },
+      { name: "Pytest & TDD", detail: "Fixtures, Parametric isolation" },
+      { name: "Verification Suites", detail: "Process interrupt chaos tests" },
+      { name: "Git", detail: "Trunk-based workflow, Atomic commits" },
+      { name: "CI/CD Actions", detail: "Test matrices, Pages deployment" },
+      { name: "Defensive Programming", detail: "Invariant assertion guards" },
     ],
   },
 ];
 ---
 
-<section id="skills" class="py-24 border-t border-[#222226] bg-[#0a0a0a] relative">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <!-- Section Header (Daniele Buser Swiss Scale) -->
-    <div class="space-y-3 mb-16">
-      <div class="inline-flex items-center gap-2 font-mono text-xs text-[#ea3829] uppercase tracking-widest font-semibold">
-        <span>// 03 TECHNICAL STACK</span>
-      </div>
-      <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-        Competencies &amp; Infrastructure
-      </h2>
-      <p class="text-zinc-400 max-w-2xl text-base sm:text-lg leading-relaxed">
-        Focused on systems-level reliability, typed domain boundaries, and mathematically sound machine learning workflows.
-      </p>
-    </div>
-
-    <!-- 4-Column Grid with Vermilion Aura -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {skillGroups.map((group) => (
-        <div class="spotlight-card group rounded-lg border border-[#222226] bg-[#111113] p-6 flex flex-col justify-between hover:border-[#ea3829]/50 transition-all duration-200">
-          <div class="relative z-10">
-            <!-- Group Header -->
-            <div class="pb-3 border-b border-[#222226] mb-4">
-              <div class="flex items-center justify-between font-mono text-xs mb-1">
-                <span class="text-[#ff8577] font-semibold">[{group.index}] {group.code}</span>
-                <span class="text-[10px] text-zinc-500 font-mono">{group.badge}</span>
-              </div>
-              <h3 class="text-lg font-bold text-white group-hover:text-[#ff9e94] transition-colors">
-                {group.category}
-              </h3>
-              <p class="text-[11.5px] text-zinc-400 mt-1 leading-snug font-sans">
-                {group.description}
-              </p>
-            </div>
-
-            <!-- Skill Items -->
-            <ul class="space-y-3.5">
-              {group.skills.map((skill) => (
-                <li class="space-y-0.5">
-                  <div class="text-xs font-mono font-semibold text-zinc-200 flex items-center justify-between">
-                    <span>{skill.name}</span>
-                    <span class="text-[10px] text-[#ea3829]/80 font-normal">●</span>
-                  </div>
-                  <div class="text-[11px] text-zinc-400 font-sans leading-tight">
-                    {skill.detail}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <!-- Bottom Micro-Indicator -->
-          <div class="mt-6 pt-3 border-t border-[#222226] flex items-center justify-between text-[10px] font-mono text-zinc-500 relative z-10">
-            <span>VERIFIED_STACK</span>
-            <span class="text-[#ff8577] font-semibold">100% READY</span>
-          </div>
-        </div>
-      ))}
-    </div>
-
+<section id="skills" class="relative z-10 flex w-full flex-col pt-16 pb-36" aria-labelledby="skills-heading">
+  
+  <!-- Section Heading (Daniele Buser Swiss Style) -->
+  <div class="reveal-init flex items-center justify-between border-b border-grid-line-light pb-4">
+    <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="skills-heading">
+      MY TECH STACK
+    </h2>
+    <span class="text-caption font-mono text-neutral-dark font-semibold">
+      [04 DOMAINS]
+    </span>
   </div>
+
+  <!-- 4-Column Grid in bg-card-dark with micro-interactions -->
+  <div class="mt-6 grid w-full grid-cols-12 gap-4 lg:gap-6">
+    {skillGroups.map((g, idx) => (
+      <div 
+        class="group reveal-init col-span-12 sm:col-span-6 lg:col-span-3 flex w-full flex-col bg-card-dark p-6 sm:p-7 justify-between border border-transparent hover:border-neutral-dark/40 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.45)] transition-all duration-300 ease-out"
+        style={`transition-delay: ${idx * 100}ms;`}
+      >
+        <div>
+          <!-- Header -->
+          <div class="flex items-center justify-between font-mono text-caption text-neutral-dark border-b border-grid-line-dark pb-3 mb-4">
+            <span class="text-foreground font-bold group-hover:text-accent transition-colors duration-200">[{g.index}] {g.code}</span>
+            <span class="text-accent font-semibold">{g.badge}</span>
+          </div>
+
+          <h3 class="text-section font-bold tracking-tight text-foreground group-hover:text-accent transition-colors duration-200">
+            {g.category}
+          </h3>
+          <p class="text-caption text-neutral mt-1 mb-6 leading-relaxed">
+            {g.description}
+          </p>
+
+          <!-- Skill List with item hover micro-interactions -->
+          <ul class="space-y-3">
+            {g.skills.map((s) => (
+              <li class="group/item border-b border-grid-line-dark/60 pb-2 px-1.5 -mx-1.5 rounded-xs transition-colors duration-200 hover:bg-white/5 cursor-default">
+                <div class="text-body font-semibold text-foreground group-hover/item:text-accent flex items-center justify-between transition-colors duration-150">
+                  <span class="group-hover/item:translate-x-1 transition-transform duration-150 inline-block">{s.name}</span>
+                  <span class="text-accent text-[11px] font-bold group-hover/item:scale-150 transition-transform duration-150">●</span>
+                </div>
+                <div class="text-caption text-neutral-dark group-hover/item:text-neutral font-mono mt-0.5 transition-colors duration-150">
+                  {s.detail}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    ))}
+  </div>
+
 </section>

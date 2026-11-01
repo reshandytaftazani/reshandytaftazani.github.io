@@ -1,192 +1,142 @@
 ---
-// Projects.astro
+// Projects.astro (Daniele Buser exact Section 2 layout, cards, and prominent micro-interactions)
 const projects = [
   {
-    status: "PRODUCTION_READY",
-    code: "01",
-    sysTag: "SYS / EVALUATION",
     title: "LeakGuard-ML",
     subtitle: "Zero-Leakage Feature Store & Split Validator",
     summary:
       "A high-throughput feature verification engine that cryptographically guarantees zero data leakage across cross-validation folds and temporal training windows.",
-    architecture:
-      "Engineered with strict temporal partition boundaries, tombstone guards, and point-in-time joins. Enforces that no future signals, target contamination, or out-of-fold statistics bleed into evaluation sets.",
-    techStack: ["Python", "PyTorch", "FastAPI", "Pydantic V2", "Docker", "Pytest"],
-    metrics: [
-      { label: "Leak Guarantee", value: "0.00% by Design" },
-      { label: "Split Generation", value: "12x Throughput" },
-      { label: "State Verification", value: "Deterministic Seeds" },
-    ],
+    previewCode: `$ mlesys verify --target production-pipeline
+[PASS] partition_boundary: 0.00% leakage
+[PASS] tombstone_guards: temporal integrity verified
+[PASS] strict_schemas: Pydantic v2 enforced
+[BENCH] split_generation: 12x throughput`,
+    techStack: ["Python", "PyTorch", "FastAPI", "Pydantic", "Docker"],
+    metric: "0.00% Leak Guarantee",
+    secondaryMetric: "12x Throughput",
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
-    status: "LOCAL_FIRST",
-    code: "02",
-    sysTag: "SYS / RUNTIME",
     title: "AxiomServe",
     subtitle: "Low-Latency Supervised Inference Runtime",
     summary:
       "High-reliability asynchronous machine learning serving runtime designed with defensive child process supervision and zero-hang shutdown guarantees.",
-    architecture:
-      "Decoupled asynchronous worker architecture isolating ONNX/PyTorch model evaluation from HTTP ingest. Features POSIX signal interception (SIGINT/SIGTERM), automatic socket draining, and strict Pydantic V2 schema validation.",
-    techStack: ["FastAPI", "C++", "ONNX Runtime", "Python", "Linux POSIX", "Docker"],
-    metrics: [
-      { label: "Inference Latency", value: "p99 < 3.8ms" },
-      { label: "Fault Resilience", value: "Zero Zombie Procs" },
-      { label: "Type Safety", value: "100% Strict Schemas" },
-    ],
+    previewCode: `$ axiomserve --runtime onnx --workers 8
+[INIT] worker_pool initialized in shared memory
+[SIGNAL] POSIX SIGTERM handler registered
+[PASS] p99_latency: 3.82ms | throughput: 14.2k req/s
+[STATUS] zero zombie processes on exit`,
+    techStack: ["FastAPI", "C++", "ONNX", "Linux", "Docker"],
+    metric: "p99 < 3.8ms Latency",
+    secondaryMetric: "Zero Zombie Procs",
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
-    status: "CHAOS_VERIFIED",
-    code: "03",
-    sysTag: "SYS / TESTING",
     title: "SynthDist-Engine",
     subtitle: "Degenerate Distribution & TDD Chaos Harness",
     summary:
       "Property-based testing and synthetic anomaly generator specifically built to verify machine learning models against extreme distribution shifts and malformed inputs.",
-    architecture:
-      "Generates pathological edge-case inputs—including zero-variance tensors, degenerate covariance matrices, and poisoned feature distributions—within isolated sub-processes to audit pipeline recovery.",
-    techStack: ["Python", "NumPy", "scikit-learn", "Pytest", "Hypothesis", "GitHub CI"],
-    metrics: [
-      { label: "Fuzz Throughput", value: "10,000+ Cases/s" },
-      { label: "Failure Surface", value: "OS Sandboxed" },
-      { label: "Coverage", value: "Deterministic TDD" },
-    ],
+    previewCode: `$ pytest tests/fuzz/ --coverage
+[GENERATE] 10,000 degenerate distribution edge cases
+[PASS] empty_tensor_handling: ok
+[PASS] zero_variance_covariance: defended
+[STATUS] 100% boundary isolation verified`,
+    techStack: ["Python", "NumPy", "scikit-learn", "Pytest", "Hypothesis"],
+    metric: "10,000+ Fuzz Cases/s",
+    secondaryMetric: "OS Sandboxed",
     githubUrl: "https://github.com/reshandytaftazani",
   },
   {
-    status: "CLEAN_ARCH",
-    code: "04",
-    sysTag: "SYS / ARCHITECTURE",
     title: "HexaML Core",
     subtitle: "Clean Architecture Engine for ML Systems",
     summary:
       "Production-ready Hexagonal (Ports & Adapters) architecture template isolating core ML domain algorithms from transport protocols and persistence engines.",
-    architecture:
-      "Enforces strict dependency inversion where ML models adhere to abstract domain ports. Enables instantaneous local test suites with zero cloud dependencies and complete immunity to framework migrations.",
-    techStack: ["Python", "Clean Architecture", "Pydantic V2", "FastAPI", "SQLAlchemy", "Docker"],
-    metrics: [
-      { label: "Domain Decoupling", value: "Zero Framework Deps" },
-      { label: "Validation Time", value: "< 0.4ms Contract Check" },
-      { label: "Test Strategy", value: "100% Mockable Ports" },
-    ],
+    previewCode: `$ python -m hexaml.verify_contracts
+class InferenceRequest(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    tensor_id: UUID4
+    features: Annotated[list[float], Field(min_length=64)]
+[STATUS] zero framework deps in domain layer`,
+    techStack: ["Python", "Clean Arch", "Pydantic", "SQLAlchemy", "Docker"],
+    metric: "Zero Framework Lock-in",
+    secondaryMetric: "< 0.4ms Contract Check",
     githubUrl: "https://github.com/reshandytaftazani",
   },
 ];
 ---
 
-<section id="projects" class="py-24 border-t border-[#222226] bg-[#0a0a0a] relative">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <!-- Section Header (Daniele Buser Swiss Layout) -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16">
-      <div class="space-y-3">
-        <div class="inline-flex items-center gap-2 font-mono text-xs text-[#ea3829] uppercase tracking-widest font-semibold">
-          <span>// 02 FEATURED REPOSITORIES</span>
-        </div>
-        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-          Selected Engineering Work
-        </h2>
-        <p class="text-zinc-400 max-w-2xl text-base sm:text-lg leading-relaxed">
-          Production-grade systems, leak-free ML pipelines, and local-first runtimes built with clean architecture, verifiable test coverage, and strict contracts.
-        </p>
-      </div>
+<section id="projects" class="relative z-10 flex w-full flex-col pt-24 pb-36" aria-labelledby="projects-list-heading">
+  
+  <!-- Section Heading (Daniele Buser text-caption / text-body uppercase) -->
+  <div class="reveal-init flex items-center justify-between border-b border-grid-line-light pb-4">
+    <h2 class="text-caption md:text-body uppercase text-neutral-dark font-mono tracking-wider" id="projects-list-heading">
+      SELECTED WORKS
+    </h2>
+    <span class="text-caption font-mono text-neutral-dark font-semibold">
+      [04 SYSTEMS]
+    </span>
+  </div>
 
-      <a
-        href="https://github.com/reshandytaftazani"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 text-xs font-mono text-zinc-300 hover:text-[#ff8577] transition-colors shrink-0 font-medium"
-      >
-        <span>View all repositories on GitHub</span>
-        <span>→</span>
-      </a>
-    </div>
-
-    <!-- Architectural Split-Index Project Cards (2x2 Grid with Vermilion Aura) -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {projects.map((proj) => (
-        <article class="spotlight-card group flex flex-col justify-between rounded-lg border border-[#222226] bg-[#111113] hover:bg-[#141416] hover:border-[#ea3829]/50 p-6 sm:p-8 transition-all duration-200">
-          <div class="space-y-5 relative z-10">
+  <!-- 12-Column Grid (Daniele Buser exact 2-column on desktop) -->
+  <div class="mt-6 grid w-full grid-cols-12 gap-6 lg:gap-8">
+    {projects.map((proj, idx) => (
+      <div class="reveal-init col-span-12 flex w-full flex-col lg:col-span-6" style={`transition-delay: ${idx * 120}ms;`}>
+        <a 
+          data-project-card="true" 
+          class="group bg-card-dark focus-visible:outline-foreground flex w-full flex-col p-4 pb-8 focus-visible:outline-2 focus-visible:outline-offset-4 border border-transparent hover:border-neutral-dark/50 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(0,0,0,0.55)] transition-all duration-300 ease-out" 
+          aria-label={`Project: ${proj.title}`} 
+          href={proj.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <!-- Aspect container with Code/Telemetry showcase and prominent micro-interactions -->
+          <div class="relative aspect-4/3 w-full overflow-hidden select-none bg-black border border-grid-line-dark group-hover:border-neutral-dark/60 transition-colors duration-300 p-4 flex flex-col justify-between font-mono text-xs">
             
-            <!-- Architectural Index Header -->
-            <div class="flex items-center justify-between gap-4 border-b border-[#222226] pb-4">
-              <div class="flex items-center gap-3">
-                <span class="text-lg font-mono font-bold text-white tracking-tighter">
-                  [{proj.code}]
-                </span>
-                <span class="text-xs font-mono font-semibold text-[#ff8577] bg-[#ea3829]/15 px-2.5 py-0.5 rounded border border-[#ea3829]/30">
-                  {proj.status}
-                </span>
+            <!-- Header bar inside card with prominent SOURCE pill -->
+            <div class="flex items-center justify-between text-caption text-neutral-dark border-b border-grid-line-dark pb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-accent group-hover:scale-125 transition-transform duration-300"></span>
+                <span class="text-foreground uppercase font-bold tracking-tight text-xs">{proj.title}</span>
               </div>
-
-              <!-- GitHub Direct Action -->
-              <a
-                href={proj.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded border border-[#27272a] hover:border-[#ea3829]/50 transition-colors"
-                aria-label={`View ${proj.title} source code on GitHub`}
-              >
-                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                </svg>
-              </a>
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm bg-white/10 group-hover:bg-accent group-hover:text-white text-neutral transition-all duration-200">
+                <span class="font-bold text-[11px] tracking-wider">SOURCE</span>
+                <span class="text-accent group-hover:text-white transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 font-bold">↗</span>
+              </div>
             </div>
 
-            <!-- Title & Subtitle -->
-            <div>
-              <h3 class="text-2xl font-bold text-white group-hover:text-[#ff9e94] transition-colors tracking-tight">
+            <!-- Terminal code preview block with hover scaling -->
+            <pre class="text-neutral text-[11px] leading-relaxed my-auto overflow-x-hidden transition-transform duration-500 ease-out group-hover:scale-[1.025]">
+              <code>{proj.previewCode}</code>
+            </pre>
+
+            <!-- Card Bottom Telemetry -->
+            <div class="flex items-center justify-between pt-2.5 border-t border-grid-line-dark text-[10px] uppercase">
+              <span class="text-accent font-bold group-hover:scale-105 transition-transform duration-200 origin-left inline-block">{proj.metric}</span>
+              <span class="text-neutral-dark group-hover:text-foreground font-semibold transition-colors duration-200">{proj.secondaryMetric}</span>
+            </div>
+          </div>
+
+          <!-- Bottom description & tags (Daniele Buser exact card layout) -->
+          <div class="text-foreground mt-6 flex items-start justify-between gap-4 sm:mt-8">
+            <div class="min-w-0 flex-1">
+              <h3 class="text-section min-w-0 flex-1 font-bold text-foreground group-hover:text-accent group-hover:translate-x-1 transition-all duration-300">
                 {proj.title}
               </h3>
-              <p class="text-xs font-mono text-[#ea3829] font-medium mt-1">
-                {proj.subtitle}
+              <p class="text-body text-neutral mt-1 line-clamp-2 leading-relaxed">
+                {proj.summary}
               </p>
             </div>
-
-            <!-- Problem / Summary -->
-            <p class="text-sm text-zinc-300 leading-relaxed font-normal">
-              {proj.summary}
-            </p>
-
-            <!-- Architecture Details Callout -->
-            <div class="rounded bg-[#070708] p-4 border border-[#222226]">
-              <span class="text-[11px] font-mono text-zinc-500 uppercase tracking-wider block mb-1">
-                Architecture &amp; Implementation:
-              </span>
-              <p class="text-xs text-zinc-300 leading-relaxed font-sans">
-                {proj.architecture}
-              </p>
-            </div>
-
-            <!-- Tech Stack Pills -->
-            <div class="flex flex-wrap gap-1.5 pt-1">
+            <div class="flex shrink-0 flex-col items-end gap-1">
               {proj.techStack.map((tech) => (
-                <span class="px-2.5 py-1 text-[11px] font-mono rounded bg-zinc-950 border border-[#27272a] text-zinc-300">
+                <span class="text-caption md:text-body uppercase text-neutral group-hover:text-foreground/90 transition-colors duration-200 font-mono font-medium">
                   {tech}
                 </span>
               ))}
             </div>
-
           </div>
-
-          <!-- Swiss Tabular Metrics Footer in Vermilion Numerals -->
-          <div class="mt-6 pt-4 border-t border-[#222226] grid grid-cols-3 gap-2 text-center relative z-10">
-            {proj.metrics.map((metric) => (
-              <div class="rounded bg-[#070708] p-2.5 border border-[#222226]">
-                <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider truncate">
-                  {metric.label}
-                </div>
-                <div class="text-xs font-mono font-bold text-[#ff8577] mt-0.5 truncate">
-                  {metric.value}
-                </div>
-              </div>
-            ))}
-          </div>
-        </article>
-      ))}
-    </div>
-
+        </a>
+      </div>
+    ))}
   </div>
+
 </section>

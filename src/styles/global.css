@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: "Hanken Grotesk", "Neue Haas Grotesk Display Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-background: #0a0a0a;
+  --color-foreground: #f6f6f6;
+  --color-accent: #ff4500;
+  --color-neutral: #9b9b9b;
+  --color-neutral-dark: #6b6b6b;
+  --color-neutral-200: #e5e5e5;
+  --color-grid-line-light: #e8e8e8;
+  --color-grid-line-dark: #1a1a1a;
+  --color-card-dark: #161616;
 }
 
 :root {
-  color-scheme: dark;
+  --color-background: #0a0a0a;
+  --color-foreground: #f6f6f6;
+  --color-accent: #ff4500;
+  --color-neutral: #9b9b9b;
+  --color-neutral-dark: #6b6b6b;
+  --color-neutral-200: #e5e5e5;
+  --color-grid-line-light: #e8e8e8;
+  --color-grid-line-dark: #1a1a1a;
+  --color-card-dark: #161616;
+
+  /* Daniele Buser exact typography clamps from production CSS */
+  --text-display-xl: clamp(6.5rem, 4.5rem + 9.5vw, 16rem);
+  --text-display-md: clamp(2.5rem, 1.5rem + 5vw, 7rem);
+  --text-display-sm: clamp(1.875rem, 1.25rem + 2vw, 3.125rem);
+  --text-section: clamp(1.125rem, 0.875rem + 1.15vw, 2.25rem);
+  --text-code: clamp(0.6rem, 0.475rem + 0.35vw, 0.75rem);
+  --text-body-lg: 1.125rem;
+  --text-body: 0.875rem;
+  --text-caption: 0.75rem;
 }
 
 html {
   scroll-behavior: smooth;
-  background-color: #0a0a0a;
-  color: #a1a1aa;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  overscroll-behavior: none;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Custom Cursor class applied when mouse device is detected */
+html.has-custom-cursor * {
+  cursor: none !important;
 }
 
 ::selection {
-  background-color: rgba(234, 56, 41, 0.28);
-  color: #ff9e94;
+  background-color: rgba(255, 69, 0, 0.3);
+  color: #fff;
 }
 
-/* Custom subtle scrollbar */
+/* Subtle scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -30,50 +72,192 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #222226;
+  background: #262626;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #333338;
+  background: #3a3a3a;
 }
 
-/* Swiss / Daniele Buser x Matthieu Givelet Spotlight card interaction */
-.spotlight-card {
-  position: relative;
-  overflow: hidden;
+/* Daniele Buser precise typography scale classes */
+.text-display-xl {
+  font-size: var(--text-display-xl);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  font-weight: 700;
 }
 
-.spotlight-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    520px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
-    rgba(234, 56, 41, 0.11),
-    transparent 65%
-  );
+.text-display-md {
+  font-size: var(--text-display-md);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.text-display-sm {
+  font-size: var(--text-display-sm);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+.text-section {
+  font-size: var(--text-section);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.text-body-lg {
+  font-size: var(--text-body-lg);
+  line-height: 1.5;
+}
+
+.text-body {
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+
+.text-caption {
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+/* Base utility color bindings */
+.bg-background {
+  background-color: var(--color-background);
+}
+
+.bg-foreground {
+  background-color: var(--color-foreground);
+}
+
+.bg-card-dark {
+  background-color: var(--color-card-dark);
+}
+
+.border-grid-line-light {
+  border-color: var(--color-grid-line-light);
+}
+
+.border-grid-line-dark {
+  border-color: var(--color-grid-line-dark);
+}
+
+.text-background {
+  color: var(--color-background);
+}
+
+.text-foreground {
+  color: var(--color-foreground);
+}
+
+.text-neutral {
+  color: var(--color-neutral);
+}
+
+.text-neutral-dark {
+  color: var(--color-neutral-dark);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.border-accent {
+  border-color: var(--color-accent);
+}
+
+/* Robust Hover & Group-Hover Utilities for Accent Palette */
+@media (hover: hover) {
+  .hover\:bg-accent:hover {
+    background-color: var(--color-accent) !important;
+  }
+
+  .hover\:text-accent:hover {
+    color: var(--color-accent) !important;
+  }
+
+  .hover\:border-accent:hover {
+    border-color: var(--color-accent) !important;
+  }
+
+  .hover\:text-white:hover {
+    color: #ffffff !important;
+  }
+
+  .hover\:text-black:hover {
+    color: #000000 !important;
+  }
+
+  .group:hover .group-hover\:text-accent {
+    color: var(--color-accent) !important;
+  }
+
+  .group:hover .group-hover\:bg-accent {
+    background-color: var(--color-accent) !important;
+  }
+
+  .group:hover .group-hover\:text-white {
+    color: #ffffff !important;
+  }
+
+  .group:hover .group-hover\:text-black {
+    color: #000000 !important;
+  }
+
+  .group:hover .group-hover\:scale-105 {
+    transform: scale(1.05);
+  }
+
+  .group:hover .group-hover\:scale-125 {
+    transform: scale(1.25);
+  }
+
+  .group:hover .group-hover\:translate-y-1 {
+    transform: translateY(0.25rem);
+  }
+
+  .group:hover .group-hover\:translate-x-1 {
+    transform: translateX(0.25rem);
+  }
+}
+
+/* Staggered in-view reveals */
+.reveal-init {
   opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 1;
+  transform: translateY(24px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
-.spotlight-card:hover::before {
+.reveal-init.is-revealed {
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* Architectural blueprint corner crosshairs */
-.crosshair-corner {
-  position: relative;
+.reveal-hero {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
-.crosshair-corner::after {
-  content: "+";
-  position: absolute;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.15);
-  pointer-events: none;
+.reveal-hero.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init,
+  .reveal-hero {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }

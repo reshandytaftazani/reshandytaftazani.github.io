@@ -1,39 +1,58 @@
 ---
-// Footer.astro
+// Footer.astro (Daniele Buser exact minimalist Swiss footer format with tactile [TOP ↑] micro-interaction)
 const currentYear = 2026;
 ---
 
-<footer class="border-t border-[#222226] bg-[#070708] text-zinc-500 py-12 font-mono text-xs mt-auto">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-      
-      <!-- Brand & Copyright -->
-      <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-        <span class="text-zinc-200 font-bold">
-          <span class="text-[#ea3829]">&gt;</span> reshandy.dev
-        </span>
-        <span class="hidden sm:inline text-zinc-800">|</span>
-        <span class="text-zinc-500">© {currentYear} Reshandy Taftazani Aulya. All rights reserved.</span>
-      </div>
-
-      <!-- Coordinates & Top Link (Swiss Blueprint Details) -->
-      <div class="flex items-center gap-4 text-zinc-400">
-        <span class="text-[11px] text-zinc-600 font-mono hidden md:inline">
-          LAT -06.3627° | LON 106.8271°
-        </span>
-        <span class="hidden md:inline text-zinc-800">|</span>
-        <span class="text-[11px] text-zinc-500 font-mono">
-          Astro + Tailwind · GitHub Pages
-        </span>
-        <a
-          href="#"
-          class="hover:text-white hover:border-[#ea3829]/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#ea3829] rounded px-2 py-0.5 bg-zinc-950 border border-[#27272a] text-[#ff8577] font-semibold"
-          aria-label="Return to top of page"
-        >
-          [Top ↑]
-        </a>
-      </div>
-
-    </div>
+<footer class="relative z-10 w-full py-12 border-t border-grid-line-dark flex flex-col sm:flex-row items-center justify-between gap-6 text-caption text-neutral-dark font-mono bg-background">
+  
+  <!-- Left: Copyright & Identity -->
+  <div class="flex items-center gap-3">
+    <span class="text-foreground font-bold tracking-tight hover:text-accent transition-colors duration-200">RESHANDY TAFTAZANI</span>
+    <span class="text-neutral-dark">•</span>
+    <span>© {currentYear} ALL RIGHTS RESERVED</span>
   </div>
+
+  <!-- Right: Swiss Coordinates & Tactile [TOP ↑] Control -->
+  <div class="flex items-center gap-4 font-mono">
+    <span class="hidden md:inline text-neutral-dark hover:text-neutral transition-colors">LAT -06.3627° | LON 106.8271°</span>
+    <span class="hidden md:inline text-neutral-dark">•</span>
+    <span class="hidden sm:inline text-neutral-dark">ASTRO + TAILWIND</span>
+    <span class="hidden sm:inline text-neutral-dark">•</span>
+    
+    <!-- Tactile Swiss Top Button with Expanding Brackets & Rocket Leap -->
+    <a 
+      href="#about" 
+      id="back-to-top"
+      class="group relative inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-sm border border-neutral-dark/40 hover:border-accent bg-card-dark hover:bg-accent text-neutral hover:text-black font-mono font-bold text-caption transition-all duration-300 shadow-sm cursor-pointer select-none"
+      aria-label="Return to top of page"
+    >
+      <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:-translate-x-0.5">[</span>
+      <span class="text-foreground group-hover:text-black tracking-wider transition-colors duration-200">TOP</span>
+      <span class="inline-block text-accent group-hover:text-black font-bold text-sm transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-125">↑</span>
+      <span class="text-neutral-dark group-hover:text-black transition-transform duration-200 group-hover:translate-x-0.5">]</span>
+    </a>
+  </div>
+
 </footer>
+
+<script>
+  function setupBackToTop() {
+    const btn = document.getElementById("back-to-top");
+    if (!btn) return;
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupBackToTop);
+  } else {
+    setupBackToTop();
+  }
+  document.addEventListener("astro:page-load", setupBackToTop);
+</script>

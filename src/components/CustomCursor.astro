@@ -1,0 +1,141 @@
+---
+// CustomCursor.astro (Daniele Buser signature interactive spring cursor with click & hover micro-interactions)
+---
+
+<div
+  id="swiss-cursor"
+  class="pointer-events-none fixed top-0 left-0 z-50 rounded-full bg-accent opacity-0 transition-opacity duration-300 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+  style="width: 24px; height: 24px;"
+  aria-hidden="true"
+></div>
+
+<script>
+  function setupCursor() {
+    const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!isFinePointer || prefersReducedMotion) {
+      return;
+    }
+
+    const cursor = document.getElementById("swiss-cursor");
+    if (!cursor) return;
+
+    document.documentElement.classList.add("has-custom-cursor");
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let currentX = -100;
+    let currentY = -100;
+    let isHovering = false;
+    let isClicking = false;
+    let isVisible = false;
+    let rafId: number | null = null;
+
+    // Smooth spring physics factor (lerp)
+    const LERP_FACTOR = 0.22;
+
+    function render() {
+      // Spring lerp interpolation
+      currentX += (mouseX - currentX) * LERP_FACTOR;
+      currentY += (mouseY - currentY) * LERP_FACTOR;
+
+      let scale = 1;
+      if (isClicking) {
+        scale = isHovering ? 0.35 : 0.7;
+      } else if (isHovering) {
+        scale = 0.5;
+      }
+
+      cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) scale(${scale})`;
+
+      rafId = requestAnimationFrame(render);
+    }
+
+    window.addEventListener(
+      "mousemove",
+      (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        if (!isVisible) {
+          isVisible = true;
+          cursor.style.opacity = "1";
+        }
+      },
+      { passive: true }
+    );
+
+    // Mouse down / up click compression feedback
+    window.addEventListener(
+      "mousedown",
+      () => {
+        isClicking = true;
+      },
+      { passive: true }
+    );
+
+    window.addEventListener(
+      "mouseup",
+      () => {
+        isClicking = false;
+      },
+      { passive: true }
+    );
+
+    document.body.addEventListener(
+      "mouseleave",
+      () => {
+        isVisible = false;
+        cursor.style.opacity = "0";
+      },
+      { passive: true }
+    );
+
+    document.body.addEventListener(
+      "mouseenter",
+      () => {
+        isVisible = true;
+        cursor.style.opacity = "1";
+      },
+      { passive: true }
+    );
+
+    // Interactive element shrink handler
+    function bindInteractiveElements() {
+      const interactiveTargets = document.querySelectorAll(
+        "a, button, [data-project-card], [role='button'], input, textarea"
+      );
+
+      interactiveTargets.forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          isHovering = true;
+        });
+        el.addEventListener("mouseleave", () => {
+          isHovering = false;
+        });
+      });
+    }
+
+    bindInteractiveElements();
+    rafId = requestAnimationFrame(render);
+
+    // Cleanup on Astro page change
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        document.documentElement.classList.remove("has-custom-cursor");
+      },
+      { once: true }
+    );
+  }
+
+  // Initialize on load and on view transitions
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupCursor);
+  } else {
+    setupCursor();
+  }
+  document.addEventListener("astro:page-load", setupCursor);
+</script>
