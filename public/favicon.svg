@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Pitch Black Canvas -->
+  <rect width="64" height="64" fill="#0a0a0a" rx="0" />
+  
+  <!-- Outer Hairline Frame -->
+  <rect x="2" y="2" width="60" height="60" fill="none" stroke="#262626" stroke-width="2" />
+
+  <!-- Corner Precision Crosshairs -->
+  <path d="M 2 10 L 2 2 L 10 2" fill="none" stroke="#ff4500" stroke-width="2" />
+  <path d="M 62 54 L 62 62 L 54 62" fill="none" stroke="#ff4500" stroke-width="2" />
+
+  <!-- Monogram Group (Centered mathematically) -->
+  <g id="rt-monogram-glyphs">
+    <!-- Letter 'R': Vertical Stem -->
+    <rect x="12" y="16" width="5.5" height="32" fill="#f6f6f6" />
+    
+    <!-- Letter 'R': Upper Bowl -->
+    <path d="M 17.5 16 L 26 16 C 29.5 16 31 18 31 21.5 L 31 23.5 C 31 27 29.5 29 26 29 L 17.5 29 Z M 17.5 21 L 25 21 C 26 21 26.5 21.5 26.5 22.5 L 26.5 22.5 C 26.5 23.5 26 24 25 24 L 17.5 24 Z" fill="#f6f6f6" />
+
+    <!-- Letter 'R': Signature Safety Orange Diagonal Kick -->
+    <polygon points="21,28.5 27,28.5 31.5,48 25.5,48" fill="#ff4500" />
+
+    <!-- Letter 'T': Top Crossbar -->
+    <rect x="34" y="16" width="18" height="5" fill="#f6f6f6" />
+
+    <!-- Letter 'T': Vertical Center Stem -->
+    <rect x="40.25" y="21" width="5.5" height="27" fill="#f6f6f6" />
+  </g>
+
+  <!-- Systems Telemetry Active Dot -->
+  <circle cx="51.5" cy="46" r="1.5" fill="#ff4500" />
+</svg>
