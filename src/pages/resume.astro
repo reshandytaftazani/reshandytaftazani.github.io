@@ -440,6 +440,7 @@ Architecture & Methodology:
             <div class="cv-item space-y-2 pb-5 border-b border-neutral-200 last:border-b-0 last:pb-0">
               <!-- Print Continuation Header for Page 2 -->
               {idx === 1 && (
+                <div class="print-page-2-spacer hidden print:block" aria-hidden="true"></div>
                 <div class="hidden print:flex items-center justify-between border-b border-black pb-1 mb-2 font-mono text-[9px] text-neutral-600">
                   <span class="font-bold text-black uppercase tracking-wider">[03] FLAGSHIP SYSTEMS &amp; VERIFIED PROJECTS (CONT.)</span>
                   <span>UNITS 02 — 03</span>
@@ -654,10 +655,11 @@ Architecture & Methodology:
   /* ==========================================================================
      ISOLATED SWISS PRINT SPECIFICATION (@media print)
      Optimized for standard A4 format (210mm x 297mm)
+     margin: 0 removes browser-generated headers (title/URL) and footers (page/timestamp)
      ========================================================================== */
   @page {
     size: A4 portrait;
-    margin: 6mm 12mm 6mm 12mm;
+    margin: 0;
   }
 
   @media print {
@@ -705,16 +707,23 @@ Architecture & Methodology:
       min-height: auto !important;
     }
 
-    /* 3. Document Container: Expand cleanly to 100% A4 width without frame borders or shadows */
+    /* 3. Document Container: Expand cleanly to 100% A4 width with exact Swiss margins */
     #cv-document {
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
-      padding: 0 !important;
+      padding: 8mm 12mm 0 12mm !important;
+      box-sizing: border-box !important;
       border: none !important;
       box-shadow: none !important;
       background: #ffffff !important;
       color: #000000 !important;
+    }
+
+    .print-page-2-spacer {
+      display: block !important;
+      height: 8mm !important;
+      width: 100% !important;
     }
 
     /* 4. Link & URL Formatting: Suppress browser URL footers or appended link text */

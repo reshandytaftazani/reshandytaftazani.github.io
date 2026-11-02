@@ -404,7 +404,10 @@
         category: "ACTIONS",
         shortcut: "RSS",
         icon: "↗",
-        action: () => window.open("/rss.xml", "_blank", "noopener,noreferrer"),
+        action: () => {
+          closePalette();
+          navigateWithCurtain("/rss.xml");
+        },
         keywords: "rss feed xml atom subscribe field notes syndication dispatches",
       },
     ];

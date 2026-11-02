@@ -442,6 +442,18 @@ const isLandingPage = pathname === "/" || pathname === "" || pathname.endsWith("
     setupLinkTransitions();
   }
 
+  // Handle bfcache restorations (browser back/forward)
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) {
+      document.documentElement.classList.remove("swiss-shutter-covered");
+      const shutter = document.getElementById("swiss-shutter");
+      if (shutter) {
+        shutter.style.display = "none";
+        shutter.style.transform = "translate3d(0, 100%, 0)";
+      }
+    }
+  });
+
   // Initialize on load and on Astro view changes
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", setupPageTransition);

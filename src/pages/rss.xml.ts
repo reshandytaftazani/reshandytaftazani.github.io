@@ -12,6 +12,7 @@ export async function GET(context: APIContext) {
   );
 
   return rss({
+    stylesheet: '/rss-style.xsl',
     title: 'Reshandy Taftazani — Technical Field Notes & Engineering Journal',
     description: 'Engineering dispatches on distributed inference runtimes, defensive temporal verification, zero-leakage feature stores, and robust systems architecture by Reshandy Taftazani.',
     site: siteUrl,
