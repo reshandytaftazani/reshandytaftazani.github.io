@@ -56,10 +56,10 @@ const principlesData = [
 ];
 ---
 
-<!-- SCROLL TRACK WRAPPER (Desktop: 240vh for scroll progression; Mobile: auto) -->
+<!-- SCROLL TRACK WRAPPER (Desktop: 460vh for generous deliberate scroll progression; Mobile: auto) -->
 <section 
   id="principles" 
-  class="relative z-10 w-full min-h-auto lg:min-h-[240vh] pt-12 pb-16" 
+  class="relative z-10 w-full min-h-auto lg:min-h-[460vh] pt-12 pb-20" 
   aria-labelledby="principles-heading"
 >
   
@@ -151,6 +151,25 @@ const principlesData = [
       id="principles-stage-card" 
       class="mt-4 relative bg-card-dark border border-grid-line-dark p-5 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
     >
+      <!-- Swiss Mechanical Opaque Curtain Shutter (Covers & Unveils between Principles) -->
+      <div 
+        id="principles-curtain-shutter" 
+        class="pointer-events-none absolute inset-0 bg-[#0c0c0c] z-30 opacity-0 overflow-hidden flex flex-col justify-between" 
+        aria-hidden="true"
+      >
+        <!-- Shutter Top Laser Hairline -->
+        <div id="curtain-edge-top" class="w-full h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent shadow-[0_0_12px_rgba(255,69,0,0.9)] opacity-0 shrink-0"></div>
+        
+        <!-- Shutter Mid Telemetry Watermark -->
+        <div class="flex items-center justify-between px-6 font-mono text-[11px] text-accent/80 tracking-widest uppercase select-none my-auto">
+          <span>// STAGE_CURTAIN_SHUTTER</span>
+          <span class="animate-pulse">RECALIBRATING_INVARIANT...</span>
+        </div>
+
+        <!-- Shutter Bottom Laser Hairline -->
+        <div id="curtain-edge-bottom" class="w-full h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent shadow-[0_0_12px_rgba(255,69,0,0.9)] opacity-0 shrink-0"></div>
+      </div>
+
       <!-- Scanline Laser Calibration Beam -->
       <div 
         id="stage-scanline-laser" 
@@ -165,7 +184,7 @@ const principlesData = [
           return (
             <div 
               id={`principle-panel-${idx + 1}`}
-              class={`principle-panel w-full grid grid-cols-12 gap-6 lg:gap-8 items-start ${
+              class={`principle-panel w-full grid grid-cols-12 gap-6 lg:gap-8 items-start bg-card-dark ${
                 isDefault ? 'is-active' : 'is-inactive from-below'
               }`}
               data-panel-index={idx}
@@ -541,39 +560,55 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
     grid-template-rows: minmax(0, 1fr);
     align-items: start;
     width: 100%;
+    position: relative;
   }
 
   .principle-panel {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
     width: 100%;
-    will-change: opacity, transform;
+    position: relative;
+    will-change: transform, opacity, clip-path;
     opacity: 0;
     pointer-events: none;
     z-index: 1;
     visibility: hidden;
-    transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
-                transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0s linear 350ms;
   }
 
   .principle-panel.is-active {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateY(0);
     z-index: 10;
-    transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
-                transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0s linear 0s;
   }
 
-  .principle-panel.is-inactive.from-below {
-    transform: translateY(22px);
+  @media (min-width: 1024px) {
+    .principle-panel {
+      transition: none; /* Driven directly at 60fps via RAF scroll scrub */
+    }
   }
 
-  .principle-panel.is-inactive.from-above {
-    transform: translateY(-22px);
+  @media (max-width: 1023px) {
+    .principle-panel {
+      transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0s linear 350ms;
+    }
+
+    .principle-panel.is-active {
+      transform: translateY(0);
+      transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0s linear 0s;
+    }
+
+    .principle-panel.is-inactive.from-below {
+      transform: translateY(22px);
+    }
+
+    .principle-panel.is-inactive.from-above {
+      transform: translateY(-22px);
+    }
   }
 
   @keyframes stageScanlineSweep {
@@ -600,9 +635,12 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
     .principle-panel.is-inactive {
       transition: none !important;
       transform: none !important;
+      clip-path: none !important;
     }
-    #stage-scanline-laser.is-sweeping {
+    #stage-scanline-laser.is-sweeping,
+    #principles-curtain-shutter {
       animation: none !important;
+      display: none !important;
     }
   }
 </style>
@@ -637,27 +675,11 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
       }
     }
 
-    function triggerScanline() {
-      if (!laser) return;
-      laser.classList.remove('is-sweeping');
-      void laser.offsetWidth; // Force reflow
-      laser.classList.add('is-sweeping');
-    }
+    const curtainShutter = document.getElementById('principles-curtain-shutter');
+    const curtainTop = document.getElementById('curtain-edge-top');
+    const curtainBottom = document.getElementById('curtain-edge-bottom');
 
-    function setActivePrinciple(stepIdx: number, shouldPlaySound = true) {
-      if (stepIdx === currentStepIndex && panels[stepIdx]?.classList.contains('is-active')) {
-        return;
-      }
-      const direction = stepIdx > currentStepIndex ? 'down' : 'up';
-      const prevStepIndex = currentStepIndex;
-      currentStepIndex = stepIdx;
-
-      if (shouldPlaySound) {
-        playStepSound(stepIdx);
-      }
-      triggerScanline();
-
-      // 1. Update Step Buttons
+    function updateStepUI(stepIdx: number) {
       stepBtns.forEach((btn, idx) => {
         const isTarget = idx === stepIdx;
         const accentIndicator = btn.querySelector('.step-accent-indicator');
@@ -678,94 +700,280 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
         }
       });
 
-      // 2. Update Progress Bar & Counters with smooth ease
-      if (progressBar) {
-        const pct = ((stepIdx + 1) / 3) * 100;
-        progressBar.style.width = `${pct}%`;
-      }
       if (counterBadge) {
         counterBadge.textContent = `0${stepIdx + 1} / 03`;
       }
       if (activeTagLabel) {
         activeTagLabel.textContent = stepTags[stepIdx] || '';
       }
+    }
 
-      // 3. Directional Smooth Panel Transitions (Zero Layout Shift)
+    function setActivePrincipleMobile(stepIdx: number) {
+      currentStepIndex = stepIdx;
+      updateStepUI(stepIdx);
+      if (progressBar) {
+        progressBar.style.width = `${((stepIdx + 1) / 3) * 100}%`;
+      }
       panels.forEach((panel, idx) => {
-        panel.classList.remove('from-below', 'from-above');
         if (idx === stepIdx) {
           panel.classList.remove('is-inactive');
           panel.classList.add('is-active');
-        } else if (idx === prevStepIndex) {
-          panel.classList.remove('is-active');
-          panel.classList.add('is-inactive', direction === 'down' ? 'from-above' : 'from-below');
         } else {
           panel.classList.remove('is-active');
-          panel.classList.add('is-inactive', idx > stepIdx ? 'from-below' : 'from-above');
+          panel.classList.add('is-inactive');
         }
       });
+    }
+
+    function updateScrubState(progress: number, shouldPlaySound = true) {
+      // Linear Progress Bar Width (from 33.3% to 100%)
+      if (progressBar) {
+        const pct = 33.333 + progress * 66.667;
+        progressBar.style.width = `${pct.toFixed(2)}%`;
+      }
+
+      let activeStep = 0;
+      const p0 = panels[0];
+      const p1 = panels[1];
+      const p2 = panels[2];
+      if (!p0 || !p1 || !p2) return;
+
+      if (progress < 0.26) {
+        // Zone 0: Principle 01 Settled
+        activeStep = 0;
+
+        p0.style.opacity = '1';
+        p0.style.transform = 'translateY(0)';
+        p0.style.zIndex = '10';
+        p0.style.visibility = 'visible';
+        p0.style.pointerEvents = 'auto';
+
+        p1.style.opacity = '0';
+        p1.style.visibility = 'hidden';
+        p1.style.pointerEvents = 'none';
+        p1.style.zIndex = '1';
+
+        p2.style.opacity = '0';
+        p2.style.visibility = 'hidden';
+        p2.style.pointerEvents = 'none';
+        p2.style.zIndex = '1';
+
+        if (curtainShutter) {
+          curtainShutter.style.opacity = '0';
+          curtainShutter.style.clipPath = 'none';
+        }
+        if (curtainTop) curtainTop.style.opacity = '0';
+        if (curtainBottom) curtainBottom.style.opacity = '0';
+
+      } else if (progress >= 0.26 && progress < 0.48) {
+        // Transition 1: Shutter sweeps down over P0, swaps, then sweeps down unveiling P1
+        const t = (progress - 0.26) / 0.22; // 0 to 1
+        activeStep = t >= 0.5 ? 1 : 0;
+
+        if (curtainShutter && curtainTop && curtainBottom) {
+          curtainShutter.style.opacity = '1';
+
+          if (t < 0.5) {
+            // Phase A: Curtain sweeps DOWN to cover P0
+            const tau = t / 0.5; // 0 to 1
+            curtainShutter.style.clipPath = `inset(0 0 ${((1 - tau) * 100).toFixed(2)}% 0)`;
+            curtainBottom.style.opacity = '1';
+            curtainTop.style.opacity = '0';
+
+            p0.style.opacity = '1';
+            p0.style.visibility = 'visible';
+            p0.style.pointerEvents = 'none';
+
+            p1.style.opacity = '0';
+            p1.style.visibility = 'hidden';
+            p1.style.pointerEvents = 'none';
+
+            p2.style.opacity = '0';
+            p2.style.visibility = 'hidden';
+            p2.style.pointerEvents = 'none';
+          } else {
+            // Phase B: Curtain rolls DOWN to unveil P1
+            const tau = (t - 0.5) / 0.5; // 0 to 1
+            curtainShutter.style.clipPath = `inset(${(tau * 100).toFixed(2)}% 0 0 0)`;
+            curtainBottom.style.opacity = '0';
+            curtainTop.style.opacity = '1';
+
+            p0.style.opacity = '0';
+            p0.style.visibility = 'hidden';
+            p0.style.pointerEvents = 'none';
+
+            p1.style.opacity = '1';
+            p1.style.visibility = 'visible';
+            p1.style.pointerEvents = 'none';
+
+            p2.style.opacity = '0';
+            p2.style.visibility = 'hidden';
+            p2.style.pointerEvents = 'none';
+          }
+        }
+
+      } else if (progress >= 0.48 && progress < 0.74) {
+        // Zone 1: Principle 02 Settled
+        activeStep = 1;
+
+        p0.style.opacity = '0';
+        p0.style.visibility = 'hidden';
+        p0.style.pointerEvents = 'none';
+        p0.style.zIndex = '1';
+
+        p1.style.opacity = '1';
+        p1.style.transform = 'translateY(0)';
+        p1.style.zIndex = '10';
+        p1.style.visibility = 'visible';
+        p1.style.pointerEvents = 'auto';
+
+        p2.style.opacity = '0';
+        p2.style.visibility = 'hidden';
+        p2.style.pointerEvents = 'none';
+        p2.style.zIndex = '1';
+
+        if (curtainShutter) {
+          curtainShutter.style.opacity = '0';
+          curtainShutter.style.clipPath = 'none';
+        }
+        if (curtainTop) curtainTop.style.opacity = '0';
+        if (curtainBottom) curtainBottom.style.opacity = '0';
+
+      } else if (progress >= 0.74 && progress < 0.94) {
+        // Transition 2: Shutter sweeps down over P1, swaps, then sweeps down unveiling P2
+        const t = (progress - 0.74) / 0.20; // 0 to 1
+        activeStep = t >= 0.5 ? 2 : 1;
+
+        if (curtainShutter && curtainTop && curtainBottom) {
+          curtainShutter.style.opacity = '1';
+
+          if (t < 0.5) {
+            // Phase A: Curtain sweeps DOWN to cover P1
+            const tau = t / 0.5; // 0 to 1
+            curtainShutter.style.clipPath = `inset(0 0 ${((1 - tau) * 100).toFixed(2)}% 0)`;
+            curtainBottom.style.opacity = '1';
+            curtainTop.style.opacity = '0';
+
+            p0.style.opacity = '0';
+            p0.style.visibility = 'hidden';
+            p0.style.pointerEvents = 'none';
+
+            p1.style.opacity = '1';
+            p1.style.visibility = 'visible';
+            p1.style.pointerEvents = 'none';
+
+            p2.style.opacity = '0';
+            p2.style.visibility = 'hidden';
+            p2.style.pointerEvents = 'none';
+          } else {
+            // Phase B: Curtain rolls DOWN to unveil P2
+            const tau = (t - 0.5) / 0.5; // 0 to 1
+            curtainShutter.style.clipPath = `inset(${(tau * 100).toFixed(2)}% 0 0 0)`;
+            curtainBottom.style.opacity = '0';
+            curtainTop.style.opacity = '1';
+
+            p0.style.opacity = '0';
+            p0.style.visibility = 'hidden';
+            p0.style.pointerEvents = 'none';
+
+            p1.style.opacity = '0';
+            p1.style.visibility = 'hidden';
+            p1.style.pointerEvents = 'none';
+
+            p2.style.opacity = '1';
+            p2.style.visibility = 'visible';
+            p2.style.pointerEvents = 'none';
+          }
+        }
+
+      } else {
+        // Zone 2: Principle 03 Settled (progress >= 0.94)
+        activeStep = 2;
+
+        p0.style.opacity = '0';
+        p0.style.visibility = 'hidden';
+        p0.style.pointerEvents = 'none';
+        p0.style.zIndex = '1';
+
+        p1.style.opacity = '0';
+        p1.style.visibility = 'hidden';
+        p1.style.pointerEvents = 'none';
+        p1.style.zIndex = '1';
+
+        p2.style.opacity = '1';
+        p2.style.transform = 'translateY(0)';
+        p2.style.zIndex = '10';
+        p2.style.visibility = 'visible';
+        p2.style.pointerEvents = 'auto';
+
+        if (curtainShutter) {
+          curtainShutter.style.opacity = '0';
+          curtainShutter.style.clipPath = 'none';
+        }
+        if (curtainTop) curtainTop.style.opacity = '0';
+        if (curtainBottom) curtainBottom.style.opacity = '0';
+      }
+
+      // Update Active Navigation Step and Telemetry if step changed
+      if (activeStep !== currentStepIndex) {
+        if (shouldPlaySound) playStepSound(activeStep);
+        currentStepIndex = activeStep;
+        updateStepUI(activeStep);
+      }
     }
 
     // Direct Click Stepper Handler (Hybrid Navigation with Smooth Alignment)
     stepBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         const targetIdx = parseInt(btn.dataset.stepIndex || '0', 10);
-        if (targetIdx === currentStepIndex) return;
+        if (targetIdx === currentStepIndex && !isManualClickLock) return;
 
         isManualClickLock = true;
         if (manualLockTimeout) clearTimeout(manualLockTimeout);
         manualLockTimeout = setTimeout(() => {
           isManualClickLock = false;
-        }, 750);
+        }, 700);
 
-        setActivePrinciple(targetIdx, true);
+        playStepSound(targetIdx);
+        updateStepUI(targetIdx);
 
-        // On desktop, smoothly sync scroll position inside the sticky track
         if (window.innerWidth >= 1024 && section) {
           const sectionTop = section.getBoundingClientRect().top + window.scrollY;
           const sectionHeight = section.offsetHeight;
           const maxScroll = sectionHeight - window.innerHeight;
-          const targetProgress = targetIdx === 0 ? 0.08 : targetIdx === 1 ? 0.50 : 0.92;
+          // Step 0 -> 0.13, Step 1 -> 0.61, Step 2 -> 0.97
+          const targetProgress = targetIdx === 0 ? 0.13 : targetIdx === 1 ? 0.61 : 0.97;
           const targetScrollY = sectionTop + targetProgress * maxScroll;
 
           window.scrollTo({
             top: targetScrollY,
             behavior: 'smooth',
           });
+        } else {
+          setActivePrincipleMobile(targetIdx);
         }
       });
     });
 
-    // Desktop Scroll-Driven Observer with RAF and Hysteresis Deadbands
+    // Desktop Scroll-Driven Observer with RAF and 1:1 Scrub
     function checkScrollProgress(shouldPlaySound = true) {
-      if (!section || isManualClickLock || window.innerWidth < 1024) return;
+      if (!section || window.innerWidth < 1024) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       const rect = section.getBoundingClientRect();
       const sectionHeight = section.offsetHeight;
       const viewportHeight = window.innerHeight;
 
+      // Only perform work when section is in or near viewport
+      if (rect.bottom < -200 || rect.top > viewportHeight + 200) return;
+
       // Scrolled distance within section track
       const scrolled = -rect.top;
       const maxScroll = sectionHeight - viewportHeight;
+      if (maxScroll <= 0) return;
 
-      if (scrolled >= -20 && scrolled <= maxScroll + 20) {
-        const progress = Math.max(0, Math.min(1, scrolled / maxScroll));
-
-        // Hysteresis deadband thresholds to prevent edge jitter
-        let targetStep = currentStepIndex;
-        if (currentStepIndex === 0) {
-          if (progress > 0.38) targetStep = 1;
-        } else if (currentStepIndex === 1) {
-          if (progress < 0.28) targetStep = 0;
-          else if (progress > 0.72) targetStep = 2;
-        } else if (currentStepIndex === 2) {
-          if (progress < 0.62) targetStep = 1;
-        }
-
-        if (targetStep !== currentStepIndex) {
-          setActivePrinciple(targetStep, shouldPlaySound);
-        }
-      }
+      const progress = Math.max(0, Math.min(1, scrolled / maxScroll));
+      updateScrubState(progress, shouldPlaySound);
     }
 
     function handleScroll() {
@@ -782,8 +990,13 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Initial check on page load to align with initial scroll position
-    checkScrollProgress(false);
+    // Initial alignment on mount: enforce clean starting state then sync to scroll
+    if (window.innerWidth >= 1024) {
+      updateScrubState(0, false);
+      checkScrollProgress(false);
+    } else {
+      setActivePrincipleMobile(0);
+    }
 
     // =======================================================================
     // SIMULATOR 01: ZERO DATA LEAKAGE (TIMELINE RANGE SCRUBBER)

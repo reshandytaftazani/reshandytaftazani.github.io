@@ -290,7 +290,7 @@ const defaultDomain = skillDomains[0]; // LANG
       <span class="hidden sm:inline-block font-mono text-[11px] text-neutral-dark">
         PROJECTION: <span class="text-accent font-semibold">TABBED_SPLIT_MATRIX</span>
       </span>
-      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-mono bg-neutral-900 border border-grid-line-dark text-neutral-dark uppercase">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-mono bg-neutral-900 border border-grid-line-dark text-neutral-dark uppercase">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
         REACTIVE_PROBE
       </span>
@@ -337,12 +337,12 @@ const defaultDomain = skillDomains[0]; // LANG
 
               <div class="flex items-center justify-between w-full">
                 <span class="tab-code font-bold tracking-wider">[{domain.index}] {domain.code}</span>
-                <span class="tab-dot text-accent text-[9px] font-bold">
+                <span class="tab-dot text-accent text-[11px] font-bold">
                   {isDefaultTab ? '●' : '○'}
                 </span>
               </div>
               
-              <div class="mt-1 flex items-center justify-between text-[9px] font-mono">
+              <div class="mt-1 flex items-center justify-between text-[11px] font-mono">
                 <span class="tab-tagline text-neutral-dark uppercase tracking-wider truncate">
                   {domain.tagline}
                 </span>
@@ -353,7 +353,7 @@ const defaultDomain = skillDomains[0]; // LANG
       </div>
 
       <!-- TAB PANELS CONTAINER -->
-      <div class="tab-panels-container relative flex flex-col">
+      <div class="tab-panels-container relative flex flex-col transition-[min-height] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]">
         {skillDomains.map((domain, domainIdx) => {
           const isDefaultTab = domainIdx === 0;
           return (
@@ -379,7 +379,7 @@ const defaultDomain = skillDomains[0]; // LANG
                     {domain.category}
                   </h3>
                 </div>
-                <span class="text-[10px] font-mono uppercase px-2 py-0.5 bg-card-dark text-accent border border-grid-line-dark font-semibold self-start sm:self-auto">
+                <span class="text-xs font-mono uppercase px-2 py-0.5 bg-card-dark text-accent border border-grid-line-dark font-semibold self-start sm:self-auto">
                   STATUS: {domain.badge}
                 </span>
               </div>
@@ -438,7 +438,7 @@ const defaultDomain = skillDomains[0]; // LANG
 
                         <!-- Right Indicator Glyph -->
                         <div class="flex items-center gap-2 shrink-0 font-mono text-[11px]">
-                          <span class="hidden md:inline-block text-[10px] text-neutral-dark group-hover/row-container:text-accent uppercase tracking-wider font-semibold">
+                          <span class="hidden md:inline-block text-[11px] text-neutral-dark group-hover/row-container:text-accent uppercase tracking-wider font-semibold">
                             {skill.categoryClass}
                           </span>
                           <span class="row-glyph text-accent font-bold transition-transform duration-150 group-hover/row-container:translate-x-0.5">
@@ -461,17 +461,17 @@ const defaultDomain = skillDomains[0]; // LANG
                         <div class="space-y-3.5 font-mono text-[11px]">
                           <!-- Header Badge -->
                           <div class="flex items-center justify-between pb-2 border-b border-grid-line-dark/60">
-                            <span class="text-[10px] uppercase text-neutral-dark font-semibold">
+                            <span class="text-xs uppercase text-neutral-dark font-semibold">
                               TELEMETRY_PROBE // [{skill.name}]
                             </span>
-                            <span class="text-[10px] px-2 py-0.5 bg-neutral-900 border border-neutral-700 text-accent font-bold uppercase">
+                            <span class="text-xs px-2 py-0.5 bg-neutral-900 border border-neutral-700 text-accent font-bold uppercase">
                               {skill.categoryClass}
                             </span>
                           </div>
 
                           <!-- System Invariant -->
                           <div>
-                            <div class="text-[9px] uppercase text-neutral-dark tracking-wider mb-1 font-semibold">
+                            <div class="text-[11px] uppercase text-neutral-dark tracking-wider mb-1 font-semibold">
                               // SYSTEM_INVARIANT:
                             </div>
                             <p class="text-neutral font-sans text-body leading-relaxed">
@@ -481,10 +481,10 @@ const defaultDomain = skillDomains[0]; // LANG
 
                           <!-- Production Telemetry -->
                           <div>
-                            <div class="text-[9px] uppercase text-neutral-dark tracking-wider mb-1 font-semibold">
+                            <div class="text-[11px] uppercase text-neutral-dark tracking-wider mb-1 font-semibold">
                               // PRODUCTION_TELEMETRY:
                             </div>
-                            <div class="bg-neutral-950 p-2.5 border border-grid-line-dark text-neutral-200 text-[10px]">
+                            <div class="bg-neutral-950 p-2.5 border border-grid-line-dark text-neutral-200 text-xs">
                               {skill.productionTelemetry}
                             </div>
                           </div>
@@ -496,7 +496,7 @@ const defaultDomain = skillDomains[0]; // LANG
                               class="w-full flex items-center justify-between px-3 py-2 bg-neutral-900 hover:bg-accent text-foreground hover:text-black border border-grid-line-dark hover:border-accent text-[11px] font-bold tracking-wider transition-colors duration-150"
                             >
                               <span class="text-accent group-hover:text-black">[{skill.blueprintLabel}]</span>
-                              <span class="text-[10px]">BLUEPRINT ↗</span>
+                              <span class="text-[11px]">BLUEPRINT ↗</span>
                             </a>
                           </div>
                         </div>
@@ -522,7 +522,7 @@ const defaultDomain = skillDomains[0]; // LANG
         style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);"
       >
         <!-- Inspector Top Telemetry Bar -->
-        <div class="flex items-center justify-between font-mono text-[10px] text-neutral-dark border-b border-grid-line-dark pb-3 select-none">
+        <div class="flex items-center justify-between font-mono text-xs text-neutral-dark border-b border-grid-line-dark pb-3 select-none">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span class="text-foreground font-bold tracking-wider">[INSPECTOR // LIVE_PROBE]</span>
@@ -535,12 +535,12 @@ const defaultDomain = skillDomains[0]; // LANG
         <!-- Selected Parameter Name & Class -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <span class="font-mono text-[10px] uppercase text-neutral-dark tracking-wider select-none">
+            <span class="font-mono text-xs uppercase text-neutral-dark tracking-wider select-none">
               PARAMETER_NAME:
             </span>
             <span 
               id="inspector-category-class" 
-              class="font-mono text-[10px] px-2 py-0.5 bg-neutral-900 border border-neutral-700 text-accent font-bold uppercase tracking-wider transition-all duration-150"
+              class="font-mono text-xs px-2 py-0.5 bg-neutral-900 border border-neutral-700 text-accent font-bold uppercase tracking-wider transition-all duration-150"
             >
               {defaultSkill.categoryClass}
             </span>
@@ -556,9 +556,9 @@ const defaultDomain = skillDomains[0]; // LANG
 
         <!-- Architectural System Invariant -->
         <div class="space-y-2 pt-4 border-t border-grid-line-dark">
-          <div class="font-mono text-[10px] uppercase text-neutral-dark tracking-wider select-none flex items-center justify-between">
+          <div class="font-mono text-xs uppercase text-neutral-dark tracking-wider select-none flex items-center justify-between">
             <span>// SYSTEM_INVARIANT:</span>
-            <span class="text-accent text-[9px]">ARCHITECTURAL_ROLE</span>
+            <span class="text-accent text-[11px]">ARCHITECTURAL_ROLE</span>
           </div>
           <p 
             id="inspector-system-invariant" 
@@ -570,9 +570,9 @@ const defaultDomain = skillDomains[0]; // LANG
 
         <!-- Production Telemetry & Real-World Benchmark -->
         <div class="space-y-2 pt-4 border-t border-grid-line-dark">
-          <div class="font-mono text-[10px] uppercase text-neutral-dark tracking-wider select-none flex items-center justify-between">
+          <div class="font-mono text-xs uppercase text-neutral-dark tracking-wider select-none flex items-center justify-between">
             <span>// PRODUCTION_TELEMETRY:</span>
-            <span class="text-emerald-400 text-[9px]">SLA_VERIFIED ✓</span>
+            <span class="text-emerald-400 text-[11px]">SLA_VERIFIED ✓</span>
           </div>
           <div class="bg-black p-3.5 border border-grid-line-dark font-mono text-[11px] space-y-2">
             <div 
@@ -591,7 +591,7 @@ const defaultDomain = skillDomains[0]; // LANG
 
         <!-- Integrated Blueprint Link -->
         <div class="pt-4 border-t border-grid-line-dark">
-          <div class="font-mono text-[10px] uppercase text-neutral-dark tracking-wider mb-2 select-none">
+          <div class="font-mono text-xs uppercase text-neutral-dark tracking-wider mb-2 select-none">
             // INTEGRATED_BLUEPRINT:
           </div>
           <a 
@@ -611,7 +611,7 @@ const defaultDomain = skillDomains[0]; // LANG
         </div>
 
         <!-- Subtle Hardware/Bus Telemetry Stamp -->
-        <div class="pt-2 flex items-center justify-between font-mono text-[9px] text-neutral-dark border-t border-grid-line-dark/40 select-none">
+        <div class="pt-2 flex items-center justify-between font-mono text-[11px] text-neutral-dark border-t border-grid-line-dark/40 select-none">
           <span id="inspector-bus-channel">BUS: /DEV/SHM // PROTO: IPC_RING</span>
           <span>LATENCY: &lt; 0.12ms</span>
         </div>
@@ -637,6 +637,26 @@ const defaultDomain = skillDomains[0]; // LANG
     }
   }
 
+  @keyframes tabExitFade {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  .domain-tab-panel.is-exiting {
+    position: absolute;
+    inset-x: 0;
+    top: 0;
+    z-index: 20;
+    pointer-events: none;
+    animation: tabExitFade 160ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
   @keyframes scanlineSweep {
     0% {
       top: 0%;
@@ -657,7 +677,7 @@ const defaultDomain = skillDomains[0]; // LANG
       box-shadow: 0 0 25px rgba(255, 69, 0, 0.28);
     }
     100% {
-      border-color: #1a1a1a;
+      border-color: #262626;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
   }
@@ -704,9 +724,13 @@ const defaultDomain = skillDomains[0]; // LANG
     .domain-tab-panel.is-entering .domain-desc-block,
     .domain-tab-panel.is-entering .skill-row-container,
     .domain-tab-panel.is-entering .panel-scanline-laser,
+    .domain-tab-panel.is-exiting,
     #desktop-inspector-panel.is-syncing {
       animation: none !important;
       transform: none !important;
+    }
+    .domain-tab-panel.is-exiting {
+      display: none !important;
     }
   }
 </style>
@@ -737,6 +761,7 @@ const defaultDomain = skillDomains[0]; // LANG
     let currentActiveId = 'python';
     let currentActiveTab = 'LANG';
     let lastAudioTime = 0;
+    let activeExitTimeout: ReturnType<typeof setTimeout> | null = null;
 
     function playDebouncedClick(freq = 1100) {
       const now = performance.now();
@@ -747,17 +772,31 @@ const defaultDomain = skillDomains[0]; // LANG
       }
     }
 
-    function animateValueChange(element: HTMLElement | null, newText: string) {
+    function animateValueChange(element: HTMLElement | null, newText: string, duration = 180) {
       if (!element || element.textContent === newText) return;
-      element.textContent = newText;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      element.animate(
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        element.textContent = newText;
+        return;
+      }
+      const halfDur = Math.round(duration * 0.45);
+      const secondHalf = duration - halfDur;
+      const anim = element.animate(
         [
-          { opacity: 0.45, transform: 'translateY(3px)' },
-          { opacity: 1, transform: 'translateY(0)' }
+          { opacity: 1, transform: 'translateY(0)' },
+          { opacity: 0.15, transform: 'translateY(-2px)' }
         ],
-        { duration: 150, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+        { duration: halfDur, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
       );
+      anim.onfinish = () => {
+        element.textContent = newText;
+        element.animate(
+          [
+            { opacity: 0.15, transform: 'translateY(3px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ],
+          { duration: secondHalf, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+        );
+      };
     }
 
     function setActiveSkill(targetRow: HTMLButtonElement, shouldPlaySound = true) {
@@ -836,35 +875,66 @@ const defaultDomain = skillDomains[0]; // LANG
         }
       });
 
-      // Update Tab Panels with Staggered Slide & Laser Sweep
-      tabPanels.forEach((panel) => {
-        const isTarget = panel.dataset.tabPanel === targetCode;
-        if (isTarget) {
-          panel.classList.remove('hidden');
-          panel.classList.add('flex');
-
-          // Trigger entrance animation & laser sweep by reflowing DOM
-          panel.classList.remove('is-entering');
-          void panel.offsetWidth; // Force reflow
-          panel.classList.add('is-entering');
-
-          // Flash sync pulse on desktop inspector
-          if (desktopInspector) {
-            desktopInspector.classList.remove('is-syncing');
-            void desktopInspector.offsetWidth; // Force reflow
-            desktopInspector.classList.add('is-syncing');
+      // Clear any pending exit timeout and clean up previous exiting panels
+      if (activeExitTimeout) {
+        clearTimeout(activeExitTimeout);
+        activeExitTimeout = null;
+        tabPanels.forEach((p) => {
+          if (p.classList.contains('is-exiting')) {
+            p.classList.add('hidden');
+            p.classList.remove('flex', 'is-exiting');
           }
+        });
+      }
 
-          // Automatically select the first skill in the newly active tab
-          const firstRow = panel.querySelector<HTMLButtonElement>('.skill-row');
-          if (firstRow) {
-            setActiveSkill(firstRow, false);
+      const panelsContainer = document.querySelector<HTMLElement>('.tab-panels-container');
+      const currentPanel = document.querySelector<HTMLElement>('.domain-tab-panel:not(.hidden)');
+      const targetPanel = document.querySelector<HTMLElement>(`[data-tab-panel="${targetCode}"]`);
+
+      if (!targetPanel) return;
+
+      // Lock container height during transition to avoid sudden layout jumping
+      if (panelsContainer && currentPanel) {
+        const currentHeight = currentPanel.offsetHeight;
+        panelsContainer.style.minHeight = `${currentHeight}px`;
+      }
+
+      // Handle Outgoing Panel Graceful Exit
+      if (currentPanel && currentPanel !== targetPanel) {
+        currentPanel.classList.remove('is-entering');
+        currentPanel.classList.add('is-exiting');
+
+        activeExitTimeout = setTimeout(() => {
+          currentPanel.classList.add('hidden');
+          currentPanel.classList.remove('flex', 'is-exiting');
+          if (panelsContainer) {
+            panelsContainer.style.minHeight = '';
           }
-        } else {
-          panel.classList.add('hidden');
-          panel.classList.remove('flex', 'is-entering');
-        }
-      });
+          activeExitTimeout = null;
+        }, 160);
+      }
+
+      // Handle Incoming Panel Entrance
+      targetPanel.classList.remove('hidden', 'is-exiting');
+      targetPanel.classList.add('flex');
+
+      // Trigger entrance animation & laser sweep by reflowing DOM
+      targetPanel.classList.remove('is-entering');
+      void targetPanel.offsetWidth; // Force reflow
+      targetPanel.classList.add('is-entering');
+
+      // Flash sync pulse on desktop inspector
+      if (desktopInspector) {
+        desktopInspector.classList.remove('is-syncing');
+        void desktopInspector.offsetWidth; // Force reflow
+        desktopInspector.classList.add('is-syncing');
+      }
+
+      // Automatically select the first skill in the newly active tab
+      const firstRow = targetPanel.querySelector<HTMLButtonElement>('.skill-row');
+      if (firstRow) {
+        setActiveSkill(firstRow, false);
+      }
 
       // Reset any open mobile accordions in newly switched tab
       accordions.forEach((acc) => {
