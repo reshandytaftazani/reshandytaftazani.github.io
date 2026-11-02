@@ -78,10 +78,10 @@ const principlesData = [
       </div>
 
       <div class="flex items-center gap-4">
-        <span class="hidden sm:inline-block font-mono text-[11px] text-neutral-dark">
+        <span class="hidden sm:inline-block font-mono text-xs text-neutral-400">
           STAGE_TELEMETRY: <span id="principles-active-tag" class="text-accent font-semibold">TEMPORAL_INTEGRITY</span>
         </span>
-        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-mono bg-neutral-900 border border-grid-line-dark text-neutral-dark uppercase">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono bg-neutral-900 border border-grid-line-dark text-neutral-300 font-semibold uppercase">
           <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
           <span id="principles-step-counter">01 / 03</span>
         </span>
@@ -91,7 +91,7 @@ const principlesData = [
     <!-- HYBRID STEPPER NAVIGATION (Direct Jump Buttons & Visual Progress Gauge) -->
     <div class="mt-4 flex flex-col space-y-1.5">
       <div 
-        class="grid grid-cols-3 border border-grid-line-dark bg-card-dark divide-x divide-grid-line-dark font-mono text-[11px]" 
+        class="grid grid-cols-3 border border-grid-line-dark bg-card-dark divide-x divide-grid-line-dark font-mono text-xs sm:text-sm" 
         role="tablist" 
         aria-label="Engineering principles navigation steps"
       >
@@ -120,12 +120,12 @@ const principlesData = [
 
               <div class="flex items-center gap-2 min-w-0">
                 <span class="step-num font-bold text-accent">P-[{p.step}]</span>
-                <span class="step-label hidden sm:inline-block font-bold text-[10px] truncate">
+                <span class="step-label hidden sm:inline-block font-bold text-xs truncate">
                   {p.tag}
                 </span>
               </div>
 
-              <span class="step-dot text-accent text-[9px] font-bold">
+              <span class="step-dot text-accent text-xs font-bold">
                 {isInitial ? '●' : '○'}
               </span>
             </button>
@@ -137,7 +137,7 @@ const principlesData = [
       <div class="w-full h-[2px] bg-neutral-900 overflow-hidden relative" aria-hidden="true">
         <div 
           id="principles-progress-bar" 
-          class="h-full bg-accent transition-all duration-200"
+          class="h-full bg-accent transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)]"
           style="width: 33.333%;"
         ></div>
       </div>
@@ -158,27 +158,28 @@ const principlesData = [
         aria-hidden="true"
       ></div>
 
-      <!-- 3 Principles Content Panels (Grid-based, Only Active is Displayed) -->
-      {principlesData.map((p, idx) => {
-        const isDefault = idx === 0;
-        return (
-          <div 
-            id={`principle-panel-${idx + 1}`}
-            class={`principle-panel w-full grid-cols-12 gap-6 lg:gap-8 items-start transition-opacity duration-150 ${
-              isDefault ? 'grid is-active' : 'hidden'
-            }`}
-            data-panel-index={idx}
-          >
+      <!-- 3 Principles Content Panels (Stacked in same Grid cell for silky cross-fade) -->
+      <div id="principles-panels-container" class="principles-panels-stack relative w-full">
+        {principlesData.map((p, idx) => {
+          const isDefault = idx === 0;
+          return (
+            <div 
+              id={`principle-panel-${idx + 1}`}
+              class={`principle-panel w-full grid grid-cols-12 gap-6 lg:gap-8 items-start ${
+                isDefault ? 'is-active' : 'is-inactive from-below'
+              }`}
+              data-panel-index={idx}
+            >
             
             <!-- SISI KIRI (5 KOLOM): ARCHITECTURAL IDENTITY & PROOF HOOKS -->
             <div class="w-full col-span-12 lg:col-span-5 flex flex-col justify-between space-y-4">
               <div class="space-y-3">
                 <!-- Tag Header -->
                 <div class="flex items-center justify-between font-mono text-caption text-neutral-dark border-b border-grid-line-dark pb-2">
-                  <span class="text-foreground font-bold font-mono text-[13px]">
+                  <span class="text-foreground font-bold font-mono text-sm">
                     PRINCIPLE <span class="text-accent">P-[{p.step}]</span>
                   </span>
-                  <span class="uppercase tracking-wider text-accent font-semibold text-[10px]">
+                  <span class="uppercase tracking-wider text-accent font-semibold text-xs">
                     {p.tag}
                   </span>
                 </div>
@@ -188,16 +189,16 @@ const principlesData = [
                   <h3 class="text-[1.25rem] lg:text-[1.4rem] font-bold tracking-tight text-foreground leading-tight">
                     {p.title}
                   </h3>
-                  <p class="text-[12px] sm:text-[13px] text-neutral leading-relaxed mt-2">
+                  <p class="text-[13px] sm:text-sm text-neutral-300 leading-relaxed mt-2">
                     {p.description}
                   </p>
                 </div>
 
                 <!-- Invariant Bullets -->
-                <ul class="space-y-1.5 pt-2 border-t border-grid-line-dark text-[11px] sm:text-[12px] text-neutral">
+                <ul class="space-y-2 pt-2 border-t border-grid-line-dark text-xs sm:text-[13px] text-neutral-300">
                   {p.bullets.map((bullet) => (
                     <li class="flex items-start gap-2">
-                      <span class="text-accent font-bold mt-0.5 select-none text-[11px]">•</span>
+                      <span class="text-accent font-bold mt-0.5 select-none text-xs">•</span>
                       <span class="leading-snug">{bullet}</span>
                     </li>
                   ))}
@@ -205,21 +206,21 @@ const principlesData = [
               </div>
 
               <!-- Verified Case Study & Technical Notes Hooks -->
-              <div class="pt-3 border-t border-grid-line-dark space-y-1.5 font-mono text-[10px]">
-                <div class="text-[9px] uppercase text-neutral-dark tracking-wider select-none font-semibold">
+              <div class="pt-3 border-t border-grid-line-dark space-y-2 font-mono text-xs">
+                <div class="text-xs uppercase text-neutral-400 tracking-wider select-none font-semibold">
                   // VERIFIED_IMPLEMENTATION_PROOF:
                 </div>
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   <a 
                     href={p.noteUrl}
-                    class="flex-1 flex items-center justify-between px-2.5 py-1.5 bg-black hover:bg-neutral-900 border border-grid-line-dark hover:border-accent text-neutral-200 hover:text-white transition-colors duration-150"
+                    class="flex-1 flex items-center justify-between px-3 py-2 bg-black hover:bg-neutral-900 border border-grid-line-dark hover:border-accent text-neutral-200 hover:text-white font-semibold transition-colors duration-150"
                   >
                     <span class="truncate">{p.noteLabel}</span>
-                    <span class="text-accent text-[10px]">↗</span>
+                    <span class="text-accent text-xs">↗</span>
                   </a>
                   <a 
                     href={p.projectUrl}
-                    class="flex items-center justify-between px-2.5 py-1.5 bg-black hover:bg-accent border border-grid-line-dark hover:border-accent text-accent hover:text-black font-bold transition-all duration-150"
+                    class="flex items-center justify-between px-3 py-2 bg-black hover:bg-accent border border-grid-line-dark hover:border-accent text-accent hover:text-black font-bold transition-all duration-150"
                   >
                     <span>{p.projectLabel}</span>
                   </a>
@@ -237,27 +238,27 @@ const principlesData = [
                 <div class="space-y-3">
                   <!-- Control Header -->
                   <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
-                    <span class="font-mono text-[9px] sm:text-[10px] uppercase text-neutral-dark font-semibold tracking-wider">
+                    <span class="font-mono text-xs uppercase text-neutral-400 font-semibold tracking-wider">
                       INTERACTIVE_CANVAS // PURGE_EMBARGO_SPLITTER
                     </span>
                     <span 
                       id="p1-status-badge" 
-                      class="font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
+                      class="font-mono text-xs tracking-wider px-2.5 py-1 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
                     >
-                      <span id="p1-badge-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span id="p1-badge-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
                       <span id="p1-badge-text">PASS: ZERO_LEAKAGE (+9d GAP)</span>
                     </span>
                   </div>
 
                   <!-- Scrubber Control Box -->
-                  <div class="bg-black p-3 border border-grid-line-dark space-y-2 font-mono text-[10px]">
-                    <div class="flex items-center justify-between text-neutral-dark text-[9px] uppercase pb-1 border-b border-grid-line-dark/60">
+                  <div class="bg-black p-3.5 border border-grid-line-dark space-y-2.5 font-mono text-xs">
+                    <div class="flex items-center justify-between text-neutral-300 text-xs uppercase pb-1.5 border-b border-grid-line-dark/60 font-semibold">
                       <span>SCRUB TEMPORAL CUTOFF BOUNDARY (t)</span>
-                      <span id="p1-slider-val-label" class="text-accent font-bold">CUTOFF: 2024-03-01 (45%)</span>
+                      <span id="p1-slider-val-label" class="text-accent font-bold text-xs sm:text-[13px]">CUTOFF: 2024-03-01 (45%)</span>
                     </div>
 
                     <!-- Range Slider Input -->
-                    <div class="py-0.5">
+                    <div class="py-1">
                       <input 
                         id="p1-time-slider" 
                         type="range" 
@@ -265,26 +266,26 @@ const principlesData = [
                         max="80" 
                         value="45" 
                         step="1"
-                        class="w-full h-1.5 bg-neutral-800 rounded-none appearance-none cursor-pointer accent-[#ff4500] focus:outline-none"
+                        class="w-full h-2 bg-neutral-800 rounded-none appearance-none cursor-pointer accent-[#ff4500] focus:outline-none"
                         aria-label="Scrub temporal train-validation cutoff timestamp"
                       />
                     </div>
 
                     <!-- Quick Preset Selectors -->
-                    <div class="flex items-center justify-between gap-2 pt-1 border-t border-grid-line-dark/40 text-[9px]">
-                      <span class="text-neutral-dark">PRESETS:</span>
+                    <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-grid-line-dark/40 text-xs">
+                      <span class="text-neutral-400 font-semibold">PRESETS:</span>
                       <div class="flex items-center gap-2">
                         <button 
                           id="p1-btn-preset-purge" 
                           type="button" 
-                          class="py-0.5 px-2 bg-neutral-900 hover:bg-neutral-800 border border-emerald-500/40 text-emerald-400 font-mono tracking-wider transition-colors duration-150 active:scale-[0.98] cursor-pointer"
+                          class="py-1 px-2.5 bg-neutral-900 hover:bg-neutral-800 border border-emerald-500/40 text-emerald-400 font-mono font-semibold tracking-wider transition-colors duration-150 active:scale-[0.98] cursor-pointer"
                         >
                           [STRICT PURGE (9d GAP)]
                         </button>
                         <button 
                           id="p1-btn-preset-leak" 
                           type="button" 
-                          class="py-0.5 px-2 bg-neutral-900 hover:bg-neutral-800 border border-rose-500/40 text-rose-400 font-mono tracking-wider transition-colors duration-150 active:scale-[0.98] cursor-pointer"
+                          class="py-1 px-2.5 bg-neutral-900 hover:bg-neutral-800 border border-rose-500/40 text-rose-400 font-mono font-semibold tracking-wider transition-colors duration-150 active:scale-[0.98] cursor-pointer"
                         >
                           [NAIVE OVERLAP (+5d LEAK)]
                         </button>
@@ -293,43 +294,43 @@ const principlesData = [
                   </div>
 
                   <!-- Wide Timeline Range Visualizer -->
-                  <div class="bg-black p-3 border border-grid-line-dark font-mono text-[10px] space-y-1.5">
-                    <div class="flex items-center justify-between text-neutral-dark text-[9px] uppercase pb-1 border-b border-grid-line-dark/60">
+                  <div class="bg-black p-3.5 border border-grid-line-dark font-mono text-xs space-y-2">
+                    <div class="flex items-center justify-between text-neutral-400 text-xs uppercase pb-1.5 border-b border-grid-line-dark/60 font-semibold">
                       <span>t0: 2024-01-01</span>
-                      <span id="p1-timeline-split-label" class="text-accent font-bold">GAP: +9 DAYS (EMBARGO)</span>
+                      <span id="p1-timeline-split-label" class="text-accent font-bold text-xs sm:text-[13px]">GAP: +9 DAYS (EMBARGO)</span>
                       <span>t_end: 2024-04-30</span>
                     </div>
 
                     <!-- Multi-Bar Visualizer -->
-                    <div class="relative w-full h-7 bg-neutral-900 border border-grid-line-dark flex overflow-hidden">
+                    <div class="relative w-full h-9 bg-neutral-900 border border-grid-line-dark flex overflow-hidden">
                       <div 
                         id="p1-train-bar" 
-                        class="h-full bg-neutral-700 text-foreground flex items-center justify-center font-bold text-[9px] border-r border-background transition-all duration-75"
+                        class="h-full bg-neutral-700 text-foreground flex items-center justify-center font-bold text-xs sm:text-[13px] border-r border-background transition-all duration-75"
                         style="width: 45%;"
                       >
-                        <span id="p1-train-label" class="truncate px-1.5">TRAIN [45%]</span>
+                        <span id="p1-train-label" class="truncate px-2">TRAIN [45%]</span>
                       </div>
 
                       <div 
                         id="p1-embargo-bar" 
-                        class="h-full bg-emerald-950/70 text-emerald-400 border-r border-background flex items-center justify-center font-bold text-[8px] transition-all duration-75"
+                        class="h-full bg-emerald-950/70 text-emerald-400 border-r border-background flex items-center justify-center font-bold text-xs transition-all duration-75"
                         style="width: 10%;"
                       >
-                        <span id="p1-embargo-label" class="truncate px-0.5">GAP 9d</span>
+                        <span id="p1-embargo-label" class="truncate px-1">GAP 9d</span>
                       </div>
 
                       <div 
                         id="p1-eval-bar" 
-                        class="h-full bg-neutral-800 text-neutral flex items-center justify-center font-bold text-[9px] transition-all duration-75"
+                        class="h-full bg-neutral-800 text-neutral-200 flex items-center justify-center font-bold text-xs sm:text-[13px] transition-all duration-75"
                         style="width: 45%;"
                       >
-                        <span id="p1-eval-label" class="truncate px-1.5">EVAL [45%]</span>
+                        <span id="p1-eval-label" class="truncate px-2">EVAL [45%]</span>
                       </div>
                     </div>
 
                     <!-- Live Sample Count Callout -->
-                    <div id="p1-callout" class="flex items-center justify-between text-[10px] text-emerald-400 pt-0.5 transition-colors duration-150">
-                      <span class="flex items-center gap-1 font-mono">
+                    <div id="p1-callout" class="flex items-center justify-between text-xs sm:text-[13px] text-emerald-400 pt-1 font-semibold transition-colors duration-150">
+                      <span class="flex items-center gap-1.5 font-mono">
                         <span id="p1-callout-icon">✓</span>
                         <span id="p1-callout-text">1,420 / 1,420 samples uncontaminated. Point-in-time verified.</span>
                       </span>
@@ -337,12 +338,12 @@ const principlesData = [
                   </div>
 
                   <!-- Live Code Assert Output Console -->
-                  <div class="bg-black p-2.5 border border-grid-line-dark font-mono text-caption text-neutral overflow-x-auto leading-tight">
-                    <div class="text-[9px] text-neutral-dark mb-0.5 select-none flex items-center justify-between">
+                  <div class="bg-black p-3 border border-grid-line-dark font-mono text-neutral-300 overflow-x-auto leading-tight">
+                    <div class="text-xs text-neutral-400 mb-1 select-none flex items-center justify-between font-semibold">
                       <span># LIVE_ASSERTION_MONITOR:</span>
-                      <span id="p1-assert-status" class="text-emerald-400 text-[9px]">ASSERT_PASS ✓</span>
+                      <span id="p1-assert-status" class="text-emerald-400 text-xs font-bold">ASSERT_PASS ✓</span>
                     </div>
-                    <code id="p1-assert-code" class="text-neutral text-[10px] block select-all whitespace-pre font-mono leading-relaxed">assert partition.max_timestamp &lt; eval_window.min_timestamp, \
+                    <code id="p1-assert-code" class="text-neutral-200 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed">assert partition.max_timestamp &lt; eval_window.min_timestamp, \
     "LeakageDetected: lookahead contamination in split"
 # [PASS] 2024-03-01 &lt; 2024-03-10 (+9d temporal gap maintained) ✓</code>
                   </div>
@@ -356,14 +357,14 @@ const principlesData = [
                 <div class="space-y-3">
                   <!-- Control Header -->
                   <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
-                    <span class="font-mono text-[9px] sm:text-[10px] uppercase text-neutral-dark font-semibold tracking-wider">
+                    <span class="font-mono text-xs uppercase text-neutral-400 font-semibold tracking-wider">
                       INTERACTIVE_CANVAS // POSIX_SIGNAL_SUPERVISOR
                     </span>
                     <span 
                       id="p2-status-badge" 
-                      class="font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
+                      class="font-mono text-xs tracking-wider px-2.5 py-1 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
                     >
-                      <span id="p2-badge-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span id="p2-badge-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                       <span id="p2-badge-text">PID 40921: RUNNING (ACTIVE)</span>
                     </span>
                   </div>
@@ -373,60 +374,60 @@ const principlesData = [
                     <button 
                       id="p2-btn-sigterm"
                       type="button"
-                      class="p-2 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                      class="p-2.5 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-xs tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
                     >
-                      <span class="block text-accent font-bold text-[11px]">SIGTERM (15)</span>
-                      <span class="text-[9px] text-neutral-dark block mt-0.5">DRAIN 12/12</span>
+                      <span class="block text-accent font-bold text-xs sm:text-[13px]">SIGTERM (15)</span>
+                      <span class="text-xs text-neutral-300 block mt-0.5">DRAIN 12/12</span>
                     </button>
                     
                     <button 
                       id="p2-btn-sigint"
                       type="button"
-                      class="p-2 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                      class="p-2.5 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-xs tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
                     >
-                      <span class="block text-accent font-bold text-[11px]">SIGINT (2)</span>
-                      <span class="text-[9px] text-neutral-dark block mt-0.5">FLUSH CKPT</span>
+                      <span class="block text-accent font-bold text-xs sm:text-[13px]">SIGINT (2)</span>
+                      <span class="text-xs text-neutral-300 block mt-0.5">FLUSH CKPT</span>
                     </button>
                     
                     <button 
                       id="p2-btn-sigkill"
                       type="button"
-                      class="p-2 bg-black border border-grid-line-dark hover:border-rose-500 text-foreground hover:text-rose-400 font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                      class="p-2.5 bg-black border border-grid-line-dark hover:border-rose-500 text-foreground hover:text-rose-400 font-mono text-xs tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
                     >
-                      <span class="block text-rose-500 font-bold text-[11px]">SIGKILL (9)</span>
-                      <span class="text-[9px] text-neutral-dark block mt-0.5">REAP TEST</span>
+                      <span class="block text-rose-500 font-bold text-xs sm:text-[13px]">SIGKILL (9)</span>
+                      <span class="text-xs text-neutral-300 block mt-0.5">REAP TEST</span>
                     </button>
                   </div>
 
                   <!-- Streaming Terminal Window -->
-                  <div class="bg-black p-3 border border-grid-line-dark font-mono text-[10px] space-y-1.5 min-h-[130px] max-h-[130px] flex flex-col justify-between">
-                    <div class="flex items-center justify-between text-neutral-dark text-[9px] uppercase pb-1 border-b border-grid-line-dark/60 select-none">
+                  <div class="bg-black p-3.5 border border-grid-line-dark font-mono text-xs space-y-2 min-h-[145px] max-h-[145px] flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-neutral-400 text-xs uppercase pb-1.5 border-b border-grid-line-dark/60 select-none font-semibold">
                       <span>TTY: /DEV/PTS/2 // BUS: SHM</span>
                       <span>MEM: 142MB RSS</span>
                       <span id="p2-zombie-count" class="text-emerald-400 font-bold">ZOMBIES: 0</span>
                     </div>
 
-                    <div id="p2-terminal-lines" class="space-y-1 text-[10px] text-neutral overflow-y-auto max-h-[75px] leading-relaxed">
-                      <div class="text-neutral-dark">$ spawn_worker(task=heavy_inference, pid=40921)</div>
+                    <div id="p2-terminal-lines" class="space-y-1 text-xs sm:text-[13px] text-neutral-200 overflow-y-auto max-h-[85px] leading-relaxed">
+                      <div class="text-neutral-400">$ spawn_worker(task=heavy_inference, pid=40921)</div>
                       <div class="text-foreground flex items-center gap-1.5">
                         <span class="text-emerald-400">●</span>
                         <span>[RUNNING] Ingesting inference queue... 12/12 items allocated in memory</span>
                       </div>
-                      <div class="text-neutral-dark">// Ready for OS interrupt chaos injection...</div>
+                      <div class="text-neutral-400">// Ready for OS interrupt chaos injection...</div>
                     </div>
 
-                    <div class="pt-1 border-t border-grid-line-dark/50 flex items-center justify-between text-[9px] text-neutral-dark select-none">
-                      <span id="p2-terminal-status" class="flex items-center gap-1 text-emerald-400">
+                    <div class="pt-1.5 border-t border-grid-line-dark/50 flex items-center justify-between text-xs text-neutral-400 select-none font-semibold">
+                      <span id="p2-terminal-status" class="flex items-center gap-1.5 text-emerald-400 font-bold">
                         <span>●</span> LISTENING FOR SIGNALS
                       </span>
-                      <span id="p2-exit-code" class="text-neutral-dark font-mono">EXIT_CODE: --</span>
+                      <span id="p2-exit-code" class="text-neutral-300 font-mono">EXIT_CODE: --</span>
                     </div>
                   </div>
 
                   <!-- Code contract representation -->
-                  <div class="bg-black p-2 border border-grid-line-dark font-mono text-caption text-neutral overflow-x-auto leading-tight">
-                    <div class="text-[9px] text-neutral-dark mb-0.5 select-none"># DEFENSIVE_SUPERVISOR_TEST:</div>
-                    <code class="text-neutral text-[10px] block select-all whitespace-pre font-mono">def test_worker_interrupt_leaves_no_zombies():
+                  <div class="bg-black p-3 border border-grid-line-dark font-mono text-neutral-300 overflow-x-auto leading-tight">
+                    <div class="text-xs text-neutral-400 mb-1 select-none font-semibold"># DEFENSIVE_SUPERVISOR_TEST:</div>
+                    <code class="text-neutral-200 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed">def test_worker_interrupt_leaves_no_zombies():
     proc = spawn_worker(task=heavy_inference)
     proc.send_signal(signal.SIGINT)
     assert proc.wait(timeout=1.0) == 0</code>
@@ -441,14 +442,14 @@ const principlesData = [
                 <div class="space-y-3">
                   <!-- Control Header -->
                   <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
-                    <span class="font-mono text-[9px] sm:text-[10px] uppercase text-neutral-dark font-semibold tracking-wider">
+                    <span class="font-mono text-xs uppercase text-neutral-400 font-semibold tracking-wider">
                       INTERACTIVE_CANVAS // PYDANTIC_V2_STRICT_CORE
                     </span>
                     <span 
                       id="p3-status-badge" 
-                      class="font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
+                      class="font-mono text-xs tracking-wider px-2.5 py-1 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150"
                     >
-                      <span id="p3-badge-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span id="p3-badge-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
                       <span id="p3-badge-text">PASS: 200_VALIDATED</span>
                     </span>
                   </div>
@@ -458,28 +459,28 @@ const principlesData = [
                     <button 
                       id="p3-btn-extra"
                       type="button"
-                      class="p-2 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                      class="p-2.5 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-xs tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
                     >
-                      <span class="block text-accent font-bold text-[11px]">+ EXTRA_PARAM</span>
-                      <span class="text-[9px] text-neutral-dark block mt-0.5">EXTRA="FORBID"</span>
+                      <span class="block text-accent font-bold text-xs sm:text-[13px]">+ EXTRA_PARAM</span>
+                      <span class="text-xs text-neutral-300 block mt-0.5">EXTRA="FORBID"</span>
                     </button>
                     
                     <button 
                       id="p3-btn-dim"
                       type="button"
-                      class="p-2 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                      class="p-2.5 bg-black border border-grid-line-dark hover:border-accent text-foreground hover:text-white font-mono text-xs tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
                     >
-                      <span class="block text-accent font-bold text-[11px]">+ DIM_MISMATCH</span>
-                      <span class="text-[9px] text-neutral-dark block mt-0.5">64 vs 128 ITEMS</span>
+                      <span class="block text-accent font-bold text-xs sm:text-[13px]">+ DIM_MISMATCH</span>
+                      <span class="text-xs text-neutral-300 block mt-0.5">64 vs 128 ITEMS</span>
                     </button>
                     
                     <button 
                       id="p3-btn-null"
                       type="button"
-                      class="p-2 bg-black border border-grid-line-dark hover:border-rose-500 text-foreground hover:text-rose-400 font-mono text-[10px] tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
+                      class="p-2.5 bg-black border border-grid-line-dark hover:border-rose-500 text-foreground hover:text-rose-400 font-mono text-xs tracking-wider transition-all duration-150 cursor-pointer select-none active:scale-[0.98] text-center"
                     >
-                      <span class="block text-rose-500 font-bold text-[11px]">+ NULL_PAYLOAD</span>
-                      <span class="text-[9px] text-neutral-dark block mt-0.5">STRICT=TRUE</span>
+                      <span class="block text-rose-500 font-bold text-xs sm:text-[13px]">+ NULL_PAYLOAD</span>
+                      <span class="text-xs text-neutral-300 block mt-0.5">STRICT=TRUE</span>
                     </button>
                   </div>
 
@@ -487,33 +488,33 @@ const principlesData = [
                   <button 
                     id="p3-btn-reset"
                     type="button"
-                    class="w-full py-1.5 px-2 bg-neutral-900 hover:bg-neutral-800 border border-grid-line-dark text-neutral-200 hover:text-white font-mono text-[10px] font-bold tracking-wider transition-colors duration-150 active:scale-[0.99] cursor-pointer text-center"
+                    class="w-full py-2 px-3 bg-neutral-900 hover:bg-neutral-800 border border-grid-line-dark text-neutral-200 hover:text-white font-mono text-xs sm:text-[13px] font-bold tracking-wider transition-colors duration-150 active:scale-[0.99] cursor-pointer text-center"
                   >
                     [RESET TO STRICT VALID PAYLOAD (200 OK)]
                   </button>
 
                   <!-- Input Buffer JSON Payload Display -->
-                  <div class="bg-black p-2.5 border border-grid-line-dark font-mono text-[10px] space-y-1">
-                    <div class="flex items-center justify-between text-neutral-dark text-[9px] uppercase pb-0.5 border-b border-grid-line-dark/60 select-none">
+                  <div class="bg-black p-3 border border-grid-line-dark font-mono text-xs space-y-1.5">
+                    <div class="flex items-center justify-between text-neutral-400 text-xs uppercase pb-1 border-b border-grid-line-dark/60 select-none font-semibold">
                       <span>INCOMING_JSON_BUFFER</span>
-                      <span id="p3-payload-type" class="text-accent font-bold">VALID_JSON_SCHEMA</span>
+                      <span id="p3-payload-type" class="text-accent font-bold text-xs sm:text-[13px]">VALID_JSON_SCHEMA</span>
                     </div>
 
-                    <div class="text-[10px] text-neutral overflow-x-auto leading-relaxed">
-                      <pre id="p3-payload-display" class="font-mono whitespace-pre text-neutral-dark">&#123;
+                    <div class="text-xs sm:text-[13px] text-neutral-300 overflow-x-auto leading-relaxed">
+                      <pre id="p3-payload-display" class="font-mono whitespace-pre text-neutral-300">&#123;
   <span id="p3-embeddings-line">"embeddings": [0.182, -0.429, ... 128 items],</span>
-  <span id="p3-extra-line" class="hidden text-rose-400 bg-rose-950/40 px-1 font-bold">"extra_param": "malicious_injection", // [FORBIDDEN]</span>
+  <span id="p3-extra-line" class="hidden text-rose-400 bg-rose-950/40 px-1.5 py-0.5 font-bold">"extra_param": "malicious_injection", // [FORBIDDEN]</span>
 &#125;</pre>
                     </div>
                   </div>
 
                   <!-- Real Pydantic V2 Validation Output -->
-                  <div class="bg-black p-2.5 border border-grid-line-dark font-mono text-caption text-neutral overflow-x-auto leading-tight min-h-[75px]">
-                    <div class="text-[9px] text-neutral-dark mb-0.5 select-none flex items-center justify-between">
+                  <div class="bg-black p-3 border border-grid-line-dark font-mono text-neutral-300 overflow-x-auto leading-tight min-h-[85px]">
+                    <div class="text-xs text-neutral-400 mb-1 select-none flex items-center justify-between font-semibold">
                       <span># PYDANTIC_V2_RUST_CORE_RESPONSE:</span>
-                      <span id="p3-eval-latency" class="text-accent text-[9px]">LATENCY: 0.04ms</span>
+                      <span id="p3-eval-latency" class="text-accent text-xs font-bold font-mono">LATENCY: 0.04ms</span>
                     </div>
-                    <code id="p3-response-code" class="text-emerald-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed">InferenceRequest(embeddings=[128 items])
+                    <code id="p3-response-code" class="text-emerald-400 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed">InferenceRequest(embeddings=[128 items])
 Status: 200 OK — Strict schema verified via Rust core ✓</code>
                   </div>
                 </div>
@@ -523,6 +524,7 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
           </div>
         );
       })}
+      </div>
     </div>
 
   </div>
@@ -533,13 +535,54 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
 <!-- STYLES: SCANLINE LASER & STAGE TRANSITION ANIMATIONS                      -->
 <!-- ========================================================================= -->
 <style>
+  .principles-panels-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    align-items: start;
+    width: 100%;
+  }
+
+  .principle-panel {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    width: 100%;
+    will-change: opacity, transform;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    visibility: hidden;
+    transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0s linear 350ms;
+  }
+
+  .principle-panel.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    z-index: 10;
+    transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0s linear 0s;
+  }
+
+  .principle-panel.is-inactive.from-below {
+    transform: translateY(22px);
+  }
+
+  .principle-panel.is-inactive.from-above {
+    transform: translateY(-22px);
+  }
+
   @keyframes stageScanlineSweep {
     0% {
       top: 0%;
-      opacity: 1;
+      opacity: 0.95;
     }
-    60% {
-      opacity: 0.85;
+    45% {
+      opacity: 0.75;
     }
     100% {
       top: 100%;
@@ -547,30 +590,19 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
     }
   }
 
-  @keyframes stagePanelSlideIn {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .principle-panel.is-active {
-    animation: stagePanelSlideIn 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
   #stage-scanline-laser.is-sweeping {
-    animation: stageScanlineSweep 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: stageScanlineSweep 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .principle-panel,
     .principle-panel.is-active,
+    .principle-panel.is-inactive {
+      transition: none !important;
+      transform: none !important;
+    }
     #stage-scanline-laser.is-sweeping {
       animation: none !important;
-      transform: none !important;
     }
   }
 </style>
@@ -594,6 +626,16 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
     let currentStepIndex = 0;
     let isManualClickLock = false;
     let manualLockTimeout: ReturnType<typeof setTimeout> | null = null;
+    let isTicking = false;
+    let lastAudioTime = 0;
+
+    function playStepSound(stepIdx: number) {
+      const now = performance.now();
+      if (now - lastAudioTime > 120) {
+        playClick(1150 + stepIdx * 80);
+        lastAudioTime = now;
+      }
+    }
 
     function triggerScanline() {
       if (!laser) return;
@@ -606,9 +648,12 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
       if (stepIdx === currentStepIndex && panels[stepIdx]?.classList.contains('is-active')) {
         return;
       }
+      const direction = stepIdx > currentStepIndex ? 'down' : 'up';
+      const prevStepIndex = currentStepIndex;
       currentStepIndex = stepIdx;
+
       if (shouldPlaySound) {
-        playClick(1200 + stepIdx * 100);
+        playStepSound(stepIdx);
       }
       triggerScanline();
 
@@ -633,7 +678,7 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
         }
       });
 
-      // 2. Update Progress Bar & Counters
+      // 2. Update Progress Bar & Counters with smooth ease
       if (progressBar) {
         const pct = ((stepIdx + 1) / 3) * 100;
         progressBar.style.width = `${pct}%`;
@@ -645,35 +690,44 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
         activeTagLabel.textContent = stepTags[stepIdx] || '';
       }
 
-      // 3. Update Panels with Grid Layout
+      // 3. Directional Smooth Panel Transitions (Zero Layout Shift)
       panels.forEach((panel, idx) => {
+        panel.classList.remove('from-below', 'from-above');
         if (idx === stepIdx) {
-          panel.classList.remove('hidden');
-          panel.classList.add('grid', 'is-active');
+          panel.classList.remove('is-inactive');
+          panel.classList.add('is-active');
+        } else if (idx === prevStepIndex) {
+          panel.classList.remove('is-active');
+          panel.classList.add('is-inactive', direction === 'down' ? 'from-above' : 'from-below');
         } else {
-          panel.classList.add('hidden');
-          panel.classList.remove('grid', 'is-active');
+          panel.classList.remove('is-active');
+          panel.classList.add('is-inactive', idx > stepIdx ? 'from-below' : 'from-above');
         }
       });
     }
 
-    // Direct Click Stepper Handler (Hybrid Navigation)
+    // Direct Click Stepper Handler (Hybrid Navigation with Smooth Alignment)
     stepBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         const targetIdx = parseInt(btn.dataset.stepIndex || '0', 10);
+        if (targetIdx === currentStepIndex) return;
+
         isManualClickLock = true;
         if (manualLockTimeout) clearTimeout(manualLockTimeout);
         manualLockTimeout = setTimeout(() => {
           isManualClickLock = false;
-        }, 700);
+        }, 750);
 
         setActivePrinciple(targetIdx, true);
 
-        // On desktop, also sync scroll position inside the track
+        // On desktop, smoothly sync scroll position inside the sticky track
         if (window.innerWidth >= 1024 && section) {
           const sectionTop = section.getBoundingClientRect().top + window.scrollY;
           const sectionHeight = section.offsetHeight;
-          const targetScrollY = sectionTop + (targetIdx / 3) * (sectionHeight - window.innerHeight * 0.7);
+          const maxScroll = sectionHeight - window.innerHeight;
+          const targetProgress = targetIdx === 0 ? 0.08 : targetIdx === 1 ? 0.50 : 0.92;
+          const targetScrollY = sectionTop + targetProgress * maxScroll;
+
           window.scrollTo({
             top: targetScrollY,
             behavior: 'smooth',
@@ -682,33 +736,54 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
       });
     });
 
-    // Desktop Scroll-Driven Observer
-    function handleScroll() {
-      if (window.innerWidth < 1024 || !section || isManualClickLock) return;
+    // Desktop Scroll-Driven Observer with RAF and Hysteresis Deadbands
+    function checkScrollProgress(shouldPlaySound = true) {
+      if (!section || isManualClickLock || window.innerWidth < 1024) return;
 
       const rect = section.getBoundingClientRect();
       const sectionHeight = section.offsetHeight;
       const viewportHeight = window.innerHeight;
 
-      // Calculate scroll progress within section track (0 to 1)
+      // Scrolled distance within section track
       const scrolled = -rect.top;
       const maxScroll = sectionHeight - viewportHeight;
 
-      if (scrolled >= 0 && scrolled <= maxScroll) {
-        const progress = scrolled / maxScroll;
-        let step = 0;
-        if (progress > 0.66) {
-          step = 2;
-        } else if (progress > 0.33) {
-          step = 1;
+      if (scrolled >= -20 && scrolled <= maxScroll + 20) {
+        const progress = Math.max(0, Math.min(1, scrolled / maxScroll));
+
+        // Hysteresis deadband thresholds to prevent edge jitter
+        let targetStep = currentStepIndex;
+        if (currentStepIndex === 0) {
+          if (progress > 0.38) targetStep = 1;
+        } else if (currentStepIndex === 1) {
+          if (progress < 0.28) targetStep = 0;
+          else if (progress > 0.72) targetStep = 2;
+        } else if (currentStepIndex === 2) {
+          if (progress < 0.62) targetStep = 1;
         }
-        if (step !== currentStepIndex) {
-          setActivePrinciple(step, true);
+
+        if (targetStep !== currentStepIndex) {
+          setActivePrinciple(targetStep, shouldPlaySound);
         }
       }
     }
 
+    function handleScroll() {
+      if (window.innerWidth < 1024 || !section || isManualClickLock) return;
+
+      if (!isTicking) {
+        window.requestAnimationFrame(() => {
+          checkScrollProgress(true);
+          isTicking = false;
+        });
+        isTicking = true;
+      }
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Initial check on page load to align with initial scroll position
+    checkScrollProgress(false);
 
     // =======================================================================
     // SIMULATOR 01: ZERO DATA LEAKAGE (TIMELINE RANGE SCRUBBER)
@@ -759,41 +834,41 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
         }
 
         if (p1StatusBadge) {
-          p1StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+          p1StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
         }
-        if (p1BadgeDot) p1BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+        if (p1BadgeDot) p1BadgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
         if (p1BadgeText) p1BadgeText.textContent = `PASS: ZERO_LEAKAGE (+${gapDays}d GAP)`;
         if (p1SplitLabel) p1SplitLabel.textContent = `EMBARGO BUFFER: +${gapDays} DAYS`;
 
         if (p1TrainBar) {
           p1TrainBar.style.width = `${trainPct}%`;
-          p1TrainBar.className = 'h-full bg-neutral-700 text-foreground flex items-center justify-center font-bold text-[9px] border-r border-background transition-all duration-75';
+          p1TrainBar.className = 'h-full bg-neutral-700 text-foreground flex items-center justify-center font-bold text-xs sm:text-[13px] border-r border-background transition-all duration-75';
         }
         if (p1TrainLabel) p1TrainLabel.textContent = `TRAIN [${trainPct}%]`;
 
         if (p1EmbargoBar) {
           p1EmbargoBar.style.width = `${embargoPct}%`;
-          p1EmbargoBar.className = 'h-full bg-emerald-950/70 text-emerald-400 border-r border-background flex items-center justify-center font-bold text-[8px] transition-all duration-75';
+          p1EmbargoBar.className = 'h-full bg-emerald-950/70 text-emerald-400 border-r border-background flex items-center justify-center font-bold text-xs transition-all duration-75';
         }
         if (p1EmbargoLabel) p1EmbargoLabel.textContent = `GAP ${gapDays}d`;
 
         if (p1EvalBar) {
           p1EvalBar.style.width = `${evalPct}%`;
-          p1EvalBar.className = 'h-full bg-neutral-800 text-neutral flex items-center justify-center font-bold text-[9px] transition-all duration-75';
+          p1EvalBar.className = 'h-full bg-neutral-800 text-neutral-200 flex items-center justify-center font-bold text-xs sm:text-[13px] transition-all duration-75';
         }
         if (p1EvalLabel) p1EvalLabel.textContent = `EVAL [${evalPct}%]`;
 
-        if (p1Callout) p1Callout.className = 'flex items-center justify-between text-[10px] text-emerald-400 pt-0.5 transition-colors duration-150';
+        if (p1Callout) p1Callout.className = 'flex items-center justify-between text-xs sm:text-[13px] text-emerald-400 pt-1 font-semibold transition-colors duration-150';
         if (p1CalloutIcon) p1CalloutIcon.textContent = '✓';
         if (p1CalloutText) p1CalloutText.textContent = '1,420 / 1,420 samples uncontaminated. Point-in-time verified.';
 
         if (p1AssertStatus) {
           p1AssertStatus.textContent = 'ASSERT_PASS ✓';
-          p1AssertStatus.className = 'text-emerald-400 text-[9px]';
+          p1AssertStatus.className = 'text-emerald-400 text-xs font-bold';
         }
 
         if (p1AssertCode) {
-          p1AssertCode.className = 'text-neutral text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+          p1AssertCode.className = 'text-neutral-200 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed';
           p1AssertCode.textContent = `assert partition.max_timestamp < eval_window.min_timestamp, \\
     "LeakageDetected: lookahead contamination in split"
 # [PASS] 2024-03-01 < 2024-03-10 (+${gapDays}d temporal gap maintained) ✓`;
@@ -808,15 +883,15 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
         }
 
         if (p1StatusBadge) {
-          p1StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+          p1StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
         }
-        if (p1BadgeDot) p1BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+        if (p1BadgeDot) p1BadgeDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping';
         if (p1BadgeText) p1BadgeText.textContent = `FAIL: LOOKAHEAD_VIOLATION (+${leakDays}d)`;
         if (p1SplitLabel) p1SplitLabel.textContent = `OVERLAP: +${leakDays}d TARGET CONTAMINATION`;
 
         if (p1TrainBar) {
           p1TrainBar.style.width = `${trainPct}%`;
-          p1TrainBar.className = 'h-full bg-rose-950 text-rose-300 flex items-center justify-center font-bold text-[9px] border-r border-rose-500 transition-all duration-75';
+          p1TrainBar.className = 'h-full bg-rose-950 text-rose-300 flex items-center justify-center font-bold text-xs sm:text-[13px] border-r border-rose-500 transition-all duration-75';
         }
         if (p1TrainLabel) p1TrainLabel.textContent = `TRAIN [${trainPct}%] LEAKING`;
 
@@ -828,21 +903,21 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
         const remainingEval = Math.max(20, 100 - trainPct);
         if (p1EvalBar) {
           p1EvalBar.style.width = `${remainingEval}%`;
-          p1EvalBar.className = 'h-full bg-neutral-900 text-rose-400/80 flex items-center justify-center font-bold text-[9px] transition-all duration-75';
+          p1EvalBar.className = 'h-full bg-neutral-900 text-rose-400/80 flex items-center justify-center font-bold text-xs sm:text-[13px] transition-all duration-75';
         }
         if (p1EvalLabel) p1EvalLabel.textContent = `EVAL [${remainingEval}%]`;
 
-        if (p1Callout) p1Callout.className = 'flex items-center justify-between text-[10px] text-rose-400 font-bold pt-0.5 transition-colors duration-150';
+        if (p1Callout) p1Callout.className = 'flex items-center justify-between text-xs sm:text-[13px] text-rose-400 font-bold pt-1 transition-colors duration-150';
         if (p1CalloutIcon) p1CalloutIcon.textContent = '✗';
         if (p1CalloutText) p1CalloutText.textContent = `VIOLATION: ${leakedRows} test labels leaked into training window!`;
 
         if (p1AssertStatus) {
           p1AssertStatus.textContent = 'ASSERTION_ERROR ✗';
-          p1AssertStatus.className = 'text-rose-400 text-[9px] font-bold';
+          p1AssertStatus.className = 'text-rose-400 text-xs font-bold';
         }
 
         if (p1AssertCode) {
-          p1AssertCode.className = 'text-rose-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+          p1AssertCode.className = 'text-rose-400 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed';
           p1AssertCode.textContent = `assert partition.max_timestamp < eval_window.min_timestamp, \\
     "LeakageDetected: lookahead contamination in split"
 # AssertionError: LeakageDetected!
@@ -897,12 +972,12 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
       playClick(750);
 
       if (p2StatusBadge) {
-        p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-accent/40 bg-accent/10 text-accent font-bold flex items-center gap-1.5 transition-all duration-150';
+        p2StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-accent/40 bg-accent/10 text-accent font-bold flex items-center gap-1.5 transition-all duration-150';
       }
-      if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-accent animate-ping';
+      if (p2BadgeDot) p2BadgeDot.className = 'w-2 h-2 rounded-full bg-accent animate-ping';
       if (p2BadgeText) p2BadgeText.textContent = `PID ${currentWorkerPid}: SIGTERM (15)`;
       if (p2TerminalStatus) {
-        p2TerminalStatus.className = 'flex items-center gap-1 text-accent';
+        p2TerminalStatus.className = 'flex items-center gap-1.5 text-accent font-bold';
         p2TerminalStatus.innerHTML = '<span>⚡</span> TRAP TRIGGERED';
       }
 
@@ -923,16 +998,16 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
           </div>`);
 
           if (p2StatusBadge) {
-            p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+            p2StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
           }
-          if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+          if (p2BadgeDot) p2BadgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
           if (p2BadgeText) p2BadgeText.textContent = 'PASS: ZERO_ZOMBIES (CODE 0)';
           if (p2ExitCode) {
-            p2ExitCode.className = 'text-emerald-400 font-bold';
+            p2ExitCode.className = 'text-emerald-400 font-bold font-mono text-xs';
             p2ExitCode.textContent = 'EXIT_CODE: 0 ✓';
           }
           if (p2TerminalStatus) {
-            p2TerminalStatus.className = 'flex items-center gap-1 text-emerald-400';
+            p2TerminalStatus.className = 'flex items-center gap-1.5 text-emerald-400 font-bold';
             p2TerminalStatus.innerHTML = '<span>✓</span> SUPERVISOR DRAINED';
           }
           isP2Busy = false;
@@ -946,9 +1021,9 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
       playClick(850);
 
       if (p2StatusBadge) {
-        p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-accent/40 bg-accent/10 text-accent font-bold flex items-center gap-1.5 transition-all duration-150';
+        p2StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-accent/40 bg-accent/10 text-accent font-bold flex items-center gap-1.5 transition-all duration-150';
       }
-      if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-accent animate-ping';
+      if (p2BadgeDot) p2BadgeDot.className = 'w-2 h-2 rounded-full bg-accent animate-ping';
       if (p2BadgeText) p2BadgeText.textContent = `PID ${currentWorkerPid}: SIGINT (2)`;
 
       appendTerminalLine(`<div class="text-accent flex items-center gap-1 pt-1 border-t border-grid-line-dark/40 font-bold">
@@ -968,12 +1043,12 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
           </div>`);
 
           if (p2StatusBadge) {
-            p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+            p2StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
           }
-          if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+          if (p2BadgeDot) p2BadgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
           if (p2BadgeText) p2BadgeText.textContent = 'PASS: STATE_PRESERVED (CODE 130)';
           if (p2ExitCode) {
-            p2ExitCode.className = 'text-emerald-400 font-bold';
+            p2ExitCode.className = 'text-emerald-400 font-bold font-mono text-xs';
             p2ExitCode.textContent = 'EXIT_CODE: 130 ✓';
           }
           isP2Busy = false;
@@ -987,9 +1062,9 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
       playViolation();
 
       if (p2StatusBadge) {
-        p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+        p2StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
       }
-      if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+      if (p2BadgeDot) p2BadgeDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping';
       if (p2BadgeText) p2BadgeText.textContent = `PID ${currentWorkerPid}: KILLED (SIGKILL 9)`;
 
       appendTerminalLine(`<div class="text-rose-400 flex items-center gap-1 pt-1 border-t border-grid-line-dark/40 font-bold">
@@ -1009,12 +1084,12 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
           </div>`);
 
           if (p2StatusBadge) {
-            p2StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+            p2StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
           }
-          if (p2BadgeDot) p2BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+          if (p2BadgeDot) p2BadgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
           if (p2BadgeText) p2BadgeText.textContent = `RESPAWNED: PID ${currentWorkerPid} (ACTIVE)`;
           if (p2ExitCode) {
-            p2ExitCode.className = 'text-rose-400';
+            p2ExitCode.className = 'text-rose-400 font-mono text-xs';
             p2ExitCode.textContent = 'EXIT_CODE: 137 (KILLED)';
           }
           if (p2ZombieCount) {
@@ -1044,23 +1119,23 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
     function resetP3Valid() {
       playSuccess();
       if (p3StatusBadge) {
-        p3StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+        p3StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold flex items-center gap-1.5 transition-all duration-150';
       }
-      if (p3BadgeDot) p3BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+      if (p3BadgeDot) p3BadgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
       if (p3BadgeText) p3BadgeText.textContent = 'PASS: 200_VALIDATED';
       if (p3PayloadType) {
         p3PayloadType.textContent = 'VALID_JSON_SCHEMA';
-        p3PayloadType.className = 'text-accent font-bold';
+        p3PayloadType.className = 'text-accent font-bold text-xs sm:text-[13px]';
       }
       if (p3EmbeddingsLine) {
-        p3EmbeddingsLine.className = 'text-neutral-dark';
+        p3EmbeddingsLine.className = 'text-neutral-300';
         p3EmbeddingsLine.textContent = '"embeddings": [0.182, -0.429, ... 128 items],';
       }
       if (p3ExtraLine) p3ExtraLine.className = 'hidden';
       if (p3EvalLatency) p3EvalLatency.textContent = 'LATENCY: 0.04ms';
 
       if (p3ResponseCode) {
-        p3ResponseCode.className = 'text-emerald-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+        p3ResponseCode.className = 'text-emerald-400 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed';
         p3ResponseCode.textContent = `InferenceRequest(embeddings=[128 items])
 Status: 200 OK — Strict schema verified via Rust core ✓`;
       }
@@ -1069,23 +1144,23 @@ Status: 200 OK — Strict schema verified via Rust core ✓`;
     p3BtnExtra?.addEventListener('click', () => {
       playViolation();
       if (p3StatusBadge) {
-        p3StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+        p3StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
       }
-      if (p3BadgeDot) p3BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+      if (p3BadgeDot) p3BadgeDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping';
       if (p3BadgeText) p3BadgeText.textContent = 'FAIL: EXTRA_FORBIDDEN';
       if (p3PayloadType) {
         p3PayloadType.textContent = 'ILLEGAL_EXTRA_FIELD';
-        p3PayloadType.className = 'text-rose-400 font-bold';
+        p3PayloadType.className = 'text-rose-400 font-bold text-xs sm:text-[13px]';
       }
       if (p3EmbeddingsLine) {
-        p3EmbeddingsLine.className = 'text-neutral-dark';
+        p3EmbeddingsLine.className = 'text-neutral-300';
         p3EmbeddingsLine.textContent = '"embeddings": [0.182, -0.429, ... 128 items],';
       }
-      if (p3ExtraLine) p3ExtraLine.className = 'inline text-rose-400 bg-rose-950/40 px-1 font-bold';
+      if (p3ExtraLine) p3ExtraLine.className = 'inline text-rose-400 bg-rose-950/40 px-1.5 py-0.5 font-bold';
       if (p3EvalLatency) p3EvalLatency.textContent = 'LATENCY: 0.02ms (REJECTED)';
 
       if (p3ResponseCode) {
-        p3ResponseCode.className = 'text-rose-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+        p3ResponseCode.className = 'text-rose-400 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed';
         p3ResponseCode.textContent = `ValidationError: 1 validation error for InferenceRequest
 extra_param
   Extra inputs are not permitted [type=extra_forbidden, input_value='malicious_injection', input_type=str]`;
@@ -1095,23 +1170,23 @@ extra_param
     p3BtnDim?.addEventListener('click', () => {
       playViolation();
       if (p3StatusBadge) {
-        p3StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+        p3StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
       }
-      if (p3BadgeDot) p3BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+      if (p3BadgeDot) p3BadgeDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping';
       if (p3BadgeText) p3BadgeText.textContent = 'FAIL: DIMENSION_MISMATCH';
       if (p3PayloadType) {
         p3PayloadType.textContent = 'DEGENERATE_VECTOR_LENGTH';
-        p3PayloadType.className = 'text-rose-400 font-bold';
+        p3PayloadType.className = 'text-rose-400 font-bold text-xs sm:text-[13px]';
       }
       if (p3ExtraLine) p3ExtraLine.className = 'hidden';
       if (p3EmbeddingsLine) {
-        p3EmbeddingsLine.className = 'inline text-rose-400 bg-rose-950/40 px-1 font-bold';
+        p3EmbeddingsLine.className = 'inline text-rose-400 bg-rose-950/40 px-1.5 py-0.5 font-bold';
         p3EmbeddingsLine.textContent = '"embeddings": [0.182, -0.429, ... 64 items ONLY], // [TOO_SHORT]';
       }
       if (p3EvalLatency) p3EvalLatency.textContent = 'LATENCY: 0.02ms (REJECTED)';
 
       if (p3ResponseCode) {
-        p3ResponseCode.className = 'text-rose-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+        p3ResponseCode.className = 'text-rose-400 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed';
         p3ResponseCode.textContent = `ValidationError: 1 validation error for InferenceRequest
 embeddings
   List should have at least 128 items after validation, not 64 [type=too_short, input_length=64]`;
@@ -1121,23 +1196,23 @@ embeddings
     p3BtnNull?.addEventListener('click', () => {
       playViolation();
       if (p3StatusBadge) {
-        p3StatusBadge.className = 'font-mono text-[9px] sm:text-[10px] tracking-wider px-2 py-0.5 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
+        p3StatusBadge.className = 'font-mono text-xs tracking-wider px-2.5 py-1 border border-rose-500/40 bg-rose-500/10 text-rose-400 font-bold flex items-center gap-1.5 transition-all duration-150';
       }
-      if (p3BadgeDot) p3BadgeDot.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping';
+      if (p3BadgeDot) p3BadgeDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-ping';
       if (p3BadgeText) p3BadgeText.textContent = 'FAIL: NULL_TYPE_VIOLATION';
       if (p3PayloadType) {
         p3PayloadType.textContent = 'INVALID_NULL_TYPE';
-        p3PayloadType.className = 'text-rose-400 font-bold';
+        p3PayloadType.className = 'text-rose-400 font-bold text-xs sm:text-[13px]';
       }
       if (p3ExtraLine) p3ExtraLine.className = 'hidden';
       if (p3EmbeddingsLine) {
-        p3EmbeddingsLine.className = 'inline text-rose-400 bg-rose-950/40 px-1 font-bold';
+        p3EmbeddingsLine.className = 'inline text-rose-400 bg-rose-950/40 px-1.5 py-0.5 font-bold';
         p3EmbeddingsLine.textContent = '"embeddings": null, // [STRICT_TYPE_VIOLATION]';
       }
       if (p3EvalLatency) p3EvalLatency.textContent = 'LATENCY: 0.01ms (REJECTED)';
 
       if (p3ResponseCode) {
-        p3ResponseCode.className = 'text-rose-400 text-[10px] block select-all whitespace-pre font-mono leading-relaxed';
+        p3ResponseCode.className = 'text-rose-400 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed';
         p3ResponseCode.textContent = `ValidationError: 1 validation error for InferenceRequest
 embeddings
   Input should be a valid list [type=list_type, input_value=None, input_type=NoneType]`;
