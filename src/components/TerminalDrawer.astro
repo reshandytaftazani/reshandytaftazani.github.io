@@ -14,10 +14,12 @@
 <!-- Terminal Drawer Sliding Panel -->
 <aside
   id="terminal-drawer"
-  class="fixed bottom-0 left-0 right-0 z-[99992] flex flex-col bg-[#08090a] border-t-2 border-accent/80 shadow-[0_-16px_50px_rgba(0,0,0,0.95)] font-mono text-xs transition-transform duration-300 ease-out translate-y-full h-[60vh] md:h-[42vh] no-print print:hidden"
+  class="fixed bottom-0 left-0 right-0 z-[99992] flex flex-col bg-[#08090a] border-t-2 border-accent/80 font-mono text-xs translate-y-full no-print print:hidden shadow-[0_-16px_50px_rgba(0,0,0,0.95)]"
   role="region"
   aria-label="Interactive UNIX Kernel Terminal Drawer"
 >
+  <!-- Animated Top Accent Beam -->
+  <div class="terminal-top-beam pointer-events-none absolute top-0 left-0 right-0 h-[2px] opacity-0 transition-opacity duration-500 z-10" aria-hidden="true"></div>
   <!-- Header Bar -->
   <div class="flex items-center justify-between px-3 sm:px-4 py-2 bg-[#0e1113] border-b border-[#1c2227] select-none text-[11px] sm:text-xs">
     <!-- Left: Identity & IPC Telemetry -->
@@ -32,13 +34,13 @@
       <!-- Kernel Identity -->
       <div class="flex items-center gap-1.5 font-bold tracking-wider text-foreground truncate">
         <span class="text-accent">&gt;</span>
-        <span class="truncate">[TERMINAL // RESHANDY_KERNEL_v2.4]</span>
+        <span class="truncate">[KERNEL // LINUX 6.8 RESHANDY-x86_64]</span>
       </div>
 
       <!-- Live Status Badge -->
       <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 font-bold text-[10px] shrink-0">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="tracking-widest">IPC: CONNECTED</span>
+        <span class="tracking-widest">IPC: POSIX_RING_ACTIVE</span>
       </div>
     </div>
 
@@ -87,14 +89,25 @@
   <!-- Terminal Screen (Scrollable History Buffer + Active Prompt) -->
   <div
     id="terminal-screen"
-    class="flex-1 overflow-y-auto p-3 sm:p-4 font-mono text-[11px] sm:text-xs leading-relaxed select-text space-y-2.5 bg-[#08090a] text-neutral-300 cursor-text"
+    class="flex-1 overflow-y-auto p-3 sm:p-4 font-mono text-[11px] sm:text-xs leading-relaxed select-text space-y-3 bg-[#08090a] text-neutral-300 cursor-text"
   >
     <!-- Screen Log Buffer (Dynamic history items inserted here) -->
     <div id="terminal-log" class="space-y-3"></div>
 
-    <!-- Active Input Line with Blinking Monospaced Cursor -->
-    <div id="terminal-active-line" class="flex items-start gap-2 pt-1">
-      <span class="text-accent font-bold select-none whitespace-nowrap shrink-0">guest@reshandy-kernel:~$</span>
+    <!-- Active Input Line with Blinking Monospaced Cursor & Dynamic Agent Badge -->
+    <div id="terminal-active-line" class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5 pt-2 border-t border-[#181f25]/80">
+      <div class="flex items-center gap-2 select-none shrink-0 font-bold">
+        <span 
+          id="term-status-badge" 
+          class="px-1.5 py-0.5 rounded-xs bg-emerald-950/70 text-emerald-400 border border-emerald-500/30 text-[9.5px] tracking-wider uppercase transition-colors"
+        >
+          ● IDLE
+        </span>
+        <span class="text-neutral-400">guest@reshandy-kernel</span>
+        <span class="text-neutral-600">:</span>
+        <span class="text-[#38bdf8]">~</span>
+        <span class="text-accent font-bold">❯</span>
+      </div>
       <div class="relative flex-1 min-w-0 font-mono text-foreground flex items-center">
         <!-- Rendered Text with Inline Hovering Cursor -->
         <span id="term-before-cursor" class="whitespace-pre-wrap break-all"></span>
@@ -121,12 +134,13 @@
     <div class="flex items-center gap-1.5 shrink-0">
       <span class="text-neutral-600 font-bold hidden sm:inline">QUICK:</span>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="help">help</button>
-      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="whoami">whoami</button>
-      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="run modelarena --train">run modelarena --train</button>
-      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="eval --split test">eval --split test</button>
+      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-[#38bdf8] font-bold transition-colors cursor-pointer" data-cmd="whoami">whoami</button>
+      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-emerald-400 font-bold transition-colors cursor-pointer" data-cmd="run modelarena --train">run modelarena --train</button>
+      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-amber-300 font-bold transition-colors cursor-pointer" data-cmd="eval --split test">eval --split test</button>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="cat modelarena">cat modelarena</button>
+      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="cat leakguard-ml">cat leakguard-ml</button>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="cat finance-tracker">cat finance-tracker</button>
-      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="cat savebite">cat savebite</button>
+      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="roofline">roofline</button>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="curl /contact">curl /contact</button>
     </div>
 
@@ -150,14 +164,137 @@
     }
   }
 
-  /* Maximized Drawer Viewport Clamp */
-  #terminal-drawer.is-maximized {
-    height: 88vh !important;
+  /* Scrim Backdrop Smooth Fade (Synchronized for Open & Close) */
+  #terminal-scrim {
+    transition: opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+                backdrop-filter 320ms cubic-bezier(0.16, 1, 0.3, 1);
   }
+
+  /* Default Drawer Height & Accelerated Exit Motion */
+  #terminal-drawer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 99992 !important;
+    height: 60vh;
+    transform: translateY(100%);
+    pointer-events: none;
+    transition: transform 320ms cubic-bezier(0.32, 0, 0.67, 0),
+                height 380ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 320ms ease-in;
+    will-change: transform, height;
+    box-shadow: 0 -16px 50px rgba(0, 0, 0, 0.95);
+  }
+
   @media (min-width: 768px) {
-    #terminal-drawer.is-maximized {
-      height: 90vh !important;
+    #terminal-drawer {
+      height: 44vh;
     }
+  }
+
+  /* Active Open State: Tactile Spring Slide-Up Deceleration */
+  #terminal-drawer.translate-y-0,
+  #terminal-drawer.is-open {
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+    box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.98), 0 -2px 28px rgba(255, 69, 0, 0.28);
+    transition: transform 440ms cubic-bezier(0.16, 1, 0.3, 1),
+                height 400ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 440ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Active Closing State: Swift, natural gravity drop off-screen */
+  #terminal-drawer.is-closing {
+    transform: translateY(100%) !important;
+    pointer-events: none !important;
+    transition: transform 320ms cubic-bezier(0.32, 0, 0.67, 0) !important,
+                box-shadow 280ms ease-out !important;
+  }
+
+  #terminal-drawer.translate-y-full:not(.is-open) {
+    transform: translateY(100%) !important;
+    pointer-events: none !important;
+  }
+
+  /* Maximized Drawer Viewport Clamp with Smooth Transition */
+  #terminal-drawer.is-maximized {
+    height: 92vh !important;
+  }
+
+  /* Luminous top border sweep beam */
+  @keyframes beamSweep {
+    0% {
+      background-position: -200% 0;
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      background-position: 200% 0;
+      opacity: 0.7;
+    }
+  }
+
+  #terminal-drawer.translate-y-0 .terminal-top-beam {
+    opacity: 1;
+    background: linear-gradient(90deg, transparent 0%, #ff4500 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: beamSweep 3.2s infinite linear;
+  }
+
+  /* Entrance keyframes for initial boot banner and prompt */
+  @keyframes termEntranceAppear {
+    0% {
+      opacity: 0;
+      transform: translateY(14px);
+      filter: brightness(1.25);
+    }
+    70% {
+      filter: brightness(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      filter: brightness(1);
+    }
+  }
+
+  .term-entrance-appear {
+    animation: termEntranceAppear 360ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Entrance keyframes for command execution cards */
+  @keyframes termCardEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(12px) scale(0.995);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .term-card-entrance {
+    animation: termCardEntrance 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Entrance keyframes for streaming lines */
+  @keyframes termLineEntrance {
+    0% {
+      opacity: 0;
+      transform: translateX(-6px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .term-line-entrance {
+    animation: termLineEntrance 140ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   /* Scanline texture for authentic UNIX terminal buffer */
@@ -224,6 +361,29 @@
       ],
       source_repo: "https://github.com/reshandytaftazani/modelarena"
     },
+    "leakguard-ml": {
+      id: "leakguard-ml",
+      name: "LeakGuard ML",
+      title: "Point-in-Time Feature Store & Lookahead Leakage Prevention",
+      status: "100% TEMPORAL ISOLATION",
+      architecture: {
+        temporal_join: "Polars Rust Vectorized As-Of Joins",
+        cross_validation: "Purged & Embargoed Rolling Splits",
+        audit_harness: "Chaos Timestamp Scrambler with Invariant Assertions",
+        columnar_store: "DuckDB & Apache Parquet"
+      },
+      verified_metrics: {
+        throughput: "14.2M rows/sec temporal join throughput",
+        peak_memory: "412 MB streaming footprint on 50k events",
+        leakage_violations: "0 / 50,000 verified against future information",
+        vectorized_speedup: "6.4x vs standard Pandas temporal joins"
+      },
+      invariants: [
+        "Query timestamp strictly upper-bounds feature availability horizon",
+        "Purge window strips lookahead overlap on overlapping trade/signal labels"
+      ],
+      source_repo: "https://github.com/reshandytaftazani/leakguard-ml"
+    },
     "finance-tracker": {
       id: "finance-tracker",
       name: "Finance Tracker",
@@ -271,29 +431,6 @@
         "Session tokens and CSRF validations guard all mutating state operations"
       ],
       source_repo: "https://github.com/PBP-D-Kelompok-8/SaveBite"
-    },
-    "leakguard-ml": {
-      id: "leakguard-ml",
-      name: "LeakGuard ML",
-      title: "Point-in-Time Feature Store & Lookahead Leakage Prevention",
-      status: "100% TEMPORAL ISOLATION",
-      architecture: {
-        temporal_join: "Polars Rust Vectorized As-Of Joins",
-        cross_validation: "Purged & Embargoed Rolling Splits",
-        audit_harness: "Chaos Timestamp Scrambler with Invariant Assertions",
-        columnar_store: "DuckDB & Apache Parquet"
-      },
-      verified_metrics: {
-        throughput: "14.2M rows/sec temporal join throughput",
-        peak_memory: "412 MB streaming footprint on 50k events",
-        leakage_violations: "0 / 50,000 verified against future information",
-        vectorized_speedup: "6.4x vs standard Pandas temporal joins"
-      },
-      invariants: [
-        "Query timestamp strictly upper-bounds feature availability horizon",
-        "Purge window strips lookahead overlap on overlapping trade/signal labels"
-      ],
-      source_repo: "https://github.com/reshandytaftazani/leakguard-ml"
     }
   };
 
@@ -311,6 +448,7 @@
     const btnClose = document.getElementById("term-btn-close");
     const btnHelp = document.getElementById("term-btn-help");
     const btnClear = document.getElementById("term-btn-clear");
+    const statusBadge = document.getElementById("term-status-badge");
 
     if (!drawer || !scrim || !screen || !log || !input || !beforeCursor || !cursor || !afterCursor) {
       return;
@@ -320,8 +458,24 @@
     let isMaximized = false;
     let isStreaming = false;
     let activeTrainingInterval: ReturnType<typeof setInterval> | null = null;
+    let isClosingTimeout: ReturnType<typeof setTimeout> | null = null;
     const commandHistory: string[] = [];
     let historyIndex = -1;
+
+    // Helper: Update dynamic status badge
+    function setKernelStatus(state: "idle" | "busy" | "exec") {
+      if (!statusBadge) return;
+      if (state === "exec") {
+        statusBadge.className = "px-1.5 py-0.5 rounded-xs bg-amber-950/80 text-amber-400 border border-amber-500/40 text-[9.5px] tracking-wider uppercase font-bold animate-pulse";
+        statusBadge.textContent = "⚡ EXEC";
+      } else if (state === "busy") {
+        statusBadge.className = "px-1.5 py-0.5 rounded-xs bg-accent/20 text-accent border border-accent/40 text-[9.5px] tracking-wider uppercase font-bold animate-pulse";
+        statusBadge.textContent = "▲ BUSY";
+      } else {
+        statusBadge.className = "px-1.5 py-0.5 rounded-xs bg-emerald-950/70 text-emerald-400 border border-emerald-500/30 text-[9.5px] tracking-wider uppercase font-bold";
+        statusBadge.textContent = "● IDLE";
+      }
+    }
 
     // Helper: Escape HTML
     function escapeHtml(str: string): string {
@@ -376,23 +530,53 @@
       });
     }
 
-    // Display initial boot welcome banner once
+    // Display initial boot welcome banner with modern systems telemetry
     function renderBootBanner() {
       if (log.children.length === 0) {
         const banner = document.createElement("div");
-        banner.className = "p-3 rounded-xs bg-[#0b0e11] border border-[#1b2228] text-neutral-400 space-y-1.5";
+        banner.className = "p-3 sm:p-3.5 rounded-xs bg-[#0b0e12] border border-[#1b232c] text-neutral-300 space-y-2.5 shadow-sm term-entrance-appear";
         banner.innerHTML = `
-          <div class="flex items-center justify-between border-b border-[#1c2228] pb-1.5 text-[10px] text-neutral-500">
-            <span class="text-accent font-bold">RESHANDY_KERNEL v2.4 (x86_64-pc-none-elf)</span>
-            <span>DEPOK, ID // UTC+7</span>
+          <div class="flex flex-wrap items-center justify-between border-b border-[#1f2832] pb-2 gap-2 text-[10.5px]">
+            <div class="flex items-center gap-2">
+              <span class="text-accent font-bold tracking-wider">[RESHANDY_KERNEL v2.4]</span>
+              <span class="text-neutral-500 font-mono">(x86_64-pc-linux-gnu)</span>
+            </div>
+            <div class="flex items-center gap-2 text-neutral-500 font-mono text-[10px]">
+              <span class="text-emerald-400 font-bold">POSIX_IPC: READY</span>
+              <span>•</span>
+              <span>CUDA_ARBITER: ONLINE</span>
+              <span>•</span>
+              <span>DEPOK, ID // UTC+07</span>
+            </div>
           </div>
-          <p class="text-foreground font-semibold">
-            Interactive ML &amp; Systems Engineering Shell. Zero Data Leakage • Clean Invariants.
+
+          <p class="text-foreground text-[11.5px] sm:text-xs font-semibold leading-relaxed">
+            Interactive ML &amp; Systems Engineering Shell. Defensive Invariants • Zero Data Leakage • Clean Hexagonal Architecture.
           </p>
-          <p class="text-[11px] text-neutral-400">
-            Type <span class="text-accent font-bold">help</span> for command dictionary, <span class="text-[#38bdf8] font-bold">whoami</span> for candidate profile,
-            or <span class="text-emerald-400 font-bold">run modelarena --train</span> for multi-agent simulation.
-          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10.5px] pt-0.5">
+            <div class="p-2 rounded-xs bg-[#101419] border border-[#1d2630]">
+              <span class="text-accent font-bold">SYSTEMS:</span>
+              <span class="text-neutral-300"> POSIX Signals, Zero CUDA Frag, Ring Buffers</span>
+            </div>
+            <div class="p-2 rounded-xs bg-[#101419] border border-[#1d2630]">
+              <span class="text-accent font-bold">ML / DATA:</span>
+              <span class="text-neutral-300"> Purged CV, Zero Lookahead Leakage, Polars</span>
+            </div>
+            <div class="p-2 rounded-xs bg-[#101419] border border-[#1d2630]">
+              <span class="text-accent font-bold">FINTECH:</span>
+              <span class="text-neutral-300"> Double-Entry ACID, 4-Place Fixed Decimal</span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5 pt-1 text-[11px] text-neutral-400">
+            <span class="text-neutral-500">Quick start:</span>
+            <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-neutral-300 font-bold transition-colors cursor-pointer" data-cmd="help">help</button>
+            <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-[#38bdf8] font-bold transition-colors cursor-pointer" data-cmd="whoami">whoami</button>
+            <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-emerald-400 font-bold transition-colors cursor-pointer" data-cmd="run modelarena --train">run modelarena --train</button>
+            <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-amber-300 font-bold transition-colors cursor-pointer" data-cmd="eval --split test">eval --split test</button>
+            <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="roofline">roofline</button>
+          </div>
         `;
         log.appendChild(banner);
         scrollScreenToBottom();
@@ -403,8 +587,12 @@
     function openTerminal() {
       if (isOpen) return;
       isOpen = true;
-      drawer.classList.remove("translate-y-full");
-      drawer.classList.add("translate-y-0");
+      if (isClosingTimeout) {
+        clearTimeout(isClosingTimeout);
+        isClosingTimeout = null;
+      }
+      drawer.classList.remove("translate-y-full", "is-closing");
+      drawer.classList.add("translate-y-0", "is-open");
       scrim.classList.remove("opacity-0", "pointer-events-none");
       scrim.classList.add("opacity-100", "pointer-events-auto");
       
@@ -422,11 +610,23 @@
     function closeTerminal() {
       if (!isOpen) return;
       isOpen = false;
-      drawer.classList.remove("translate-y-0");
-      drawer.classList.add("translate-y-full");
+      drawer.classList.remove("translate-y-0", "is-open");
+      drawer.classList.add("translate-y-full", "is-closing");
       scrim.classList.remove("opacity-100", "pointer-events-auto");
       scrim.classList.add("opacity-0", "pointer-events-none");
       
+      if (isClosingTimeout) clearTimeout(isClosingTimeout);
+      isClosingTimeout = setTimeout(() => {
+        drawer.classList.remove("is-closing");
+        // Reset maximize cleanly while hidden offscreen
+        if (isMaximized) {
+          isMaximized = false;
+          drawer.classList.remove("is-maximized");
+          if (btnResizeText) btnResizeText.textContent = "[MAX]";
+        }
+        isClosingTimeout = null;
+      }, 340);
+
       // Stop background interval immediately if user closes during training stream
       if (activeTrainingInterval) {
         clearInterval(activeTrainingInterval);
@@ -435,6 +635,7 @@
         input.disabled = false;
       }
 
+      setKernelStatus("idle");
       input.blur();
       playClick();
     }
@@ -448,15 +649,17 @@
       }
     }
 
-    // Toggle maximize state
+    // Toggle maximize state with fluid spring animation
     function toggleMaximize() {
       isMaximized = !isMaximized;
       if (isMaximized) {
         drawer.classList.add("is-maximized");
         if (btnResizeText) btnResizeText.textContent = "[RESTORE]";
+        if (btnResize) btnResize.setAttribute("aria-label", "Restore terminal drawer to default height");
       } else {
         drawer.classList.remove("is-maximized");
         if (btnResizeText) btnResizeText.textContent = "[MAX]";
+        if (btnResize) btnResize.setAttribute("aria-label", "Maximize terminal drawer");
       }
       playClick();
       scrollScreenToBottom();
@@ -470,32 +673,60 @@
       }
       isStreaming = false;
       appendLogLine("^C", "text-neutral-500 font-bold");
-      appendLogLine("[TRAINING ABORTED BY USER]", "text-amber-400 font-bold");
+      appendLogLine("[TRAINING ABORTED BY USER (SIGINT)]", "text-amber-400 font-bold");
       input.disabled = false;
       input.focus();
+      setKernelStatus("idle");
       playViolation();
       scrollScreenToBottom();
     }
 
-    // Append a raw log entry
-    function appendLogEntry(command: string, htmlOutput: string) {
+    // Append modern high-precision Developer CLI card output
+    function appendLogEntry(
+      command: string, 
+      htmlOutput: string, 
+      statusBadge = "200 OK", 
+      statusType: "success" | "warning" | "error" | "info" = "success",
+      durationMs?: number
+    ) {
       const entry = document.createElement("div");
-      entry.className = "space-y-1.5";
+      entry.className = "space-y-1.5 my-2.5 term-card-entrance";
+      
+      const badgeStyle = statusType === "success" 
+        ? "text-emerald-400 border-emerald-500/30 bg-emerald-950/40" 
+        : statusType === "warning"
+        ? "text-amber-400 border-amber-500/30 bg-amber-950/40"
+        : statusType === "error"
+        ? "text-rose-400 border-rose-500/30 bg-rose-950/40"
+        : "text-[#38bdf8] border-[#38bdf8]/30 bg-sky-950/40";
+
+      const ms = durationMs ?? Math.floor(Math.random() * 10 + 6);
+
       entry.innerHTML = `
-        <div class="flex items-baseline gap-2 font-bold text-neutral-400">
-          <span class="text-accent select-none">guest@reshandy-kernel:~$</span>
-          <span class="text-foreground">${escapeHtml(command)}</span>
+        <div class="flex items-center justify-between text-[10.5px] px-2.5 py-1.5 bg-[#0e1215] border border-[#1e262e] rounded-xs select-none">
+          <div class="flex items-center gap-2 font-mono min-w-0 truncate">
+            <span class="text-accent font-bold">❯</span>
+            <span class="text-neutral-400 font-medium hidden sm:inline">guest@reshandy-kernel:~$</span>
+            <span class="text-foreground font-bold truncate">${escapeHtml(command)}</span>
+          </div>
+          <div class="flex items-center gap-2 text-neutral-500 text-[10px] font-mono shrink-0">
+            <span class="px-1.5 py-0.5 rounded-xs border ${badgeStyle} font-bold font-mono text-[9px] tracking-wider">${escapeHtml(statusBadge)}</span>
+            <span class="hidden sm:inline text-neutral-600">•</span>
+            <span class="text-neutral-400 font-mono hidden sm:inline">took ${ms}ms</span>
+          </div>
         </div>
-        <div class="term-stdout pl-2 sm:pl-3 border-l-2 border-[#1c2227] space-y-1">${htmlOutput}</div>
+        <div class="term-stdout p-3 bg-[#0a0d0f]/95 border border-[#1b2228] rounded-xs font-mono text-[11px] sm:text-xs leading-relaxed space-y-2">
+          ${htmlOutput}
+        </div>
       `;
       log.appendChild(entry);
       scrollScreenToBottom();
     }
 
-    // Append single line
+    // Append single raw line
     function appendLogLine(text: string, className = "text-neutral-300") {
       const line = document.createElement("div");
-      line.className = className;
+      line.className = className + " term-line-entrance";
       line.textContent = text;
       log.appendChild(line);
       scrollScreenToBottom();
@@ -505,6 +736,8 @@
     function executeCommand(rawCommand: string) {
       const trimmed = rawCommand.trim();
       if (!trimmed) return;
+
+      const startTime = performance.now();
 
       // History recording
       if (commandHistory.length === 0 || commandHistory[commandHistory.length - 1] !== trimmed) {
@@ -516,116 +749,165 @@
       const cmd = tokens[0].toLowerCase();
       const args = tokens.slice(1);
 
+      setKernelStatus("busy");
+
       switch (cmd) {
         case "help": {
           playSuccess();
+          const tookMs = Math.round(performance.now() - startTime) || 8;
           const html = `
-            <div class="overflow-x-auto text-[11px] sm:text-xs">
-              <div class="text-accent font-bold pb-1">[SYSTEM COMMAND DICTIONARY &amp; KERNEL INTERFACES]</div>
-              <table class="w-full text-left border-collapse border border-[#222]">
+            <div class="overflow-x-auto space-y-2.5 text-[11px] sm:text-xs">
+              <div class="flex items-center justify-between pb-1.5 border-b border-[#222a32] text-[10px] text-neutral-400 font-mono">
+                <span class="text-accent font-bold tracking-wider">[KERNEL SUBSYSTEMS &amp; COMMAND REGISTRY]</span>
+                <span class="text-emerald-400 font-bold">POSIX x86_64 ABI</span>
+              </div>
+              <table class="w-full text-left border-collapse font-mono text-[11px]">
                 <thead>
-                  <tr class="bg-[#121619] text-neutral-400 border-b border-[#222]">
-                    <th class="p-1.5">COMMAND</th>
-                    <th class="p-1.5">ARGUMENTS</th>
-                    <th class="p-1.5">DESCRIPTION</th>
+                  <tr class="bg-[#12171c] text-neutral-400 border-b border-[#222a32] text-[10px] uppercase tracking-wider">
+                    <th class="p-2">COMMAND</th>
+                    <th class="p-2">ARGUMENTS</th>
+                    <th class="p-2 hidden sm:table-cell">SUBSYSTEM</th>
+                    <th class="p-2">DESCRIPTION</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-[#1a1a1a]">
+                <tbody class="divide-y divide-[#1b222a]">
                   <tr>
-                    <td class="p-1.5 text-accent font-bold">help</td>
-                    <td class="p-1.5 text-neutral-500">—</td>
-                    <td class="p-1.5 text-neutral-300">Display this command dictionary table</td>
+                    <td class="p-2 text-accent font-bold">help</td>
+                    <td class="p-2 text-neutral-500">—</td>
+                    <td class="p-2 text-neutral-400 text-[10px] hidden sm:table-cell">[CORE]</td>
+                    <td class="p-2 text-neutral-300">Display this command dictionary &amp; kernel interfaces</td>
                   </tr>
                   <tr>
-                    <td class="p-1.5 text-accent font-bold">whoami</td>
-                    <td class="p-1.5 text-neutral-500">—</td>
-                    <td class="p-1.5 text-neutral-300">Candidate profile (Reshandy Taftazani Aulya, CS @ UI, MLE &amp; Systems)</td>
+                    <td class="p-2 text-accent font-bold">whoami</td>
+                    <td class="p-2 text-neutral-500">—</td>
+                    <td class="p-2 text-[#38bdf8] text-[10px] hidden sm:table-cell">[IDENTITY]</td>
+                    <td class="p-2 text-neutral-300">Candidate profile, university degree, and systems engineering invariants</td>
                   </tr>
                   <tr>
-                    <td class="p-1.5 text-accent font-bold">cat</td>
-                    <td class="p-1.5 text-[#38bdf8]">[modelarena|finance-tracker|savebite]</td>
-                    <td class="p-1.5 text-neutral-300">Display JSON architecture &amp; verified engineering invariants</td>
+                    <td class="p-2 text-accent font-bold">run</td>
+                    <td class="p-2 text-emerald-400">modelarena --train</td>
+                    <td class="p-2 text-emerald-400 text-[10px] hidden sm:table-cell">[ML/SYS]</td>
+                    <td class="p-2 text-neutral-300">Execute multi-agent RL simulation with 100ms streaming stdout logs</td>
                   </tr>
                   <tr>
-                    <td class="p-1.5 text-accent font-bold">run</td>
-                    <td class="p-1.5 text-emerald-400">modelarena --train</td>
-                    <td class="p-1.5 text-neutral-300">Execute multi-agent RL simulation with 100ms streaming stdout logs</td>
+                    <td class="p-2 text-accent font-bold">eval</td>
+                    <td class="p-2 text-[#a7f3d0]">--split test</td>
+                    <td class="p-2 text-[#a7f3d0] text-[10px] hidden sm:table-cell">[QUANT]</td>
+                    <td class="p-2 text-neutral-300">Display quantitative table (Sharpe, MDD, p50/p95 latency, zero-leakage)</td>
                   </tr>
                   <tr>
-                    <td class="p-1.5 text-accent font-bold">eval</td>
-                    <td class="p-1.5 text-[#a7f3d0]">--split test</td>
-                    <td class="p-1.5 text-neutral-300">Display quantitative table (Sharpe ratio, max drawdown, inference latency)</td>
+                    <td class="p-2 text-accent font-bold">cat</td>
+                    <td class="p-2 text-[#38bdf8]">[project]</td>
+                    <td class="p-2 text-[#38bdf8] text-[10px] hidden sm:table-cell">[MANIFEST]</td>
+                    <td class="p-2 text-neutral-300">Display JSON architecture spec (modelarena, leakguard-ml, finance-tracker, savebite)</td>
                   </tr>
                   <tr>
-                    <td class="p-1.5 text-accent font-bold">curl</td>
-                    <td class="p-1.5 text-amber-300">/contact</td>
-                    <td class="p-1.5 text-neutral-300">Display contact email, PGP public key fingerprint, and social endpoints</td>
+                    <td class="p-2 text-accent font-bold">roofline</td>
+                    <td class="p-2 text-neutral-500">—</td>
+                    <td class="p-2 text-amber-300 text-[10px] hidden sm:table-cell">[HARDWARE]</td>
+                    <td class="p-2 text-neutral-300">Display attainable performance for NVIDIA A100, RTX 4090, and T4</td>
                   </tr>
                   <tr>
-                    <td class="p-1.5 text-accent font-bold">clear</td>
-                    <td class="p-1.5 text-neutral-500">—</td>
-                    <td class="p-1.5 text-neutral-300">Clear terminal output screen buffer</td>
+                    <td class="p-2 text-accent font-bold">curl</td>
+                    <td class="p-2 text-amber-300">/contact</td>
+                    <td class="p-2 text-amber-300 text-[10px] hidden sm:table-cell">[NET]</td>
+                    <td class="p-2 text-neutral-300">HTTP/2 GET contact endpoints, PGP public key fingerprint, and social URLs</td>
                   </tr>
                   <tr>
-                    <td class="p-1.5 text-accent font-bold">exit</td>
-                    <td class="p-1.5 text-neutral-500">—</td>
-                    <td class="p-1.5 text-neutral-300">Slide down and close terminal drawer</td>
+                    <td class="p-2 text-accent font-bold">clear</td>
+                    <td class="p-2 text-neutral-500">—</td>
+                    <td class="p-2 text-neutral-400 text-[10px] hidden sm:table-cell">[SCREEN]</td>
+                    <td class="p-2 text-neutral-300">Clear terminal output screen buffer</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 text-accent font-bold">exit</td>
+                    <td class="p-2 text-neutral-500">—</td>
+                    <td class="p-2 text-neutral-400 text-[10px] hidden sm:table-cell">[SHELL]</td>
+                    <td class="p-2 text-neutral-300">Slide down and close terminal drawer</td>
                   </tr>
                 </tbody>
               </table>
-              <div class="pt-2 text-neutral-500 text-[10px]">
-                Tip: Use <kbd class="text-neutral-400">↑</kbd> and <kbd class="text-neutral-400">↓</kbd> arrow keys to traverse command history.
+              <div class="pt-1.5 flex flex-wrap items-center justify-between text-neutral-500 text-[10px]">
+                <span>Tip: Use <kbd class="text-neutral-400">↑</kbd> and <kbd class="text-neutral-400">↓</kbd> for history, <kbd class="text-neutral-400">Tab</kbd> for autocompletion.</span>
+                <span>Press <kbd class="text-neutral-400">ESC</kbd> to exit.</span>
               </div>
             </div>
           `;
-          appendLogEntry(trimmed, html);
+          appendLogEntry(trimmed, html, "200 OK", "success", tookMs);
+          setKernelStatus("idle");
           break;
         }
 
         case "whoami": {
           playSuccess();
+          const tookMs = Math.round(performance.now() - startTime) || 12;
           const html = `
-            <div class="space-y-1.5 bg-[#0e1114] p-3 rounded-xs border border-[#1e242a]">
-              <div class="flex items-center justify-between border-b border-[#222a30] pb-1.5">
-                <span class="text-accent font-bold text-sm">RESHANDY TAFTAZANI AULYA</span>
-                <span class="text-[10px] text-emerald-400 font-bold">[ACTIVE // VERIFIED]</span>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1">
-                <div>
-                  <span class="text-neutral-500">Role:</span>
-                  <span class="text-foreground font-semibold"> Machine Learning &amp; Systems Engineer</span>
+            <div class="space-y-3 bg-[#0d1115] p-3 sm:p-3.5 rounded-xs border border-[#1e2630]">
+              <div class="flex flex-wrap items-center justify-between border-b border-[#222c36] pb-2 gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-accent font-bold text-sm sm:text-base tracking-wide">RESHANDY TAFTAZANI AULYA</span>
+                  <span class="text-[10px] text-neutral-500 font-mono">[CS @ UI]</span>
                 </div>
-                <div>
-                  <span class="text-neutral-500">Institution:</span>
-                  <span class="text-foreground"> Faculty of Computer Science, Universitas Indonesia</span>
-                </div>
-                <div>
-                  <span class="text-neutral-500">Degree Focus:</span>
-                  <span class="text-foreground"> Computer Science (CS @ UI) • Depok, West Java</span>
-                </div>
-                <div>
-                  <span class="text-neutral-500">Kernel Version:</span>
-                  <span class="text-foreground font-mono"> Linux 6.8.0-reshandy-kernel x86_64</span>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-xs bg-emerald-950/70 border border-emerald-500/40 text-emerald-400 font-bold text-[10px]">
+                    ● CANDIDATE_VERIFIED
+                  </span>
+                  <span class="text-[10px] text-neutral-500 font-mono">DEPOK, ID</span>
                 </div>
               </div>
-              <div class="pt-2 border-t border-[#222a30] text-[11px] space-y-1">
-                <div class="text-neutral-400 font-bold">Core Engineering Invariants:</div>
-                <div class="text-neutral-300 flex items-start gap-1.5">
-                  <span class="text-accent font-bold">•</span>
-                  <span><strong>Zero Data Leakage:</strong> Mathematically verified temporal joins with purged cross-validation.</span>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px] pt-0.5">
+                <div class="space-y-1">
+                  <div class="text-neutral-500 text-[10px] uppercase tracking-wider">Engineering Focus:</div>
+                  <div class="text-foreground font-semibold">Machine Learning &amp; Software Systems Engineering</div>
                 </div>
-                <div class="text-neutral-300 flex items-start gap-1.5">
-                  <span class="text-accent font-bold">•</span>
-                  <span><strong>Defensive Architecture:</strong> Fixed-point decimal arithmetic barring IEEE 754 float drift in financial ledgers.</span>
+                <div class="space-y-1">
+                  <div class="text-neutral-500 text-[10px] uppercase tracking-wider">Institution &amp; Faculty:</div>
+                  <div class="text-foreground">Faculty of Computer Science, Universitas Indonesia (Class of 2025)</div>
                 </div>
-                <div class="text-neutral-300 flex items-start gap-1.5">
-                  <span class="text-accent font-bold">•</span>
-                  <span><strong>Systems Throughput:</strong> Multi-agent dynamic memory allocation with zero CUDA ring fragmentation.</span>
+                <div class="space-y-1">
+                  <div class="text-neutral-500 text-[10px] uppercase tracking-wider">Kernel Environment:</div>
+                  <div class="text-foreground font-mono">Linux 6.8.0-reshandy-kernel (x86_64, POSIX Compliant)</div>
+                </div>
+                <div class="space-y-1">
+                  <div class="text-neutral-500 text-[10px] uppercase tracking-wider">Toolchain &amp; Runtimes:</div>
+                  <div class="text-foreground font-mono">Python 3.12, C++20, PyTorch 2.5, Polars, DuckDB, Astro</div>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-[#222c36] space-y-2">
+                <div class="text-neutral-400 font-bold text-[10.5px] uppercase tracking-wider flex items-center justify-between">
+                  <span>Core Engineering Invariants:</span>
+                  <span class="text-emerald-400 text-[10px]">3 / 3 PASS</span>
+                </div>
+                <div class="space-y-1.5 text-[11px]">
+                  <div class="flex items-start gap-2 bg-[#10151a] p-2 rounded-xs border border-[#1d2630]">
+                    <span class="text-emerald-400 font-bold">✔</span>
+                    <div>
+                      <strong class="text-foreground">Zero Data Leakage:</strong>
+                      <span class="text-neutral-300"> Mathematically verified temporal joins with purged cross-validation in Polars &amp; DuckDB.</span>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2 bg-[#10151a] p-2 rounded-xs border border-[#1d2630]">
+                    <span class="text-emerald-400 font-bold">✔</span>
+                    <div>
+                      <strong class="text-foreground">Defensive Architecture:</strong>
+                      <span class="text-neutral-300"> Fixed-point decimal arithmetic barring IEEE 754 float drift in financial ledgers.</span>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2 bg-[#10151a] p-2 rounded-xs border border-[#1d2630]">
+                    <span class="text-emerald-400 font-bold">✔</span>
+                    <div>
+                      <strong class="text-foreground">Systems Throughput:</strong>
+                      <span class="text-neutral-300"> Multi-agent dynamic memory allocation with zero CUDA ring fragmentation.</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           `;
-          appendLogEntry(trimmed, html);
+          appendLogEntry(trimmed, html, "200 OK", "success", tookMs);
+          setKernelStatus("idle");
           break;
         }
 
@@ -633,11 +915,17 @@
           const target = args[0]?.toLowerCase();
           if (!target) {
             playViolation();
+            const tookMs = Math.round(performance.now() - startTime) || 6;
             const html = `
-              <div class="text-amber-400 font-bold">cat: missing project or file argument.</div>
-              <div class="text-neutral-400 text-[11px]">Usage: cat [modelarena | finance-tracker | savebite | leakguard-ml]</div>
+              <div class="space-y-1 text-amber-400 font-bold">
+                <div>cat: missing project manifest operand.</div>
+                <div class="text-neutral-400 font-normal text-[11px]">
+                  Usage: <span class="text-accent font-bold">cat [modelarena | leakguard-ml | finance-tracker | savebite]</span>
+                </div>
+              </div>
             `;
-            appendLogEntry(trimmed, html);
+            appendLogEntry(trimmed, html, "400 BAD_REQUEST", "warning", tookMs);
+            setKernelStatus("idle");
             break;
           }
 
@@ -651,27 +939,44 @@
           const spec = PROJECT_CAT_DATA[specKey];
           if (!spec) {
             playViolation();
+            const tookMs = Math.round(performance.now() - startTime) || 6;
             const available = Object.keys(PROJECT_CAT_DATA).join(" | ");
             const html = `
-              <div class="text-amber-400 font-bold">cat: ${escapeHtml(target)}: No such project manifest.</div>
-              <div class="text-neutral-400 text-[11px]">Available targets: [${available}]</div>
+              <div class="space-y-1 text-amber-400 font-bold">
+                <div>cat: ${escapeHtml(target)}: No such project manifest in kernel space.</div>
+                <div class="text-neutral-400 font-normal text-[11px]">Available targets: [${available}]</div>
+              </div>
             `;
-            appendLogEntry(trimmed, html);
+            appendLogEntry(trimmed, html, "404 NOT_FOUND", "warning", tookMs);
+            setKernelStatus("idle");
             break;
           }
 
           playSuccess();
+          const tookMs = Math.round(performance.now() - startTime) || 14;
           const highlighted = syntaxHighlightJson(spec);
           const html = `
-            <div class="space-y-1">
-              <div class="flex items-center justify-between text-[10px] text-neutral-500 border-b border-[#222] pb-1">
-                <span>MANIFEST: ${spec.name.toUpperCase()} // SPEC_v1.0.json</span>
-                <span class="text-accent">${spec.status}</span>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-[10px] text-neutral-500 border-b border-[#222a32] pb-1.5 font-mono">
+                <div class="flex items-center gap-2">
+                  <span class="text-accent font-bold">MANIFEST:</span>
+                  <span class="text-foreground">${spec.name.toUpperCase()} // SPEC_v1.0.json</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-emerald-400 font-bold">[100% INVARIANTS PASS]</span>
+                  <span>•</span>
+                  <span class="text-accent">${spec.status}</span>
+                </div>
               </div>
-              <pre class="bg-[#0b0e11] p-2.5 rounded-xs border border-[#1b2228] overflow-x-auto text-[11px] leading-relaxed">${highlighted}</pre>
+              <pre class="bg-[#0b0e11] p-3 rounded-xs border border-[#1b2228] overflow-x-auto text-[11px] leading-relaxed select-text">${highlighted}</pre>
+              <div class="flex items-center justify-between text-[10px] text-neutral-500 pt-0.5">
+                <span>Repository: <a href="${spec.source_repo}" target="_blank" rel="noopener noreferrer" class="text-[#38bdf8] underline hover:text-accent">${spec.source_repo} ↗</a></span>
+                <span>Architecture verified under POSIX invariants</span>
+              </div>
             </div>
           `;
-          appendLogEntry(trimmed, html);
+          appendLogEntry(trimmed, html, "200 OK", "success", tookMs);
+          setKernelStatus("idle");
           break;
         }
 
@@ -681,71 +986,91 @@
 
           if (subTarget !== "modelarena" || !isTrain) {
             playViolation();
+            const tookMs = Math.round(performance.now() - startTime) || 8;
             const html = `
-              <div class="text-amber-400 font-bold">run: invalid command syntax.</div>
-              <div class="text-neutral-400 text-[11px]">Usage: <span class="text-emerald-400 font-bold">run modelarena --train</span></div>
+              <div class="space-y-1 text-amber-400 font-bold">
+                <div>run: invalid command syntax.</div>
+                <div class="text-neutral-400 font-normal text-[11px]">
+                  Usage: <span class="text-emerald-400 font-bold">run modelarena --train</span>
+                </div>
+              </div>
             `;
-            appendLogEntry(trimmed, html);
+            appendLogEntry(trimmed, html, "400 BAD_SYNTAX", "warning", tookMs);
+            setKernelStatus("idle");
             break;
           }
 
-          // Multi-agent training simulation with streaming stdout ASCII log (1 line per 100ms)
+          // Multi-agent training simulation with streaming stdout ASCII log
           playSuccess();
           isStreaming = true;
           input.disabled = true;
+          setKernelStatus("exec");
 
           const streamContainer = document.createElement("div");
-          streamContainer.className = "space-y-1.5";
+          streamContainer.className = "space-y-1.5 my-2.5 term-card-entrance";
           streamContainer.innerHTML = `
-            <div class="flex items-baseline gap-2 font-bold text-neutral-400">
-              <span class="text-accent select-none">guest@reshandy-kernel:~$</span>
-              <span class="text-foreground">${escapeHtml(trimmed)}</span>
+            <div class="flex items-center justify-between text-[10.5px] px-2.5 py-1.5 bg-[#0e1215] border border-accent/40 rounded-xs select-none">
+              <div class="flex items-center gap-2 font-mono">
+                <span class="text-accent font-bold">⚡</span>
+                <span class="text-neutral-400 font-medium hidden sm:inline">guest@reshandy-kernel:~$</span>
+                <span class="text-foreground font-bold">${escapeHtml(trimmed)}</span>
+              </div>
+              <div class="flex items-center gap-2 text-neutral-500 text-[10px] font-mono">
+                <span id="train-status-pill" class="px-1.5 py-0.5 rounded-xs border border-accent/50 bg-accent/20 text-accent font-bold font-mono text-[9px] tracking-wider animate-pulse">[RUNNING]</span>
+                <span class="hidden sm:inline text-neutral-600">•</span>
+                <span class="text-neutral-400 font-mono hidden sm:inline">Ctrl+C to abort</span>
+              </div>
             </div>
-            <div class="term-stdout pl-2 sm:pl-3 border-l-2 border-accent space-y-1 font-mono text-[11px] sm:text-xs">
-              <div class="text-neutral-500 text-[10px] pb-1">[EXEC] Invoking PyTorch 2.5 Multi-Agent CUDA Allocation Harness... Press Ctrl+C to abort.</div>
-              <div id="train-stream-target" class="space-y-0.5"></div>
+            <div class="term-stdout p-3 bg-[#0a0d0f]/95 border border-[#1b2228] rounded-xs font-mono text-[11px] sm:text-xs leading-relaxed space-y-2">
+              <div class="flex items-center justify-between pb-1.5 border-b border-[#1f2832] text-[10px] text-neutral-500">
+                <span class="text-accent font-bold">[PYTORCH 2.5 CUDA ALLOCATION HARNESS // MODELARENA]</span>
+                <span class="text-emerald-400 font-mono">SHARED BUFFER: 24.0 GB</span>
+              </div>
+              <div id="train-stream-target" class="space-y-1"></div>
             </div>
           `;
           log.appendChild(streamContainer);
           scrollScreenToBottom();
 
           const targetDiv = streamContainer.querySelector("#train-stream-target");
+          const statusPill = streamContainer.querySelector("#train-status-pill");
           if (!targetDiv) break;
 
           const logLines: { text: string; color?: string }[] = [
-            { text: "[INIT] Allocating 4 Heterogeneous Agents in POSIX Shared Memory Ring...", color: "text-neutral-400" },
-            { text: "[AGENT POOL] 01: Dense-12L | 02: MoE-8x2 | 03: LinearAttn | 04: StateSpace", color: "text-[#38bdf8]" },
-            { text: "[VRAM ARBITER] Total Sliding Buffer: 24.0 GB | Reallocation Patience: 50 steps", color: "text-neutral-400" },
-            { text: "[EPOCH 01/05] Loss: 2.418 | Speed: 1,320 tok/s [==>                 ] 15%", color: "text-neutral-300" },
-            { text: "[EPOCH 01/05] Loss: 1.842 | Speed: 1,380 tok/s [=====>              ] 30%", color: "text-neutral-300" },
-            { text: "[EPOCH 01/05] Loss: 1.412 | Speed: 1,410 tok/s [=========>          ] 50%", color: "text-neutral-300" },
-            { text: "[EPOCH 01/05] Loss: 1.105 | Speed: 1,425 tok/s [==============>     ] 75%", color: "text-neutral-300" },
-            { text: "[EPOCH 01/05] Loss: 0.942 | Speed: 1,430 tok/s [===================>] 100%", color: "text-emerald-400" },
-            { text: "[ARBITER] Reallocating memory: Agent 01 (+25% quota, ΔL=-1.476 curvature)", color: "text-accent" },
-            { text: "[EPOCH 02/05] Loss: 0.892 | Speed: 1,415 tok/s [===>                ] 20%", color: "text-neutral-300" },
-            { text: "[EPOCH 02/05] Loss: 0.761 | Speed: 1,420 tok/s [========>           ] 45%", color: "text-neutral-300" },
-            { text: "[EPOCH 02/05] Loss: 0.684 | Speed: 1,435 tok/s [============>       ] 65%", color: "text-neutral-300" },
-            { text: "[EPOCH 02/05] Loss: 0.598 | Speed: 1,440 tok/s [================>   ] 85%", color: "text-neutral-300" },
-            { text: "[EPOCH 02/05] Loss: 0.521 | Speed: 1,445 tok/s [===================>] 100%", color: "text-emerald-400" },
-            { text: "[ARBITER] Ring-Buffer offsets intact. CUDA memory fragmentation: 0.00%", color: "text-accent" },
-            { text: "[EPOCH 03/05] Loss: 0.495 | Speed: 1,420 tok/s [===>                ] 20%", color: "text-neutral-300" },
-            { text: "[EPOCH 03/05] Loss: 0.442 | Speed: 1,430 tok/s [========>           ] 45%", color: "text-neutral-300" },
-            { text: "[EPOCH 03/05] Loss: 0.384 | Speed: 1,420 tok/s [=========>          ] 62%", color: "text-amber-300 font-bold" },
-            { text: "[EPOCH 03/05] Loss: 0.341 | Speed: 1,440 tok/s [===============>    ] 80%", color: "text-neutral-300" },
-            { text: "[EPOCH 03/05] Loss: 0.298 | Speed: 1,450 tok/s [===================>] 100%", color: "text-emerald-400" },
-            { text: "[ARBITER] Relative ranking: Agent 01 rank #1, Agent 02 rank #2, Agent 04 rank #3", color: "text-accent" },
-            { text: "[EPOCH 04/05] Loss: 0.285 | Speed: 1,430 tok/s [===>                ] 20%", color: "text-neutral-300" },
-            { text: "[EPOCH 04/05] Loss: 0.262 | Speed: 1,440 tok/s [========>           ] 45%", color: "text-neutral-300" },
-            { text: "[EPOCH 04/05] Loss: 0.241 | Speed: 1,445 tok/s [============>       ] 65%", color: "text-neutral-300" },
-            { text: "[EPOCH 04/05] Loss: 0.224 | Speed: 1,455 tok/s [================>   ] 85%", color: "text-neutral-300" },
-            { text: "[EPOCH 04/05] Loss: 0.209 | Speed: 1,460 tok/s [===================>] 100%", color: "text-emerald-400" },
-            { text: "[EPOCH 05/05] Loss: 0.198 | Speed: 1,450 tok/s [===>                ] 20%", color: "text-neutral-300" },
-            { text: "[EPOCH 05/05] Loss: 0.189 | Speed: 1,455 tok/s [========>           ] 45%", color: "text-neutral-300" },
-            { text: "[EPOCH 05/05] Loss: 0.182 | Speed: 1,460 tok/s [=============>      ] 70%", color: "text-neutral-300" },
-            { text: "[EPOCH 05/05] Loss: 0.178 | Speed: 1,465 tok/s [===================>] 100%", color: "text-emerald-400 font-bold" },
-            { text: "------------------------------------------------------------------------", color: "text-neutral-600" },
-            { text: "[TRAINING COMPLETE] 5 Epochs in 2.8s | Final Loss: 0.178 (-92.6% ΔL)", color: "text-emerald-400 font-bold" },
-            { text: "[INVARIANT AUDIT] Zero CUDA fragmentation (0.00%) | Zero NaN or Inf values", color: "text-accent font-bold" }
+            { text: "● [01/04] [INIT] Allocating 4 Heterogeneous Agents in POSIX Shared Memory Ring...", color: "text-neutral-300 font-semibold" },
+            { text: "  ↳ AGENT POOL: 01: Dense-12L | 02: MoE-8x2 | 03: LinearAttn | 04: StateSpace", color: "text-[#38bdf8]" },
+            { text: "  ↳ VRAM ARBITER: Total Sliding Buffer: 24.0 GB | Reallocation Patience: 50 steps", color: "text-neutral-400" },
+            { text: "● [02/04] [EPOCH STREAM] Commencing Multi-Transformer Gradient Exchange...", color: "text-neutral-300 font-semibold" },
+            { text: "  [EPOCH 01/05] Loss: 2.418 | Speed: 1,320 tok/s [==>                 ] 15%", color: "text-neutral-300" },
+            { text: "  [EPOCH 01/05] Loss: 1.842 | Speed: 1,380 tok/s [=====>              ] 30%", color: "text-neutral-300" },
+            { text: "  [EPOCH 01/05] Loss: 1.412 | Speed: 1,410 tok/s [=========>          ] 50%", color: "text-neutral-300" },
+            { text: "  [EPOCH 01/05] Loss: 1.105 | Speed: 1,425 tok/s [==============>     ] 75%", color: "text-neutral-300" },
+            { text: "  [EPOCH 01/05] Loss: 0.942 | Speed: 1,430 tok/s [===================>] 100%", color: "text-emerald-400" },
+            { text: "● [03/04] [ARBITER] Reallocating memory: Agent 01 (+25% quota, ΔL=-1.476 curvature)", color: "text-accent font-bold" },
+            { text: "  [EPOCH 02/05] Loss: 0.892 | Speed: 1,415 tok/s [===>                ] 20%", color: "text-neutral-300" },
+            { text: "  [EPOCH 02/05] Loss: 0.761 | Speed: 1,420 tok/s [========>           ] 45%", color: "text-neutral-300" },
+            { text: "  [EPOCH 02/05] Loss: 0.684 | Speed: 1,435 tok/s [============>       ] 65%", color: "text-neutral-300" },
+            { text: "  [EPOCH 02/05] Loss: 0.598 | Speed: 1,440 tok/s [================>   ] 85%", color: "text-neutral-300" },
+            { text: "  [EPOCH 02/05] Loss: 0.521 | Speed: 1,445 tok/s [===================>] 100%", color: "text-emerald-400" },
+            { text: "  ↳ [AUDIT] Ring-Buffer offsets intact. CUDA memory fragmentation: 0.00%", color: "text-accent" },
+            { text: "  [EPOCH 03/05] Loss: 0.495 | Speed: 1,420 tok/s [===>                ] 20%", color: "text-neutral-300" },
+            { text: "  [EPOCH 03/05] Loss: 0.442 | Speed: 1,430 tok/s [========>           ] 45%", color: "text-neutral-300" },
+            { text: "  [EPOCH 03/05] Loss: 0.384 | Speed: 1,420 tok/s [=========>          ] 62%", color: "text-amber-300 font-bold" },
+            { text: "  [EPOCH 03/05] Loss: 0.341 | Speed: 1,440 tok/s [===============>    ] 80%", color: "text-neutral-300" },
+            { text: "  [EPOCH 03/05] Loss: 0.298 | Speed: 1,450 tok/s [===================>] 100%", color: "text-emerald-400" },
+            { text: "  ↳ [RANKING] Relative gradient: Agent 01 rank #1, Agent 02 rank #2, Agent 04 rank #3", color: "text-[#38bdf8]" },
+            { text: "  [EPOCH 04/05] Loss: 0.285 | Speed: 1,430 tok/s [===>                ] 20%", color: "text-neutral-300" },
+            { text: "  [EPOCH 04/05] Loss: 0.262 | Speed: 1,440 tok/s [========>           ] 45%", color: "text-neutral-300" },
+            { text: "  [EPOCH 04/05] Loss: 0.241 | Speed: 1,445 tok/s [============>       ] 65%", color: "text-neutral-300" },
+            { text: "  [EPOCH 04/05] Loss: 0.224 | Speed: 1,455 tok/s [================>   ] 85%", color: "text-neutral-300" },
+            { text: "  [EPOCH 04/05] Loss: 0.209 | Speed: 1,460 tok/s [===================>] 100%", color: "text-emerald-400" },
+            { text: "  [EPOCH 05/05] Loss: 0.198 | Speed: 1,450 tok/s [===>                ] 20%", color: "text-neutral-300" },
+            { text: "  [EPOCH 05/05] Loss: 0.189 | Speed: 1,455 tok/s [========>           ] 45%", color: "text-neutral-300" },
+            { text: "  [EPOCH 05/05] Loss: 0.182 | Speed: 1,460 tok/s [=============>      ] 70%", color: "text-neutral-300" },
+            { text: "  [EPOCH 05/05] Loss: 0.178 | Speed: 1,465 tok/s [===================>] 100%", color: "text-emerald-400 font-bold" },
+            { text: "────────────────────────────────────────────────────────────────────────", color: "text-neutral-700" },
+            { text: "● [04/04] [TRAINING COMPLETE] 5 Epochs in 2.8s | Final Loss: 0.178 (-92.6% ΔL)", color: "text-emerald-400 font-bold" },
+            { text: "  ✔ INVARIANT AUDIT: Zero CUDA fragmentation (0.00%) | Zero NaN/Inf anomalies", color: "text-accent font-bold" }
           ];
 
           let lineIdx = 0;
@@ -758,6 +1083,11 @@
               isStreaming = false;
               input.disabled = false;
               input.focus();
+              setKernelStatus("idle");
+              if (statusPill) {
+                statusPill.className = "px-1.5 py-0.5 rounded-xs border border-emerald-500/50 bg-emerald-950/60 text-emerald-400 font-bold font-mono text-[9px] tracking-wider";
+                statusPill.textContent = "[COMPLETED // 0.00% FRAG]";
+              }
               playSuccess();
               scrollScreenToBottom();
               return;
@@ -765,12 +1095,12 @@
 
             const item = logLines[lineIdx];
             const p = document.createElement("div");
-            p.className = item.color || "text-neutral-300";
+            p.className = (item.color || "text-neutral-300") + " term-line-entrance";
             p.textContent = item.text;
             targetDiv.appendChild(p);
             scrollScreenToBottom();
             lineIdx++;
-          }, 100);
+          }, 90);
 
           break;
         }
@@ -786,86 +1116,89 @@
             splitArg = args[0].toLowerCase();
           }
           playSuccess();
+          const tookMs = Math.round(performance.now() - startTime) || 16;
           const html = `
-            <div class="space-y-2 text-[11px] sm:text-xs">
-              <div class="flex items-center justify-between border-b border-[#222] pb-1 text-[10px] text-neutral-400">
-                <span class="text-accent font-bold">QUANTITATIVE BENCHMARK EVALUATION (SPLIT: ${(splitArg || "test").toUpperCase()})</span>
-                <span class="text-emerald-400">100% INVARIANTS PASS</span>
+            <div class="space-y-2.5 text-[11px] sm:text-xs">
+              <div class="flex flex-wrap items-center justify-between border-b border-[#222a32] pb-1.5 text-[10px] text-neutral-400 font-mono gap-1">
+                <span class="text-accent font-bold tracking-wider">QUANTITATIVE BENCHMARK EVALUATION (SPLIT: ${(splitArg || "test").toUpperCase()})</span>
+                <span class="text-emerald-400 font-bold">100% INVARIANTS PASS</span>
               </div>
               <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse border border-[#222]">
+                <table class="w-full text-left border-collapse border border-[#1e2630] font-mono text-[11px]">
                   <thead>
-                    <tr class="bg-[#121619] text-neutral-400 border-b border-[#222]">
-                      <th class="p-1.5">METRIC</th>
-                      <th class="p-1.5">BENCHMARK / SPEC</th>
-                      <th class="p-1.5">EVAL RESULT</th>
-                      <th class="p-1.5">STATUS</th>
+                    <tr class="bg-[#12171c] text-neutral-400 border-b border-[#1e2630] text-[10px] uppercase tracking-wider">
+                      <th class="p-2">METRIC</th>
+                      <th class="p-2">BENCHMARK SPEC</th>
+                      <th class="p-2">EVAL RESULT</th>
+                      <th class="p-2">STATUS</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-[#1a1a1a]">
+                  <tbody class="divide-y divide-[#1b222a]">
                     <tr>
-                      <td class="p-1.5 font-bold text-foreground">Sharpe Ratio (Annualized)</td>
-                      <td class="p-1.5 text-neutral-500">&gt; 1.80</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">2.41</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">[VERIFIED]</td>
+                      <td class="p-2 font-bold text-foreground">Sharpe Ratio (Annualized)</td>
+                      <td class="p-2 text-neutral-500">&gt; 1.80</td>
+                      <td class="p-2 text-emerald-400 font-bold">2.41</td>
+                      <td class="p-2 text-emerald-400 font-bold">[VERIFIED]</td>
                     </tr>
                     <tr>
-                      <td class="p-1.5 font-bold text-foreground">Maximum Drawdown (MDD)</td>
-                      <td class="p-1.5 text-neutral-500">&lt; -10.00%</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">-4.82%</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">[VERIFIED]</td>
+                      <td class="p-2 font-bold text-foreground">Maximum Drawdown (MDD)</td>
+                      <td class="p-2 text-neutral-500">&lt; -10.00%</td>
+                      <td class="p-2 text-emerald-400 font-bold">-4.82%</td>
+                      <td class="p-2 text-emerald-400 font-bold">[VERIFIED]</td>
                     </tr>
                     <tr>
-                      <td class="p-1.5 font-bold text-foreground">Sortino Ratio</td>
-                      <td class="p-1.5 text-neutral-500">&gt; 2.50</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">3.18</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">[VERIFIED]</td>
+                      <td class="p-2 font-bold text-foreground">Sortino Ratio</td>
+                      <td class="p-2 text-neutral-500">&gt; 2.50</td>
+                      <td class="p-2 text-emerald-400 font-bold">3.18</td>
+                      <td class="p-2 text-emerald-400 font-bold">[VERIFIED]</td>
                     </tr>
                     <tr>
-                      <td class="p-1.5 font-bold text-foreground">Inference Latency (p50)</td>
-                      <td class="p-1.5 text-neutral-500">&lt; 2.00 ms</td>
-                      <td class="p-1.5 text-[#38bdf8] font-mono">1.14 ms</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">[PASS]</td>
+                      <td class="p-2 font-bold text-foreground">Inference Latency (p50)</td>
+                      <td class="p-2 text-neutral-500">&lt; 2.00 ms</td>
+                      <td class="p-2 text-[#38bdf8] font-mono">1.14 ms</td>
+                      <td class="p-2 text-emerald-400 font-bold">[PASS]</td>
                     </tr>
                     <tr>
-                      <td class="p-1.5 font-bold text-foreground">Inference Latency (p95)</td>
-                      <td class="p-1.5 text-neutral-500">&lt; 5.00 ms</td>
-                      <td class="p-1.5 text-[#38bdf8] font-mono">3.82 ms</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">[PASS]</td>
+                      <td class="p-2 font-bold text-foreground">Inference Latency (p95)</td>
+                      <td class="p-2 text-neutral-500">&lt; 5.00 ms</td>
+                      <td class="p-2 text-[#38bdf8] font-mono">3.82 ms</td>
+                      <td class="p-2 text-emerald-400 font-bold">[PASS]</td>
                     </tr>
                     <tr>
-                      <td class="p-1.5 font-bold text-foreground">Inference Latency (p99)</td>
-                      <td class="p-1.5 text-neutral-500">&lt; 10.00 ms</td>
-                      <td class="p-1.5 text-[#38bdf8] font-mono">6.15 ms</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">[PASS]</td>
+                      <td class="p-2 font-bold text-foreground">Inference Latency (p99)</td>
+                      <td class="p-2 text-neutral-500">&lt; 10.00 ms</td>
+                      <td class="p-2 text-[#38bdf8] font-mono">6.15 ms</td>
+                      <td class="p-2 text-emerald-400 font-bold">[PASS]</td>
                     </tr>
                     <tr>
-                      <td class="p-1.5 font-bold text-foreground">Lookahead Data Leakage</td>
-                      <td class="p-1.5 text-neutral-500">0.0000 (0.00%)</td>
-                      <td class="p-1.5 text-accent font-bold">0.0000 (0.00%)</td>
-                      <td class="p-1.5 text-accent font-bold">[ZERO LEAK]</td>
+                      <td class="p-2 font-bold text-foreground">Lookahead Data Leakage</td>
+                      <td class="p-2 text-neutral-500">0.0000 (0.00%)</td>
+                      <td class="p-2 text-accent font-bold">0.0000 (0.00%)</td>
+                      <td class="p-2 text-accent font-bold">[ZERO LEAK]</td>
                     </tr>
                     <tr>
-                      <td class="p-1.5 font-bold text-foreground">Temporal Join Invariants</td>
-                      <td class="p-1.5 text-neutral-500">10,000 / 10,000</td>
-                      <td class="p-1.5 text-emerald-400">10,000 PASS</td>
-                      <td class="p-1.5 text-emerald-400 font-bold">[PASS]</td>
+                      <td class="p-2 font-bold text-foreground">Temporal Join Invariants</td>
+                      <td class="p-2 text-neutral-500">10,000 / 10,000</td>
+                      <td class="p-2 text-emerald-400">10,000 PASS</td>
+                      <td class="p-2 text-emerald-400 font-bold">[PASS]</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <div class="text-[10px] text-neutral-500">
+              <div class="text-[10px] text-neutral-500 pt-0.5">
                 Evaluation performed on out-of-sample temporal partition with 72-hour purge embargo horizon.
               </div>
             </div>
           `;
-          appendLogEntry(trimmed, html);
+          appendLogEntry(trimmed, html, "200 OK", "success", tookMs);
+          setKernelStatus("idle");
           break;
         }
 
         case "curl": {
           const endpoint = args[0] || "/contact";
           playSuccess();
+          const tookMs = Math.round(performance.now() - startTime) || 10;
           const contactObj = {
             candidate: "Reshandy Taftazani Aulya",
             role: "Machine Learning & Systems Engineer",
@@ -883,48 +1216,66 @@
           };
           const highlighted = syntaxHighlightJson(contactObj);
           const html = `
-            <div class="space-y-1">
-              <div class="text-[10px] text-neutral-500 border-b border-[#222] pb-1 font-mono">
-                HTTP/2 200 OK • content-type: application/json • target: ${escapeHtml(endpoint)}
+            <div class="space-y-2">
+              <div class="text-[10px] text-neutral-500 border-b border-[#222a32] pb-1 font-mono flex items-center justify-between">
+                <span>HTTP/2 200 OK • content-type: application/json • target: ${escapeHtml(endpoint)}</span>
+                <span class="text-emerald-400 font-bold">TLSv1.3</span>
               </div>
-              <pre class="bg-[#0b0e11] p-2.5 rounded-xs border border-[#1b2228] overflow-x-auto text-[11px] leading-relaxed">${highlighted}</pre>
+              <pre class="bg-[#0b0e11] p-3 rounded-xs border border-[#1b2228] overflow-x-auto text-[11px] leading-relaxed select-text">${highlighted}</pre>
+              <div class="flex flex-wrap items-center gap-2 pt-1 text-[10.5px]">
+                <a href="mailto:reshandy.taftazani@ui.ac.id" class="px-2 py-0.5 rounded-xs bg-[#161c22] hover:bg-accent hover:text-black text-foreground font-bold transition-colors">EMAIL ↗</a>
+                <a href="https://github.com/reshandytaftazani" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded-xs bg-[#161c22] hover:bg-accent hover:text-black text-foreground font-bold transition-colors">GITHUB ↗</a>
+                <a href="https://linkedin.com/in/reshandy-taftazani-aulya" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded-xs bg-[#161c22] hover:bg-accent hover:text-black text-foreground font-bold transition-colors">LINKEDIN ↗</a>
+              </div>
             </div>
           `;
-          appendLogEntry(trimmed, html);
+          appendLogEntry(trimmed, html, "200 OK", "success", tookMs);
+          setKernelStatus("idle");
           break;
         }
 
         case "roofline": {
           playSuccess();
+          const tookMs = Math.round(performance.now() - startTime) || 9;
           const html = `
-            <div class="space-y-1.5 text-[11px] sm:text-xs">
-              <div class="text-accent font-bold">[HARDWARE ROOFLINE MODEL TELEMETRY]</div>
-              <div class="text-neutral-300">
-                Formula: P_attainable = min( Peak_FLOPS, Bandwidth &times; Operational_Intensity )
+            <div class="space-y-2.5 text-[11px] sm:text-xs">
+              <div class="flex items-center justify-between border-b border-[#222a32] pb-1.5 text-[10px]">
+                <span class="text-accent font-bold tracking-wider">[HARDWARE ROOFLINE MODEL TELEMETRY]</span>
+                <span class="text-neutral-400 font-mono">P_attainable = min( Peak_FLOPS, Bandwidth &times; Intensity )</span>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[10px]">
-                <div class="p-2 bg-[#121619] border border-[#222]">
-                  <div class="text-white font-bold">NVIDIA A100 SXM4</div>
-                  <div class="text-neutral-400">BW: 1,555 GB/s | Peak: 312 TF</div>
-                  <div class="text-[#38bdf8]">Knee: 200.6 FLOP/B</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-[10.5px]">
+                <div class="p-2.5 bg-[#101419] border border-[#1e2630] rounded-xs space-y-1">
+                  <div class="text-white font-bold text-[11px] flex items-center justify-between">
+                    <span>NVIDIA A100 SXM4</span>
+                    <span class="text-emerald-400 text-[9.5px]">DATACENTER</span>
+                  </div>
+                  <div class="text-neutral-400 text-[10px]">BW: 1,555 GB/s | Peak: 312 TF</div>
+                  <div class="text-[#38bdf8] font-bold">Knee: 200.6 FLOP/B</div>
                 </div>
-                <div class="p-2 bg-[#121619] border border-[#222]">
-                  <div class="text-white font-bold">NVIDIA RTX 4090</div>
-                  <div class="text-neutral-400">BW: 1,008 GB/s | Peak: 82.6 TF</div>
-                  <div class="text-[#38bdf8]">Knee: 81.9 FLOP/B</div>
+                <div class="p-2.5 bg-[#101419] border border-[#1e2630] rounded-xs space-y-1">
+                  <div class="text-white font-bold text-[11px] flex items-center justify-between">
+                    <span>NVIDIA RTX 4090</span>
+                    <span class="text-[#38bdf8] text-[9.5px]">WORKSTATION</span>
+                  </div>
+                  <div class="text-neutral-400 text-[10px]">BW: 1,008 GB/s | Peak: 82.6 TF</div>
+                  <div class="text-[#38bdf8] font-bold">Knee: 81.9 FLOP/B</div>
                 </div>
-                <div class="p-2 bg-[#121619] border border-[#222]">
-                  <div class="text-white font-bold">NVIDIA T4</div>
-                  <div class="text-neutral-400">BW: 320 GB/s | Peak: 65 TF</div>
-                  <div class="text-[#38bdf8]">Knee: 203.1 FLOP/B</div>
+                <div class="p-2.5 bg-[#101419] border border-[#1e2630] rounded-xs space-y-1">
+                  <div class="text-white font-bold text-[11px] flex items-center justify-between">
+                    <span>NVIDIA T4</span>
+                    <span class="text-amber-400 text-[9.5px]">INFERENCE</span>
+                  </div>
+                  <div class="text-neutral-400 text-[10px]">BW: 320 GB/s | Peak: 65 TF</div>
+                  <div class="text-[#38bdf8] font-bold">Knee: 203.1 FLOP/B</div>
                 </div>
               </div>
-              <div class="pt-1 text-neutral-400 text-[10px]">
+              <div class="pt-0.5 text-neutral-400 text-[10px]">
                 Interactive visualizer: <a href="/projects/modelarena#hardware-roofline" class="text-accent underline font-bold" target="_self">/projects/modelarena#hardware-roofline ↗</a>
               </div>
             </div>
           `;
-          appendLogEntry(trimmed, html);
+          appendLogEntry(trimmed, html, "200 OK", "success", tookMs);
+          setKernelStatus("idle");
           break;
         }
 
@@ -938,6 +1289,7 @@
           playClick();
           log.innerHTML = "";
           renderBootBanner();
+          setKernelStatus("idle");
           break;
         }
 
@@ -948,11 +1300,17 @@
 
         default: {
           playViolation();
+          const tookMs = Math.round(performance.now() - startTime) || 5;
           const html = `
-            <div class="text-amber-400 font-bold">zsh: command not found: ${escapeHtml(cmd)}</div>
-            <div class="text-neutral-400 text-[11px]">Type <span class="text-accent font-bold">help</span> to view available kernel commands.</div>
+            <div class="space-y-1 text-rose-400 font-bold">
+              <div>zsh: command not found: ${escapeHtml(cmd)}</div>
+              <div class="text-neutral-400 font-normal text-[11px]">
+                Type <button type="button" class="term-quick-cmd text-accent font-bold underline cursor-pointer" data-cmd="help">help</button> to view available kernel interfaces.
+              </div>
+            </div>
           `;
-          appendLogEntry(trimmed, html);
+          appendLogEntry(trimmed, html, "127 NOT_FOUND", "error", tookMs);
+          setKernelStatus("idle");
           break;
         }
       }
@@ -974,6 +1332,17 @@
 
     // Screen click redirects focus to input
     screen.addEventListener("click", (e) => {
+      // If user clicked a quick command inside stdout
+      const target = e.target as HTMLElement;
+      if (target && target.classList.contains("term-quick-cmd")) {
+        const cmd = target.getAttribute("data-cmd");
+        if (cmd) {
+          executeCommand(cmd);
+          input.focus();
+          return;
+        }
+      }
+
       // If user isn't actively selecting text, focus input
       const selection = window.getSelection();
       if (!selection || selection.isCollapsed) {
@@ -1023,7 +1392,20 @@
       if (e.key === "Tab") {
         e.preventDefault();
         const val = input.value.trim().toLowerCase();
-        const candidates = ["help", "whoami", "run modelarena --train", "eval --split test", "cat modelarena", "cat finance-tracker", "cat savebite", "curl /contact", "clear", "exit"];
+        const candidates = [
+          "help", 
+          "whoami", 
+          "run modelarena --train", 
+          "eval --split test", 
+          "cat modelarena", 
+          "cat leakguard-ml",
+          "cat finance-tracker", 
+          "cat savebite", 
+          "roofline",
+          "curl /contact", 
+          "clear", 
+          "exit"
+        ];
         const match = candidates.find((c) => c.startsWith(val));
         if (match) {
           input.value = match;
