@@ -629,7 +629,7 @@ const defaultDomain = skillDomains[0]; // LANG
   @keyframes tabRowSlideIn {
     0% {
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(16px);
     }
     100% {
       opacity: 1;
@@ -664,35 +664,38 @@ const defaultDomain = skillDomains[0]; // LANG
 
   /* Staggered Row Entrance on Tab Activation */
   .domain-tab-panel.is-entering .domain-header-block {
-    animation: tabRowSlideIn 150ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
+    animation: tabRowSlideIn 320ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
   }
   .domain-tab-panel.is-entering .domain-desc-block {
-    animation: tabRowSlideIn 150ms cubic-bezier(0.16, 1, 0.3, 1) 20ms both;
+    animation: tabRowSlideIn 320ms cubic-bezier(0.16, 1, 0.3, 1) 30ms both;
   }
   .domain-tab-panel.is-entering .skill-row-container:nth-child(1) {
-    animation: tabRowSlideIn 180ms cubic-bezier(0.16, 1, 0.3, 1) 25ms both;
+    animation: tabRowSlideIn 350ms cubic-bezier(0.16, 1, 0.3, 1) 50ms both;
   }
   .domain-tab-panel.is-entering .skill-row-container:nth-child(2) {
-    animation: tabRowSlideIn 180ms cubic-bezier(0.16, 1, 0.3, 1) 50ms both;
+    animation: tabRowSlideIn 350ms cubic-bezier(0.16, 1, 0.3, 1) 95ms both;
   }
   .domain-tab-panel.is-entering .skill-row-container:nth-child(3) {
-    animation: tabRowSlideIn 180ms cubic-bezier(0.16, 1, 0.3, 1) 75ms both;
+    animation: tabRowSlideIn 350ms cubic-bezier(0.16, 1, 0.3, 1) 140ms both;
   }
   .domain-tab-panel.is-entering .skill-row-container:nth-child(4) {
-    animation: tabRowSlideIn 180ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both;
+    animation: tabRowSlideIn 350ms cubic-bezier(0.16, 1, 0.3, 1) 185ms both;
   }
   .domain-tab-panel.is-entering .skill-row-container:nth-child(5) {
-    animation: tabRowSlideIn 180ms cubic-bezier(0.16, 1, 0.3, 1) 125ms both;
+    animation: tabRowSlideIn 350ms cubic-bezier(0.16, 1, 0.3, 1) 230ms both;
+  }
+  .domain-tab-panel.is-entering .skill-row-container:nth-child(n+6) {
+    animation: tabRowSlideIn 350ms cubic-bezier(0.16, 1, 0.3, 1) 275ms both;
   }
 
-  /* Scanline Laser Sweep */
+  /* Scanline Laser Sweep (Synchronized with Tab Row Cascade) */
   .domain-tab-panel.is-entering .panel-scanline-laser {
-    animation: scanlineSweep 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: scanlineSweep 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   /* Inspector Hardware Bus Synchronize Flash */
   #desktop-inspector-panel.is-syncing {
-    animation: inspectorSyncPulse 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: inspectorSyncPulse 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   /* Accessibility: Prefers Reduced Motion */
