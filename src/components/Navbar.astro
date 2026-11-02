@@ -340,6 +340,9 @@ const navLinks = [
 
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && drawer && !drawer.classList.contains("opacity-0")) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         closeMobileMenu();
       }
     });

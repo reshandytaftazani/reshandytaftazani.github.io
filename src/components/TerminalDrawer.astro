@@ -1084,6 +1084,8 @@
       // Escape key closes drawer if open
       if (isEscape && isOpen) {
         e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         closeTerminal();
         return;
       }

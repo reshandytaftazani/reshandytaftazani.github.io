@@ -732,6 +732,11 @@ const readingTime = calculateReadingTime(note.body, note.data.readingTime);
       // 3. ESC Key Navigation (Closes Drawer if open, else navigates back to /notes)
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
+          // If any modal/drawer overlay is active, let the overlay close itself and DO NOT navigate away
+          if ((window as any).isAnyOverlayOpen && (window as any).isAnyOverlayOpen()) {
+            return;
+          }
+
           if (isDrawerOpen) {
             closeDrawer();
             e.stopPropagation();

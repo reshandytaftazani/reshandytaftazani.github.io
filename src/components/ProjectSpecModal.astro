@@ -450,6 +450,9 @@ const projectSpecs: ProjectSpec[] = [
     // Cancel on ESC
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !dialog.classList.contains("hidden")) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         closeModal();
       }
     });

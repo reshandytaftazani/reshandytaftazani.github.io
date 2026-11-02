@@ -305,6 +305,11 @@ const categories = [
           e.preventDefault();
           searchInput?.focus();
         } else if (e.key === "Escape") {
+          // If any modal/drawer overlay is active, let the overlay close itself and DO NOT navigate away
+          if ((window as any).isAnyOverlayOpen && (window as any).isAnyOverlayOpen()) {
+            return;
+          }
+
           if (searchInput && document.activeElement === searchInput) {
             searchInput.blur();
           } else {

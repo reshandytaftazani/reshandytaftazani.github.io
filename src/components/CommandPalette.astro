@@ -12,7 +12,7 @@
 >
   <div 
     id="swiss-command-container"
-    class="relative w-full max-w-2xl bg-[#0f0f0f] border border-[#2a2a2a] shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono text-xs transition-all duration-150 scale-95 opacity-0 mt-8 sm:mt-16"
+    class="relative w-full max-w-2xl bg-[#0f0f0f] border border-[#2a2a2a] shadow-[0_25px_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono text-xs mt-8 sm:mt-16 will-change-transform"
   >
     <!-- Command Header & Search Bar -->
     <div class="flex items-center gap-3 px-4 py-3.5 border-b border-[#222] bg-[#141414]">
@@ -78,7 +78,7 @@
     // Continuous upward wipe transition helper for cross-page navigation
     function navigateWithCurtain(targetPath: string) {
       // Instantly dismiss palette to prevent overlap with curtain
-      dialog.classList.remove("flex");
+      dialog.classList.remove("flex", "is-open", "is-closing");
       dialog.classList.add("hidden");
       document.body.style.overflow = "";
 
@@ -511,28 +511,34 @@
       item.action();
     }
 
+    let closeTimeout: ReturnType<typeof setTimeout> | null = null;
+
     function openPalette() {
-      dialog.classList.remove("hidden");
-      dialog.classList.add("flex");
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+      }
+      dialog.classList.remove("hidden", "is-closing");
+      dialog.classList.add("flex", "is-open");
       document.body.style.overflow = "hidden";
 
-      requestAnimationFrame(() => {
-        container.classList.remove("scale-95", "opacity-0");
-        container.classList.add("scale-100", "opacity-100");
-        input.value = "";
-        input.focus();
-        renderResults("");
-      });
+      input.value = "";
+      input.focus();
+      renderResults("");
     }
 
     function closePalette() {
-      container.classList.remove("scale-100", "opacity-100");
-      container.classList.add("scale-95", "opacity-0");
-      setTimeout(() => {
-        dialog.classList.remove("flex");
+      if (!dialog.classList.contains("flex") || dialog.classList.contains("is-closing")) return;
+      dialog.classList.remove("is-open");
+      dialog.classList.add("is-closing");
+      document.body.style.overflow = "";
+
+      if (closeTimeout) clearTimeout(closeTimeout);
+      closeTimeout = setTimeout(() => {
+        dialog.classList.remove("flex", "is-closing");
         dialog.classList.add("hidden");
-        document.body.style.overflow = "";
-      }, 150);
+        closeTimeout = null;
+      }, 200);
     }
 
     // Input live filter
@@ -556,6 +562,8 @@
       // Close on ESC
       if (e.key === "Escape" && !dialog.classList.contains("hidden")) {
         e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         closePalette();
         return;
       }
@@ -608,3 +616,83 @@
     setupCommandPalette();
   }
 </script>
+
+<style>
+  @keyframes cmdBackdropFadeIn {
+    from {
+      opacity: 0;
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+    }
+    to {
+      opacity: 1;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  }
+
+  @keyframes cmdBackdropFadeOut {
+    from {
+      opacity: 1;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    to {
+      opacity: 0;
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+    }
+  }
+
+  @keyframes cmdModalEnter {
+    0% {
+      opacity: 0;
+      transform: scale(0.93) translateY(-20px);
+    }
+    40% {
+      opacity: 0.85;
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes cmdModalExit {
+    0% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.95) translateY(-16px);
+    }
+  }
+
+  #swiss-command-dialog.is-open {
+    animation: cmdBackdropFadeIn 0.25s ease-out forwards;
+  }
+
+  #swiss-command-dialog.is-open #swiss-command-container {
+    animation: cmdModalEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  #swiss-command-dialog.is-closing {
+    animation: cmdBackdropFadeOut 0.2s ease-in forwards;
+  }
+
+  #swiss-command-dialog.is-closing #swiss-command-container {
+    animation: cmdModalExit 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #swiss-command-dialog.is-open #swiss-command-container,
+    #swiss-command-dialog.is-closing #swiss-command-container {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+</style>

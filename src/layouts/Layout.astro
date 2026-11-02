@@ -103,6 +103,27 @@ const ogImageURL = new URL(ogImage, Astro.site).toString();
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Global Overlay State Engine: Detects active modals/drawers to prevent ESC key collisions -->
+    <script is:inline>
+      window.isAnyOverlayOpen = function() {
+        const cmd = document.getElementById("swiss-command-dialog");
+        if (cmd && !cmd.classList.contains("hidden")) return true;
+
+        const term = document.getElementById("terminal-drawer");
+        if (term && (term.classList.contains("translate-y-0") || !term.classList.contains("translate-y-full"))) return true;
+
+        const spec = document.getElementById("project-spec-dialog");
+        if (spec && !spec.classList.contains("hidden")) return true;
+
+        const mobileMenu = document.getElementById("mobile-menu-drawer");
+        if (mobileMenu && !mobileMenu.classList.contains("opacity-0") && !mobileMenu.classList.contains("pointer-events-none")) return true;
+
+        const annot = document.getElementById("annotation-drawer");
+        if (annot && annot.classList.contains("translate-x-0")) return true;
+
+        return false;
+      };
+    </script>
   </head>
   <body class="bg-background text-foreground font-sans antialiased min-h-screen relative overflow-x-hidden selection:bg-[#ff4500] selection:text-white">
     

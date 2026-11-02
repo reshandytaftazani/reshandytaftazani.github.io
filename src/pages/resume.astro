@@ -215,7 +215,6 @@ Architecture & Methodology:
   title="Reshandy Taftazani Aulya — Curriculum Vitae | ML & Systems Engineer"
   description="Printable Swiss Technical CV of Reshandy Taftazani Aulya. Computer Science undergraduate at Universitas Indonesia (Fasilkom UI). Machine Learning Engineering & Software Systems."
   ogImage="/api/og/resume.png"
-  hideOverlays={true}
 >
   <!-- Hidden ATS Text Store for Clipboard copy (Stored in script to avoid layout rendering) -->
   <script id="ats-plain-text" type="text/plain" class="no-print" aria-hidden="true">{plainTextATS}</script>
@@ -579,6 +578,11 @@ Architecture & Methodology:
       // 1. ESC Key returns to Homepage
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
+          // If any modal/drawer overlay is active, let the overlay close itself and DO NOT navigate away
+          if ((window as any).isAnyOverlayOpen && (window as any).isAnyOverlayOpen()) {
+            return;
+          }
+
           if ((window as any).navigateWithCurtain) {
             (window as any).navigateWithCurtain("/");
           } else {

@@ -328,6 +328,17 @@ const categories = ["ALL", ...new Set(allProjects.map((p) => p.data.category))];
       // 1. ESC Key returns to home
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
+          // If any modal/drawer overlay is active, let the overlay close itself and DO NOT navigate away
+          if ((window as any).isAnyOverlayOpen && (window as any).isAnyOverlayOpen()) {
+            return;
+          }
+
+          const searchInput = document.getElementById("directory-search-input") as HTMLInputElement | null;
+          if (searchInput && document.activeElement === searchInput) {
+            searchInput.blur();
+            return;
+          }
+
           if ((window as any).navigateWithCurtain) {
             (window as any).navigateWithCurtain("/#projects");
           } else {
