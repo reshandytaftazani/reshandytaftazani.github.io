@@ -12,6 +12,7 @@ interface Props {
   ogImage?: string;
   ogType?: 'website' | 'article';
   publishedTime?: string;
+  hideOverlays?: boolean;
 }
 
 const {
@@ -20,6 +21,7 @@ const {
   ogImage = "/api/og/default.png",
   ogType = "website",
   publishedTime,
+  hideOverlays = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -107,14 +109,18 @@ const ogImageURL = new URL(ogImage, Astro.site).toString();
     <!-- Swiss Telemetry Boot Sequence & Continuous Upward Wipe Shutter -->
     <PageTransition />
 
-    <!-- Global Swiss Command Palette (Ctrl+K / Cmd+K) -->
-    <CommandPalette />
+    {!hideOverlays && (
+      <>
+        <!-- Global Swiss Command Palette (Ctrl+K / Cmd+K) -->
+        <CommandPalette />
 
-    <!-- Project Technical Spec Sheet Modal Drawer -->
-    <ProjectSpecModal />
+        <!-- Project Technical Spec Sheet Modal Drawer -->
+        <ProjectSpecModal />
 
-    <!-- Global Interactive UNIX Monospaced Terminal Drawer (~ / Ctrl+J) -->
-    <TerminalDrawer />
+        <!-- Global Interactive UNIX Monospaced Terminal Drawer (~ / Ctrl+J) -->
+        <TerminalDrawer />
+      </>
+    )}
 
     <!-- Custom Interactive Spring Cursor -->
     <CustomCursor />

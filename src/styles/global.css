@@ -273,3 +273,26 @@ html.has-custom-cursor textarea {
     transition: none !important;
   }
 }
+
+/* Universal Print Cleanup: Suppress all interactive modals, fixed backdrops, drawers and cursors */
+@media print {
+  .no-print,
+  #swiss-cursor,
+  #swiss-cursor-dot,
+  #swiss-preloader,
+  #swiss-shutter,
+  #swiss-command-dialog,
+  #project-spec-dialog,
+  #terminal-drawer,
+  #terminal-scrim,
+  #mobile-menu-drawer,
+  #nav-scrim {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+

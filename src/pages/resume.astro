@@ -215,9 +215,10 @@ Architecture & Methodology:
   title="Reshandy Taftazani Aulya — Curriculum Vitae | ML & Systems Engineer"
   description="Printable Swiss Technical CV of Reshandy Taftazani Aulya. Computer Science undergraduate at Universitas Indonesia (Fasilkom UI). Machine Learning Engineering & Software Systems."
   ogImage="/api/og/resume.png"
+  hideOverlays={true}
 >
-  <!-- Hidden ATS Text Store for Clipboard copy -->
-  <textarea id="ats-plain-text" class="hidden" aria-hidden="true" readonly>{plainTextATS}</textarea>
+  <!-- Hidden ATS Text Store for Clipboard copy (Stored in script to avoid layout rendering) -->
+  <script id="ats-plain-text" type="text/plain" class="no-print" aria-hidden="true">{plainTextATS}</script>
 
   <!-- Screen Sticky Quick Action Bar (Suppressed on Print) -->
   <header class="no-print sticky top-0 z-40 w-full border-b border-[#262626] bg-[#0a0a0a]/95 backdrop-blur-md text-foreground">
@@ -328,14 +329,14 @@ Architecture & Methodology:
         </div>
 
         <!-- Contact & Telemetry Matrix (Swiss Hairline Grid Table - 2 Spacious Columns) -->
-        <div class="mt-5 border border-neutral-300 divide-y divide-neutral-300 font-mono text-xs">
+        <div class="mt-4 sm:mt-5 border border-neutral-300 divide-y divide-neutral-300 font-mono text-xs">
           <!-- Row 1: Location & Institutional Email -->
           <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-neutral-300">
-            <div class="p-3 bg-neutral-50/50 print:bg-transparent">
+            <div class="contact-cell p-2.5 sm:p-3 bg-neutral-50/50 print:bg-transparent">
               <span class="text-neutral-500 block text-[9.5px] uppercase tracking-wider font-semibold mb-0.5">LOCATION</span>
               <span class="font-bold text-black text-xs sm:text-[12.5px] tracking-tight">{personalInfo.location}</span>
             </div>
-            <div class="p-3 bg-neutral-50/50 print:bg-transparent">
+            <div class="contact-cell p-2.5 sm:p-3 bg-neutral-50/50 print:bg-transparent">
               <span class="text-neutral-500 block text-[9.5px] uppercase tracking-wider font-semibold mb-0.5">EMAIL (INSTITUTIONAL)</span>
               <a href={`mailto:${personalInfo.email}`} class="font-bold text-black hover:text-accent underline underline-offset-2 decoration-neutral-300 text-xs sm:text-[12.5px] tracking-tight transition-colors">
                 {personalInfo.email}
@@ -345,13 +346,13 @@ Architecture & Methodology:
 
           <!-- Row 2: Code Repository & Professional Network -->
           <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-neutral-300">
-            <div class="p-3 bg-neutral-50/50 print:bg-transparent">
+            <div class="contact-cell p-2.5 sm:p-3 bg-neutral-50/50 print:bg-transparent">
               <span class="text-neutral-500 block text-[9.5px] uppercase tracking-wider font-semibold mb-0.5">CODE REPOSITORY</span>
               <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" class="font-bold text-black hover:text-accent underline underline-offset-2 decoration-neutral-300 text-xs sm:text-[12.5px] tracking-tight transition-colors">
                 {personalInfo.githubDisplay}
               </a>
             </div>
-            <div class="p-3 bg-neutral-50/50 print:bg-transparent">
+            <div class="contact-cell p-2.5 sm:p-3 bg-neutral-50/50 print:bg-transparent">
               <span class="text-neutral-500 block text-[9.5px] uppercase tracking-wider font-semibold mb-0.5">PROFESSIONAL NETWORK</span>
               <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" class="font-bold text-black hover:text-accent underline underline-offset-2 decoration-neutral-300 text-xs sm:text-[12.5px] tracking-tight transition-colors">
                 {personalInfo.linkedinDisplay}
@@ -363,7 +364,7 @@ Architecture & Methodology:
 
       <!-- 2. EXECUTIVE PROFILE & ARCHITECTURAL ETHOS -->
       <section class="cv-section pt-5 pb-5 border-b border-neutral-200">
-        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-3 font-mono">
+        <div class="cv-section-header flex items-center justify-between border-b border-black pb-1.5 mb-3 font-mono">
           <div class="flex items-center gap-2">
             <span class="text-accent print:text-black font-bold text-xs">[01]</span>
             <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
@@ -379,7 +380,7 @@ Architecture & Methodology:
 
       <!-- 3. EDUCATION & ACADEMIC FOUNDATIONS -->
       <section class="cv-section pt-5 pb-5 border-b border-neutral-200">
-        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-3.5 font-mono">
+        <div class="cv-section-header flex items-center justify-between border-b border-black pb-1.5 mb-3.5 font-mono">
           <div class="flex items-center gap-2">
             <span class="text-accent print:text-black font-bold text-xs">[02]</span>
             <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
@@ -412,7 +413,7 @@ Architecture & Methodology:
             </span>
             <div class="flex flex-wrap gap-1.5 font-mono text-[11px]">
               {education.coursework.map((course) => (
-                <div class="inline-flex items-center gap-1.5 bg-neutral-100 print:bg-transparent px-2.5 py-1 rounded-xs border border-neutral-200 print:border-neutral-300">
+                <div class="coursework-badge inline-flex items-center gap-1.5 bg-neutral-100 print:bg-transparent px-2.5 py-1 rounded-xs border border-neutral-200 print:border-neutral-300">
                   <span class="text-accent print:text-black font-bold text-[9px]">■</span>
                   <span class="text-neutral-900 font-medium">{course.name}</span>
                 </div>
@@ -424,7 +425,7 @@ Architecture & Methodology:
 
       <!-- 4. FLAGSHIP SYSTEMS & ENGINEERING PROJECTS -->
       <section class="cv-section pt-5 pb-5 border-b border-neutral-200">
-        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-4 font-mono">
+        <div class="cv-section-header flex items-center justify-between border-b border-black pb-1.5 mb-4 font-mono">
           <div class="flex items-center gap-2">
             <span class="text-accent print:text-black font-bold text-xs">[03]</span>
             <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
@@ -437,6 +438,14 @@ Architecture & Methodology:
         <div class="space-y-6">
           {projects.map((proj, idx) => (
             <div class="cv-item space-y-2 pb-5 border-b border-neutral-200 last:border-b-0 last:pb-0">
+              <!-- Print Continuation Header for Page 2 -->
+              {idx === 1 && (
+                <div class="hidden print:flex items-center justify-between border-b border-black pb-1 mb-2 font-mono text-[9px] text-neutral-600">
+                  <span class="font-bold text-black uppercase tracking-wider">[03] FLAGSHIP SYSTEMS &amp; VERIFIED PROJECTS (CONT.)</span>
+                  <span>UNITS 02 — 03</span>
+                </div>
+              )}
+
               <!-- Item Header -->
               <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                 <div class="flex flex-wrap items-baseline gap-2">
@@ -493,7 +502,7 @@ Architecture & Methodology:
 
       <!-- 5. TECHNICAL SKILLS MATRIX -->
       <section class="cv-section pt-5 pb-5 border-b border-neutral-200">
-        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-3.5 font-mono">
+        <div class="cv-section-header flex items-center justify-between border-b border-black pb-1.5 mb-3.5 font-mono">
           <div class="flex items-center gap-2">
             <span class="text-accent print:text-black font-bold text-xs">[04]</span>
             <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
@@ -503,9 +512,9 @@ Architecture & Methodology:
           <span class="text-[10px] text-neutral-500 font-semibold">[04 SYSTEM DOMAINS]</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="cv-skills-grid grid grid-cols-1 md:grid-cols-2 gap-3.5">
           {skillMatrix.map((item) => (
-            <div class="bg-neutral-50 print:bg-transparent p-3 rounded-xs border border-neutral-200 print:border-neutral-300">
+            <div class="cv-skill-card bg-neutral-50 print:bg-transparent p-3 rounded-xs border border-neutral-200 print:border-neutral-300">
               <div class="flex items-center justify-between font-mono text-[10.5px] font-bold border-b border-neutral-200 pb-1.5 mb-2">
                 <span class="text-black uppercase tracking-wide">{item.group}</span>
                 <span class="text-accent print:text-black font-semibold">[{item.code}]</span>
@@ -520,7 +529,7 @@ Architecture & Methodology:
 
       <!-- 6. CORE ARCHITECTURAL PRINCIPLES & STANDARDS -->
       <section class="cv-section pt-5">
-        <div class="flex items-center justify-between border-b border-black pb-1.5 mb-3 font-mono">
+        <div class="cv-section-header flex items-center justify-between border-b border-black pb-1.5 mb-3 font-mono">
           <div class="flex items-center gap-2">
             <span class="text-accent print:text-black font-bold text-xs">[05]</span>
             <h2 class="font-bold uppercase tracking-wider text-black text-xs sm:text-[13px]">
@@ -530,16 +539,16 @@ Architecture & Methodology:
           <span class="text-[10px] text-accent print:text-black font-semibold">HIGH_INTEGRITY</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-mono text-xs text-neutral-800">
-          <div class="border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
+        <div class="cv-principles-grid grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-mono text-xs text-neutral-800">
+          <div class="cv-principle-card border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
             <span class="font-bold text-black block text-[10.5px] uppercase tracking-wider mb-1">INVARIANT VERIFICATION</span>
             <span class="text-neutral-700 text-[11px] leading-relaxed block">Strict double-entry accounting invariants and atomic rollback hooks defending against floating-point drift.</span>
           </div>
-          <div class="border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
+          <div class="cv-principle-card border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
             <span class="font-bold text-black block text-[10.5px] uppercase tracking-wider mb-1">ZERO DATA LEAKAGE</span>
             <span class="text-neutral-700 text-[11px] leading-relaxed block">Strict point-in-time joins, tombstone guards, and complete separation between training and test distributions.</span>
           </div>
-          <div class="border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
+          <div class="cv-principle-card border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
             <span class="font-bold text-black block text-[10.5px] uppercase mb-1">DECOUPLED CORES</span>
             <span class="text-neutral-700 text-[11px] leading-relaxed block">Hexagonal architecture with pure domain logic fully isolated from database drivers and external adapters.</span>
           </div>
@@ -588,11 +597,11 @@ Architecture & Methodology:
       // 3. Copy Plain Text (ATS) to Clipboard with tactile state feedback
       const copyBtn = document.getElementById("copy-ats-button");
       const copyTextEl = document.getElementById("copy-ats-text");
-      const plainTextStore = document.getElementById("ats-plain-text") as HTMLTextAreaElement | null;
+      const plainTextStore = document.getElementById("ats-plain-text");
 
       if (copyBtn && copyTextEl && plainTextStore) {
         copyBtn.addEventListener("click", () => {
-          const content = plainTextStore.value;
+          const content = plainTextStore.textContent || "";
           
           if (navigator.clipboard && window.isSecureContext) {
             navigator.clipboard.writeText(content).then(showCopiedState).catch(() => fallbackCopy(content));
@@ -615,11 +624,15 @@ Architecture & Methodology:
 
         function fallbackCopy(text: string) {
           try {
-            plainTextStore.classList.remove("hidden");
-            plainTextStore.focus();
-            plainTextStore.select();
+            const temp = document.createElement("textarea");
+            temp.value = text;
+            temp.style.position = "fixed";
+            temp.style.opacity = "0";
+            document.body.appendChild(temp);
+            temp.focus();
+            temp.select();
             document.execCommand("copy");
-            plainTextStore.classList.add("hidden");
+            document.body.removeChild(temp);
             showCopiedState();
           } catch (err) {
             console.error("Fallback clipboard copy failed:", err);
@@ -644,28 +657,43 @@ Architecture & Methodology:
      ========================================================================== */
   @page {
     size: A4 portrait;
-    margin: 10mm 12mm 12mm 12mm;
+    margin: 6mm 12mm 6mm 12mm;
   }
 
   @media print {
-    /* 1. Hide Screen Navigation, Action Controls, Custom Cursor, and Visual Cues */
+    /* 1. Hide Screen Navigation, Action Controls, Custom Cursor, Modals, Drawers & Visual Cues */
     .no-print,
     #swiss-cursor,
+    #swiss-cursor-dot,
+    #swiss-preloader,
+    #swiss-shutter,
+    #swiss-command-dialog,
+    #project-spec-dialog,
+    #terminal-drawer,
+    #terminal-scrim,
+    #ats-plain-text,
     header.no-print,
     button,
-    #mobile-menu-drawer {
+    #mobile-menu-drawer,
+    #nav-scrim {
       display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      width: 0 !important;
+      box-shadow: none !important;
+      border: none !important;
     }
 
     /* 2. Reset Body & Main Canvas to pure white background */
     html, body {
       background-color: #ffffff !important;
       color: #000000 !important;
-      font-size: 9.5pt !important;
-      line-height: 1.35 !important;
+      font-size: 8.5pt !important;
+      line-height: 1.28 !important;
       width: 100% !important;
       margin: 0 !important;
       padding: 0 !important;
+      overflow: visible !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
     }
@@ -699,15 +727,32 @@ Architecture & Methodology:
       content: none !important;
     }
 
-    /* 5. Page Break Controls: Prevent awkward breaks across project items or sections */
+    /* 5. Page Break Controls & Spacing */
     .cv-section {
+      padding-top: 2.2mm !important;
+      padding-bottom: 2.2mm !important;
       break-inside: auto;
+    }
+
+    .cv-section-header {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+      margin-bottom: 1.5mm !important;
+      padding-bottom: 1mm !important;
     }
 
     .cv-item {
       break-inside: avoid !important;
       page-break-inside: avoid !important;
-      margin-bottom: 8pt !important;
+      margin-bottom: 2mm !important;
+      padding-bottom: 2mm !important;
+    }
+
+    .cv-item:last-child {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
     }
 
     h1, h2, h3, h4 {
@@ -717,36 +762,70 @@ Architecture & Methodology:
 
     /* 6. Typography Refinements for Print */
     h1 {
-      font-size: 24pt !important;
+      font-size: 18pt !important;
       line-height: 1.05 !important;
+      letter-spacing: -0.03em !important;
     }
 
     h2 {
-      font-size: 10pt !important;
+      font-size: 9pt !important;
     }
 
     h3 {
-      font-size: 11pt !important;
+      font-size: 9.8pt !important;
     }
 
     p, li, div {
       color: #111111 !important;
     }
 
-    /* Border hairiness on print */
+    /* Hairline borders on print */
     .border-b-2 {
-      border-bottom-width: 1.5pt !important;
+      border-bottom-width: 1.2pt !important;
       border-color: #000000 !important;
     }
 
     .border-b {
       border-bottom-width: 0.5pt !important;
-      border-color: #cccccc !important;
+      border-color: #d4d4d4 !important;
     }
 
     .border-t {
       border-top-width: 0.5pt !important;
-      border-color: #cccccc !important;
+      border-color: #d4d4d4 !important;
+    }
+
+    .contact-cell {
+      padding: 1.2mm 2.2mm !important;
+    }
+
+    .coursework-badge {
+      padding: 0.5mm 1.8mm !important;
+      font-size: 7.8pt !important;
+    }
+
+    .cv-skills-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 1.8mm !important;
+    }
+
+    .cv-skill-card {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      padding: 1.8mm 2.2mm !important;
+    }
+
+    .cv-principles-grid {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 1.8mm !important;
+    }
+
+    .cv-principle-card {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      padding: 1.2mm 1.8mm !important;
     }
   }
 </style>

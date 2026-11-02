@@ -7,14 +7,14 @@
 <!-- Scrim Backdrop -->
 <div 
   id="terminal-scrim"
-  class="fixed inset-0 z-[99990] bg-black/60 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-300"
+  class="fixed inset-0 z-[99990] bg-black/60 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-300 no-print print:hidden"
   aria-hidden="true"
 ></div>
 
 <!-- Terminal Drawer Sliding Panel -->
 <aside
   id="terminal-drawer"
-  class="fixed bottom-0 left-0 right-0 z-[99992] flex flex-col bg-[#08090a] border-t-2 border-accent/80 shadow-[0_-16px_50px_rgba(0,0,0,0.95)] font-mono text-xs transition-transform duration-300 ease-out translate-y-full h-[60vh] md:h-[42vh]"
+  class="fixed bottom-0 left-0 right-0 z-[99992] flex flex-col bg-[#08090a] border-t-2 border-accent/80 shadow-[0_-16px_50px_rgba(0,0,0,0.95)] font-mono text-xs transition-transform duration-300 ease-out translate-y-full h-[60vh] md:h-[42vh] no-print print:hidden"
   role="region"
   aria-label="Interactive UNIX Kernel Terminal Drawer"
 >
@@ -141,6 +141,15 @@
 </aside>
 
 <style>
+  @media print {
+    #terminal-drawer,
+    #terminal-scrim {
+      display: none !important;
+      visibility: hidden !important;
+      box-shadow: none !important;
+    }
+  }
+
   /* Maximized Drawer Viewport Clamp */
   #terminal-drawer.is-maximized {
     height: 88vh !important;

@@ -9,7 +9,7 @@ const isLandingPage = pathname === "/" || pathname === "" || pathname.endsWith("
 {isLandingPage && (
   <div 
     id="swiss-preloader"
-    class="fixed inset-0 z-[99990] bg-[#0a0a0a] text-foreground flex flex-col justify-between p-6 sm:p-10 lg:p-14 font-mono select-none overflow-hidden"
+    class="fixed inset-0 z-[99990] bg-[#0a0a0a] text-foreground flex flex-col justify-between p-6 sm:p-10 lg:p-14 font-mono select-none overflow-hidden no-print print:hidden"
     aria-label="System Initializing"
     aria-hidden="true"
   >
@@ -93,12 +93,21 @@ const isLandingPage = pathname === "/" || pathname === "" || pathname.endsWith("
     display: block !important;
     transform: translate3d(0, 0, 0) !important;
   }
+
+  @media print {
+    #swiss-shutter,
+    #swiss-preloader {
+      display: none !important;
+      visibility: hidden !important;
+      box-shadow: none !important;
+    }
+  }
 </style>
 
 <!-- 2. Continuous Upward Wipe Curtain / Shutter Overlay -->
 <div 
   id="swiss-shutter"
-  class="fixed inset-0 z-[99995] bg-[#0a0a0a] pointer-events-none will-change-transform border-t-2 border-accent"
+  class="fixed inset-0 z-[99995] bg-[#0a0a0a] pointer-events-none will-change-transform border-t-2 border-accent no-print print:hidden"
   style="display: none; transform: translate3d(0, 100%, 0); box-shadow: 0 -4px 28px rgba(255, 69, 0, 0.35);"
   aria-hidden="true"
 ></div>
