@@ -2,27 +2,17 @@
 title: "LeakGuard ML"
 subtitle: "Point-in-Time Feature Store & Lookahead Leakage Prevention Harness"
 category: "VERIFICATION"
-status: "100% TEMPORAL ISOLATION"
-timeline: "2024 — 2025"
-role: "Lead ML Systems & Verification Author"
+status: "CONCEPT / PLANNED"
+timeline: "Planned"
+role: "Concept Design (no public implementation yet)"
 techStack: ["Python 3.12", "Polars", "Pytest", "DuckDB", "Temporal Joins", "Data Integrity"]
-metrics:
-  - label: "Throughput"
-    value: "14.2M rows/sec"
-    detail: "Vectorized as-of temporal joins computed via Polars Rust backend core"
-  - label: "Peak RAM"
-    value: "412 MB"
-    detail: "Streaming lazy evaluation memory footprint under 50k events"
-  - label: "Violations"
-    value: "0 / 50,000"
-    detail: "Strict temporal boundary assertions barring lookahead future data infiltration"
-  - label: "Query Speedup"
-    value: "6.4x"
-    detail: "Vectorized temporal joins computed via Polars Rust backend over Pandas"
-githubUrl: "https://github.com/reshandytaftazani/leakguard-ml"
-runCommand: "pytest -v tests/test_leakage_bounds.py --strict-time-split"
+metrics: []
+githubUrl: "https://github.com/reshandytaftazani"
+runCommand: "N/A (concept, no public implementation)"
 featured: false
 ---
+
+> **Concept / Planned.** This page describes a design under consideration. There is no public repository or implementation yet, and no benchmark results are claimed.
 
 ## 1. Problem Context & Architectural Motivation
 

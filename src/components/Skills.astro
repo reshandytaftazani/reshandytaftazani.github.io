@@ -10,7 +10,7 @@ interface SkillItem {
   summary: string;
   categoryClass: string;
   systemInvariant: string;
-  productionTelemetry: string;
+  productionTelemetry?: string;
   blueprintLabel: string;
   blueprintUrl: string;
 }
@@ -30,27 +30,17 @@ const skillDomains: SkillDomain[] = [
     index: "01",
     category: "Languages & Native Runtimes",
     code: "LANG",
-    badge: "100%_TYPED",
+    badge: "TYPED",
     tagline: "CORE_RUNTIMES",
-    description: "Core languages for high-throughput systems, zero-copy pipelines, and typed computation.",
+    description: "Core languages for high-throughput systems and typed computation.",
     skills: [
       {
         id: "python",
         name: "Python",
-        summary: "AsyncIO, C-Extensions, Strict Typing",
+        summary: "AsyncIO, Typing, Strict Contracts",
         categoryClass: "CORE_RUNTIME",
-        systemInvariant: "AsyncIO event-loop orchestration, C-API bindings & strict PEP 484 type annotations",
-        productionTelemetry: "Python 3.12+ // GIL-free subinterpreters // < 5ms P99 async task spawn",
-        blueprintLabel: "USED IN: MODELARENA ↗",
-        blueprintUrl: "/projects/modelarena",
-      },
-      {
-        id: "cpp",
-        name: "C / C++",
-        summary: "Zero-copy shared memory IPC ring-buffer",
-        categoryClass: "NATIVE_SYSTEMS",
-        systemInvariant: "Zero-copy shared memory IPC ring-buffer /dev/shm & SIMD vectorized tensor kernels",
-        productionTelemetry: "POSIX shm_open // 0.12µs context switch // zero zombie process reap",
+        systemInvariant: "AsyncIO event-loop orchestration & strict PEP 484 type annotations",
+        productionTelemetry: "Used in: ModelArena, Finance Tracker, SaveBite",
         blueprintLabel: "USED IN: MODELARENA ↗",
         blueprintUrl: "/projects/modelarena",
       },
@@ -60,27 +50,17 @@ const skillDomains: SkillDomain[] = [
         summary: "Strict compiler, Zero runtime overhead",
         categoryClass: "FRONTEND_ARCH",
         systemInvariant: "Strict static compiler constraints, zero runtime overhead & AST type-guards",
-        productionTelemetry: "TypeScript 5.x // Zero-dependency Astro SSG // < 16ms hydration",
-        blueprintLabel: "USED IN: RESHANDY.DEV ↗",
-        blueprintUrl: "/projects",
-      },
-      {
-        id: "duckdb",
-        name: "DuckDB & SQL",
-        summary: "Columnar analytics, Window functions",
-        categoryClass: "DATA_ENGINE",
-        systemInvariant: "Zero-copy Apache Arrow integration, vectorized analytical window queries",
-        productionTelemetry: "DuckDB 1.0+ // < 1.2ms join latency // in-memory columnar execution",
-        blueprintLabel: "USED IN: LEAKGUARD-ML ↗",
-        blueprintUrl: "/projects/leakguard-ml",
+        productionTelemetry: "Used in: Finance Tracker, portfolio site",
+        blueprintLabel: "USED IN: FINANCE-TRACKER ↗",
+        blueprintUrl: "/projects/finance-tracker",
       },
       {
         id: "bash",
-        name: "Bash & POSIX",
-        summary: "Signal traps, Process pipes, Kernel tooling",
+        name: "Bash & Shell",
+        summary: "Build, test and run scripts",
         categoryClass: "SYSTEMS_TOOLING",
-        systemInvariant: "Deterministic pipeline orchestration, Unix process signals (SIGTERM, SIGINT) & cgroup constraints",
-        productionTelemetry: "Exit code 0 guarantees // zero-zombie process reaping",
+        systemInvariant: "Command-line workflows for building, testing and running the projects",
+        productionTelemetry: "Used in: ModelArena, Finance Tracker, SaveBite",
         blueprintLabel: "USED IN: MODELARENA ↗",
         blueprintUrl: "/projects/modelarena",
       },
@@ -96,11 +76,11 @@ const skillDomains: SkillDomain[] = [
     skills: [
       {
         id: "pytorch",
-        name: "PyTorch",
-        summary: "Custom autograd hooks, Memory pool allocator",
+        name: "PyTorch (CPU)",
+        summary: "CPU tensor compute, Model evaluation",
         categoryClass: "TENSOR_COMPUTE",
-        systemInvariant: "Custom autograd hooks & sliding memory pool allocator",
-        productionTelemetry: "CUDA 12.4 // TensorRT // 99.4% GPU saturation",
+        systemInvariant: "Isolated early-stopping validation splits and deterministic seed evaluation",
+        productionTelemetry: "Used in: ModelArena",
         blueprintLabel: "USED IN: MODELARENA ↗",
         blueprintUrl: "/projects/modelarena",
       },
@@ -109,40 +89,30 @@ const skillDomains: SkillDomain[] = [
         name: "scikit-learn",
         summary: "Point-in-time estimators, Leak-free pipelines",
         categoryClass: "ESTIMATOR_PIPELINES",
-        systemInvariant: "Strict non-leaking FeatureUnion & Point-in-time Transformer estimator pipelines",
-        productionTelemetry: "Zero lookahead contamination // deterministically seeded cross-validation",
-        blueprintLabel: "USED IN: LEAKGUARD-ML ↗",
-        blueprintUrl: "/projects/leakguard-ml",
+        systemInvariant: "Fold-local preprocessing and leakage-safe cross-validation pipelines",
+        productionTelemetry: "Used in: ModelArena",
+        blueprintLabel: "USED IN: MODELARENA ↗",
+        blueprintUrl: "/projects/modelarena",
       },
       {
-        id: "numpy-polars",
-        name: "NumPy / Polars",
-        summary: "Contiguous C-memory, Apache Arrow SIMD",
+        id: "numpy",
+        name: "NumPy",
+        summary: "Contiguous array memory, Vectorized compute",
         categoryClass: "VECTORIZED_MATH",
-        systemInvariant: "Contiguous C-order memory layouts, zero-copy Apache Arrow buffers & multi-threaded SIMD queries",
-        productionTelemetry: "SIMD AVX-512 // 8.4x throughput vs vanilla Pandas",
-        blueprintLabel: "USED IN: LEAKGUARD-ML ↗",
-        blueprintUrl: "/projects/leakguard-ml",
-      },
-      {
-        id: "onnx",
-        name: "ONNX Runtime",
-        summary: "Graph operator fusion, Dynamic INT8 quantization",
-        categoryClass: "INFERENCE_ENGINE",
-        systemInvariant: "Target-specific graph operator fusion, FP16/INT8 post-training dynamic quantization",
-        productionTelemetry: "4.2x latency compression // < 8ms P99 inference SLA",
-        blueprintLabel: "USED IN: SAVEBITE ↗",
-        blueprintUrl: "/projects/savebite",
+        systemInvariant: "Contiguous C-order memory layouts and multi-dimensional array operations",
+        productionTelemetry: "Used in: ModelArena",
+        blueprintLabel: "USED IN: MODELARENA ↗",
+        blueprintUrl: "/projects/modelarena",
       },
       {
         id: "pipeline-design",
         name: "Pipeline Design",
-        summary: "Purge-embargo temporal splitting, Boundary checks",
+        summary: "Fold-local preprocessing, Holdout guards",
         categoryClass: "DATA_BOUNDARIES",
-        systemInvariant: "Purge-embargo temporal splitting, strict chronological embargo buffers & target feature masks",
-        productionTelemetry: "Zero leakage guarantee // automated CI boundary invariant assertions",
-        blueprintLabel: "USED IN: LEAKGUARD-ML ↗",
-        blueprintUrl: "/projects/leakguard-ml",
+        systemInvariant: "Fold-local preprocessing, isolated validation splits and single-use holdout tokens",
+        productionTelemetry: "Used in: ModelArena",
+        blueprintLabel: "USED IN: MODELARENA ↗",
+        blueprintUrl: "/projects/modelarena",
       },
     ],
   },
@@ -150,57 +120,57 @@ const skillDomains: SkillDomain[] = [
     index: "03",
     category: "Systems Architecture",
     code: "ARCH",
-    badge: "HEXAGONAL",
+    badge: "LAYERED",
     tagline: "ARCH_CONTRACTS",
     description: "Decoupled domain cores, explicit contracts, and containerized runtime isolation.",
     skills: [
       {
         id: "fastapi",
         name: "FastAPI",
-        summary: "AsyncIO event loop, SSE streaming telemetry",
+        summary: "AsyncIO event loop, REST routers",
         categoryClass: "API_GATEWAY",
-        systemInvariant: "Non-blocking Uvicorn event loop, streaming SSE telemetry & Pydantic request contracts",
-        productionTelemetry: "12,400 req/sec // < 2.1ms P95 roundtrip",
+        systemInvariant: "Routers calling isolated service layers with Pydantic request contracts",
+        productionTelemetry: "Used in: ModelArena, Finance Tracker",
         blueprintLabel: "USED IN: FINANCE-TRACKER ↗",
         blueprintUrl: "/projects/finance-tracker",
       },
       {
         id: "clean-architecture",
-        name: "Clean Architecture",
-        summary: "Hexagonal Ports & Adapters, Decoupled domains",
+        name: "Layered Architecture",
+        summary: "Decoupled domain services, Isolated routers",
         categoryClass: "STRUCTURAL_DESIGN",
-        systemInvariant: "Hexagonal Ports & Adapters isolating core domain models from external DB and network drivers",
-        productionTelemetry: "100% mocked infrastructure test isolation // zero coupling",
+        systemInvariant: "Service layer isolating core business logic from database and API routes",
+        productionTelemetry: "Used in: ModelArena, Finance Tracker",
         blueprintLabel: "USED IN: FINANCE-TRACKER ↗",
         blueprintUrl: "/projects/finance-tracker",
       },
       {
         id: "pydantic-v2",
         name: "Pydantic V2",
-        summary: "Strict mode, Rust pydantic-core validator",
+        summary: "Strict mode, Schema validation",
         categoryClass: "SCHEMA_VALIDATION",
-        systemInvariant: "Strict type enforcement with Rust pydantic-core, forbidding extra fields at API boundary",
-        productionTelemetry: "0.04ms validation latency // 15x faster than V1",
-        blueprintLabel: "USED IN: SAVEBITE ↗",
-        blueprintUrl: "/projects/savebite",
+        systemInvariant: "Strict type enforcement forbidding extra fields at API boundaries",
+        productionTelemetry: "Used in: ModelArena, Finance Tracker",
+        blueprintLabel: "USED IN: FINANCE-TRACKER ↗",
+        blueprintUrl: "/projects/finance-tracker",
       },
       {
         id: "linux-os",
-        name: "Linux / OS Signals",
-        summary: "POSIX signal traps, Shared memory IPC",
+        name: "OS Process Management",
+        summary: "Worker supervision, Child processes",
         categoryClass: "SYSTEMS_CONTROL",
-        systemInvariant: "Signal handlers (SIGTERM, SIGINT) ensuring graceful in-flight batch draining and zombie cleanup",
-        productionTelemetry: "100% clean shutdown // zero corrupted checkpoints",
+        systemInvariant: "Supervised child processes with cancellation, orphan blocking and restart reconciliation",
+        productionTelemetry: "Used in: ModelArena",
         blueprintLabel: "USED IN: MODELARENA ↗",
         blueprintUrl: "/projects/modelarena",
       },
       {
         id: "docker",
         name: "Docker",
-        summary: "Multi-stage builds, Distroless images",
+        summary: "Multi-stage builds, Container runtime",
         categoryClass: "CONTAINER_RUNTIME",
-        systemInvariant: "Hermetic multi-stage distroless container builds with non-root security contexts",
-        productionTelemetry: "38MB image footprint // zero CVE base packages",
+        systemInvariant: "Multi-stage Docker builds serving SPA and API from a single container",
+        productionTelemetry: "Used in: Finance Tracker",
         blueprintLabel: "USED IN: FINANCE-TRACKER ↗",
         blueprintUrl: "/projects/finance-tracker",
       },
@@ -217,58 +187,57 @@ const skillDomains: SkillDomain[] = [
       {
         id: "pytest",
         name: "Pytest & TDD",
-        summary: "Parametric fixtures, Transactional isolation",
+        summary: "Parametric fixtures, Test isolation",
         categoryClass: "AUTOMATED_SUITES",
-        systemInvariant: "Hermetic parametric test matrices, transactional database fixtures & strict coverage assertions",
-        productionTelemetry: "100% deterministic runs // zero test flakiness",
-        blueprintLabel: "USED IN: LEAKGUARD-ML ↗",
-        blueprintUrl: "/projects/leakguard-ml",
+        systemInvariant: "Unit and integration test suites covering services, models, and API routers",
+        productionTelemetry: "Used in: ModelArena, Finance Tracker, SaveBite",
+        blueprintLabel: "USED IN: FINANCE-TRACKER ↗",
+        blueprintUrl: "/projects/finance-tracker",
       },
       {
         id: "chaos-testing",
-        name: "Chaos Interrupt Suites",
-        summary: "Process signal injection, Worker drain tests",
+        name: "Worker Interruption Suites",
+        summary: "Cancellation tests, Real child processes",
         categoryClass: "FAULT_INJECTION",
-        systemInvariant: "Subprocess signal injection harness verifying process drains under sudden SIGKILL/SIGTERM",
-        productionTelemetry: "300ms recovery SLA // zero orphaned child PIDs",
+        systemInvariant: "Cancellation, orphan blocking and restart reconciliation tested with real child processes on Windows",
+        productionTelemetry: "Used in: ModelArena",
         blueprintLabel: "USED IN: MODELARENA ↗",
         blueprintUrl: "/projects/modelarena",
       },
       {
         id: "git",
-        name: "Git & Trunk-Based",
-        summary: "Linear history, Atomic commits, Squash rebase",
+        name: "Git & Version Control",
+        summary: "Structured commits, Branch workflow",
         categoryClass: "VERSION_CONTROL",
-        systemInvariant: "Atomic commits, semantic conventional tags & automated squash rebasing",
-        productionTelemetry: "100% linear git history // fast forward only",
+        systemInvariant: "Conventional commit history and feature branch workflows",
+        productionTelemetry: "Used in: ModelArena, Finance Tracker, SaveBite",
         blueprintLabel: "USED IN: MODELARENA ↗",
         blueprintUrl: "/projects/modelarena",
       },
       {
         id: "cicd",
         name: "CI/CD Actions",
-        summary: "Multi-arch test matrix, Automated releases",
+        summary: "Automated test suites, Linting workflows",
         categoryClass: "AUTOMATION_PIPELINES",
-        systemInvariant: "Matrix multi-platform verification, automated static type checking & AST security linting",
-        productionTelemetry: "< 90s full pipeline run // automated release publishing",
-        blueprintLabel: "USED IN: LEAKGUARD-ML ↗",
-        blueprintUrl: "/projects/leakguard-ml",
+        systemInvariant: "Automated linting, static type checking, and test suites in GitHub Actions",
+        productionTelemetry: "Used in: Finance Tracker, SaveBite, portfolio site",
+        blueprintLabel: "USED IN: FINANCE-TRACKER ↗",
+        blueprintUrl: "/projects/finance-tracker",
       },
       {
         id: "defensive-programming",
         name: "Defensive Programming",
         summary: "Pre/post condition asserts, Fail-fast guards",
         categoryClass: "INVARIANT_GUARDS",
-        systemInvariant: "Runtime pre-condition and post-condition assertions that fail-fast before corrupting state",
-        productionTelemetry: "Zero silent data corruption // immediate error propagation",
-        blueprintLabel: "USED IN: LEAKGUARD-ML ↗",
-        blueprintUrl: "/projects/leakguard-ml",
+        systemInvariant: "Runtime pre-condition assertions, database CHECK constraints, and integer math",
+        productionTelemetry: "Used in: ModelArena, Finance Tracker, SaveBite",
+        blueprintLabel: "USED IN: FINANCE-TRACKER ↗",
+        blueprintUrl: "/projects/finance-tracker",
       },
     ],
   },
 ];
 
-// Initial default selection for SSR Inspector rendering
 const defaultSkill = skillDomains[0].skills[0]; // Python
 const defaultDomain = skillDomains[0]; // LANG
 ---
@@ -282,7 +251,7 @@ const defaultDomain = skillDomains[0]; // LANG
         TECHNICAL STACK & TELEMETRY
       </h2>
       <span class="text-caption font-mono text-neutral-dark font-semibold">
-        [04 DOMAIN TABS // 20 TECHNOLOGIES]
+        [04 DOMAIN TABS // 17 TECHNOLOGIES]
       </span>
     </div>
 
@@ -409,7 +378,7 @@ const defaultDomain = skillDomains[0]; // LANG
                         data-category-code={domain.code}
                         data-category-class={skill.categoryClass}
                         data-invariant={skill.systemInvariant}
-                        data-telemetry={skill.productionTelemetry}
+                        data-telemetry={skill.productionTelemetry || ''}
                         data-blueprint-label={skill.blueprintLabel}
                         data-blueprint-url={skill.blueprintUrl}
                         aria-label={`Inspect telemetry and invariant for ${skill.name}`}
@@ -482,7 +451,7 @@ const defaultDomain = skillDomains[0]; // LANG
                           <!-- Production Telemetry -->
                           <div>
                             <div class="text-[11px] uppercase text-neutral-dark tracking-wider mb-1 font-semibold">
-                              // PRODUCTION_TELEMETRY:
+                              // USED_IN:
                             </div>
                             <div class="bg-neutral-950 p-2.5 border border-grid-line-dark text-neutral-200 text-xs">
                               {skill.productionTelemetry}
@@ -571,8 +540,8 @@ const defaultDomain = skillDomains[0]; // LANG
         <!-- Production Telemetry & Real-World Benchmark -->
         <div class="space-y-2 pt-4 border-t border-grid-line-dark">
           <div class="font-mono text-xs uppercase text-neutral-dark tracking-wider select-none flex items-center justify-between">
-            <span>// PRODUCTION_TELEMETRY:</span>
-            <span class="text-emerald-400 text-[11px]">SLA_VERIFIED ✓</span>
+            <span>// USED_IN:</span>
+            <span class="text-emerald-400 text-[11px]">PUBLIC_REPOS</span>
           </div>
           <div class="bg-black p-3.5 border border-grid-line-dark font-mono text-[11px] space-y-2">
             <div 
@@ -612,8 +581,8 @@ const defaultDomain = skillDomains[0]; // LANG
 
         <!-- Subtle Hardware/Bus Telemetry Stamp -->
         <div class="pt-2 flex items-center justify-between font-mono text-[11px] text-neutral-dark border-t border-grid-line-dark/40 select-none">
-          <span id="inspector-bus-channel">BUS: /DEV/SHM // PROTO: IPC_RING</span>
-          <span>LATENCY: &lt; 0.12ms</span>
+          <span id="inspector-bus-channel">STAMP: SKILLS INDEX</span>
+          <span>SOURCE: PUBLIC REPOSITORIES</span>
         </div>
       </div>
     </div>
@@ -845,7 +814,7 @@ const defaultDomain = skillDomains[0]; // LANG
       if (inspectorBlueprintBtn) inspectorBlueprintBtn.href = blueprintUrl;
       animateValueChange(inspectorBlueprintLabel, `[${blueprintLabel}]`);
       if (inspectorBusChannel) {
-        inspectorBusChannel.textContent = `BUS: /DEV/SHM/${categoryCode.toLowerCase()} // PROTO: IPC_RING`;
+        inspectorBusChannel.textContent = `STAMP: SKILLS INDEX // ${categoryCode}`;
       }
     }
 

@@ -1,104 +1,54 @@
 ---
 title: "SaveBite"
-subtitle: "Surplus Food Rescue & Distribution Platform (PBP Fasilkom UI)"
+subtitle: "Food Waste Reduction Platform — Team Project, Universitas Indonesia"
 category: "PLATFORM & WEB"
-status: "COMPLETED // COURSEWORK_2025"
-timeline: "2025"
-role: "Backend & Systems Contributor (Team Collaboration)"
-techStack: ["Django", "Python 3.12", "Flutter", "PostgreSQL", "REST API", "JSON Web Tokens"]
+status: "COMPLETED // DEPLOYED // COURSEWORK"
+timeline: "Sep — Oct 2026"
+role: "Developer, Module 4: Food Rescue Request Board (Team of 5)"
+techStack: ["Django", "Python", "PostgreSQL", "SQLite (local)", "HTML/CSS/JavaScript", "GitHub Actions"]
 metrics:
-  - label: "Course Context"
-    value: "PBP CS UI"
-    detail: "Pemrograman Berbasis Platform coursework capstone project at Universitas Indonesia"
-  - label: "Architecture"
-    value: "RESTful Decoupled"
-    detail: "Django API backend serving multi-platform Flutter mobile & web clients"
-  - label: "Auth & Security"
-    value: "Session & CSRF"
-    detail: "Role-based access control protecting food donors, beneficiaries, and drivers"
+  - label: "Context"
+    value: "PBP Class D, Group 8"
+    detail: "Five-person team project for Platform-Based Programming at Fasilkom UI, deployed on the faculty PWS platform"
+  - label: "Contribution"
+    value: "88 of 212 commits"
+    detail: "Request Board module plus cross-module fixes (dark mode, production CSRF origin); counted from git history"
+  - label: "Data Integrity"
+    value: "DB-Level Constraints"
+    detail: "Unique offers per request and bidder, CHECK constraints on quantity, status and unit, idempotent request creation"
 githubUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite"
-runCommand: "python manage.py runserver --settings=savebite.settings"
+runCommand: "python manage.py runserver"
 featured: true
 ---
 
-## 1. Problem Context & Purpose
+## 1. Overview
 
-Food waste and food insecurity coexist in urban centers: restaurants and grocery stores routinely discard edible surplus food due to lack of real-time coordination with social organizations and communities in need.
+SaveBite is a web platform that helps students and households reduce food waste. Five modules cover a leftover-ingredient recipe catalog (TheMealDB), a food rescue planner, community recipes, an ingredient request board and a food journal. It was built as a Django (MVT) application by a five-person team, each member owning one module.
 
-**SaveBite** was developed as an end-to-end platform for the *Pemrograman Berbasis Platform (PBP)* course at the Faculty of Computer Science, Universitas Indonesia (Fasilkom UI, Class of 2025). The platform coordinates:
-- **Donors:** Commercial food establishments posting surplus food batches with strict expiration windows.
-- **Beneficiaries & Charities:** Booking and claiming verified food packages in real-time.
-- **Logistics & Volunteer Couriers:** Routing distribution through authenticated status checkpoints.
+## 2. My Module: Food Rescue Request Board
 
-```
-+-------------------------------------------------------------------------------+
-|                       SAVEBITE DISTRIBUTED PLATFORM                           |
-+-------------------------------------------------------------------------------+
-|                                                                               |
-|   +-----------------------+                    +--------------------------+   |
-|   |  Flutter Mobile App   | -----------------> |  Django REST API Core    |   |
-|   |  (Donor / Beneficiary)|                    |  (Auth, CSRF, Permissions|   |
-|   +-----------------------+                    +--------------------------+   |
-|                                                              |                |
-|                                                              v                |
-|   +-----------------------+     Relational Queries     +------------------+   |
-|   |  Role-Based Access    | <========================> | PostgreSQL DB    |   |
-|   |  (Donors / Receivers) |                            | (Food Manifests) |   |
-|   +-----------------------+                            +------------------+   |
-+-------------------------------------------------------------------------------+
-```
+A forum-style board where community members request small amounts of surplus ingredients instead of buying new ones.
 
----
+**Flow.** A user posts a request → other users respond with "Saya Punya!" → the owner reviews offers, selects a helper and marks the request fulfilled, or deletes it.
 
-## 2. Collaborative Engineering & Individual Contributions
+**Access model.** Visitors can browse, search and filter. Signed-in users can create requests and make offers. Only the owner can choose a helper, mark fulfillment or delete the request.
 
-In this team collaboration under group **PBP-D-Kelompok-8**, my core engineering focus centered around:
-1. **API Endpoints & JSON Contracts:** Designing and documenting clean REST contracts consumed by the Flutter mobile client.
-2. **Defensive Model Constraints:** Implementing database-level constraints on food expiration timestamps, ensuring no claims can be executed on expired food batches.
-3. **Session Token Authentication:** Bridging mobile cross-origin requests with Django's CSRF and session management securely.
+**Capabilities.** Title search, ingredient/location/status filters, newest/oldest ordering, pagination (20 per page), and a derived "expired" status computed from `expires_at`.
 
----
+## 3. Engineering Decisions
 
-## 3. Implementation Contracts
+| Concern | Decision |
+|---|---|
+| Duplicate submissions from repeated clicks or slow networks | `RequestCreationKey`: a per-owner UUID with a payload digest makes creation idempotent; keys are retained at least 30 days and purged by a management command |
+| One offer per user per request | `UniqueConstraint(request, offered_by)` |
+| Invalid data bypassing the application layer | `CheckConstraint` rules for quantity > 0 and valid status and unit values, enforced in the database |
+| Business logic leaking into views | A service layer (`create_request_idempotent`, `offer_request`, `select_request_offer`, `fulfill_request`, `delete_request`) |
+| Schema evolution | Six migrations tracking features as they were added (offers, selected offer, expiry, creation keys, index) |
 
-```python
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.utils import timezone
+## 4. Documentation & Transparency
 
-class FoodListing(models.Model):
-    title = models.CharField(max_length=200)
-    quantity_portions = models.PositiveIntegerField()
-    pickup_deadline = models.DateTimeField()
-    donor = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    is_claimed = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+The module ships with a README (usage, roles, statuses), an operations guide for maintenance, and an AI-use disclosure.
 
-    def clean(self):
-        # Defensive validation: pickup deadline must strictly be in the future
-        if self.pickup_deadline <= timezone.now():
-            raise ValidationError("Pickup deadline must be set in the future.")
+## 5. Notes
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
-```
-
----
-
-## 4. Platform Verification Matrix
-
-| Metric | Target Specification | Achieved Result |
-| :--- | :--- | :--- |
-| **API Response Time** | `< 120ms` | **`48ms p95`** on standard CRUD routes |
-| **Client Interoperability** | 100% contract compliance | Flutter Android & Web clients fully synchronized |
-| **Course Evaluation** | Comprehensive capstone | Successfully demonstrated in Fasilkom UI evaluation |
-
----
-
-## 5. Architectural Lessons Learned
-
-1. **State Synchronization between Flutter & Django:**
-   - Asynchronous HTTP state management in Flutter required defensive error catching for offline scenarios or slow network connections during field food pickup scans.
-2. **Database Integrity Over App Logic:**
-   - Enforcing integrity rules (e.g. non-negative stock counts and future pickup deadlines) directly inside Django model `clean()` and database constraints prevented race conditions from concurrent mobile client requests.
+Production runs on PostgreSQL and local development on SQLite. Authentication uses Django sessions with CSRF protection. Latency has not been benchmarked, so no performance figures are stated.

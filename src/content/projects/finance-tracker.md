@@ -1,119 +1,56 @@
 ---
 title: "Finance Tracker"
-subtitle: "Defensive Personal Accounting Engine & Transaction Ledger"
+subtitle: "Single-Owner Personal Finance Application with Integer-Rupiah Accounting"
 category: "SYSTEMS & DATA"
-status: "STABLE // PRODUCTION_VERIFIED"
-timeline: "2025"
-role: "Fullstack Systems & Data Engineer"
-techStack: ["Python 3.12", "FastAPI", "SQLite", "PostgreSQL", "Pydantic v2", "Docker", "Pytest"]
+status: "v1.0.0 // SELF-HOSTED // CI-VERIFIED"
+timeline: "Oct 2026"
+role: "Solo Developer (Full-Stack)"
+techStack: ["Python", "FastAPI", "SQLModel", "SQLite", "Alembic", "React", "TypeScript", "TanStack Query", "Docker"]
 metrics:
-  - label: "Ledger Balance"
-    value: "100.00%"
-    detail: "Strict double-entry accounting invariants preventing silent float drift"
-  - label: "Query Latency"
-    value: "4.12ms"
-    detail: "Indexed SQLite analytical query execution time on 50,000 transactions"
-  - label: "Data Integrity"
-    value: "ACID Validated"
-    detail: "Atomic transaction rollback hooks defending against partial updates"
+  - label: "Monetary Model"
+    value: "Integer Rupiah"
+    detail: "BIGINT column with a CHECK constraint; amounts cross the API as digit strings, so no floating point is involved"
+  - label: "Authentication"
+    value: "Argon2id + Session"
+    detail: "Optional owner mode with HttpOnly cookies; session tokens stored as SHA-256 hashes"
+  - label: "Safe Migrations"
+    value: "Alembic + Backup"
+    detail: "A verified SQLite backup snapshot is taken before upgrades; the migration aborts if the backup fails"
 githubUrl: "https://github.com/reshandytaftazani/finance-tracker"
-runCommand: "python -m ledger.cli sync --audit --verify-invariants"
+runCommand: "cd backend && python -m scripts.migrate && python -m scripts.seed && python -m app"
 featured: true
 ---
 
-## 1. Problem Context & Architectural Motivation
+## 1. Overview
 
-Personal finance applications frequently suffer from precision loss, silent drift in running balances, and loose data validation when dealing with foreign exchange rates or split categories. Common failure modes:
-- **Floating Point Inaccuracies:** Using standard IEEE 754 floats ($0.1 + 0.2 \neq 0.3$) in ledger records leads to fractional cent discrepancies.
-- **Non-Atomic Bulk Ingestions:** Failing midway through a 500-row CSV import without rollback leaves balances corrupted.
-- **Untyped Transaction Schemas:** Accepting negative debits without corresponding credit symmetry breaks accounting rules.
+Finance Tracker is a personal finance application for a single owner, designed to run locally or on a private host. It covers transactions, categories, wallets, transfers, monthly budgets and spending analytics, with a React interface in Indonesian and IDR as the currency.
 
-**Finance Tracker** was engineered with defensive data engineering principles, enforcing strict double-entry balance verification, integer/decimal fixed-point arithmetic, and clean hexagonal decoupling.
+## 2. Problem
 
-```
-                    LEDGER INGESTION & AUDIT PIPELINE
-Raw Inputs -> [Pydantic v2 Schema Gate] -> [Atomic DB Transaction] -> [Audit Assertion]
-                                                    |                         |
-                                          +---------+---------+               v
-                                          | SQLite (WAL Mode) |        [BALANCED: $0.00 DIF]
-                                          +-------------------+
-```
+Personal finance tools commonly store money as floating-point numbers, accumulating rounding drift, and accept loosely validated input. For a ledger that someone relies on, correctness has to be enforced by the data model, not by careful callers.
 
----
+## 3. Approach
 
-## 2. System Architecture Blueprint
+- **Backend:** FastAPI with SQLModel on SQLite; routers (`app/api`) call services (`app/services`) that operate on typed models and schemas.
+- **Frontend:** React + TypeScript + Vite, styled with Tailwind CSS v4 and shadcn/ui; TanStack Query handles server-state caching and invalidation after mutations.
+- **Delivery:** multi-stage Docker build (frontend builder, Python runtime) serving the SPA and API from one origin, with persistent volumes for the database and backups, a health check and a single-instance constraint suited to SQLite.
 
-```
-+-------------------------------------------------------------------------------+
-|                           FINANCE TRACKER ARCHITECTURE                        |
-+-------------------------------------------------------------------------------+
-|                                                                               |
-|   +-----------------------+                    +--------------------------+   |
-|   |  CLI & REST Ingestion | -----------------> |  Pydantic v2 Validation  |   |
-|   |  (FastAPI / Argparse) |                    |  Fixed-Point Decimal Gate|   |
-|   +-----------------------+                    +--------------------------+   |
-|               |                                              |                |
-|               v                                              v                |
-|   +-----------------------+     Double-Entry Atomic  +--------------------+   |
-|   |  Transaction Engine   | =======================> | Storage Adapter    |   |
-|   |  (Debit == Credit)    |                          | SQLite WAL Mode    |   |
-|   +-----------------------+                          +--------------------+   |
-|               |                                              |                |
-|               +-----------------------+----------------------+                |
-|                                       |                                       |
-|                                       v                                       |
-|                       +-------------------------------+                       |
-|                       |   Ledger Invariant Auditor    |                       |
-|                       |   [Reports Zero Discrepancy]  |                       |
-|                       +-------------------------------+                       |
-+-------------------------------------------------------------------------------+
-```
+## 4. Engineering Decisions
 
----
+| Concern | Decision |
+|---|---|
+| Money representation | Integer rupiah with `CHECK typeof(amount_rupiah) = 'integer'` and bounded range; API amounts are digit strings; ids beyond `Number.MAX_SAFE_INTEGER` are rejected in the browser instead of being silently rounded |
+| Data isolation | The server assigns the owner; clients cannot submit `owner_id` or `normalized_name`; categories in use cannot be deleted or retyped |
+| Authentication | Default local mode, or owner mode with Argon2id; no public registration endpoint (password is set through a local CLI); HttpOnly session cookie |
+| Request safety | Host and origin checks on mutating requests |
+| Schema evolution | Alembic with transactional DDL; databases with unrecognized legacy schemas are refused rather than overwritten; automatic pre-upgrade snapshot via the SQLite backup API with an integrity check |
+| Operations | Routine backup and restore scripts, health endpoint, containerized deployment bound to loopback by default |
+| Quality gates | CI runs Ruff and pytest for the backend, and type-check, lint and tests for the frontend |
 
-## 3. Implementation Contracts & Schema Invariants
+## 5. Features
 
-```python
-from decimal import Decimal
-from pydantic import BaseModel, ConfigDict, Field, model_validator
-from uuid import UUID
-from datetime import datetime
+Transaction CRUD with month/category/type filters, pagination and partial updates · wallets and transfers · monthly category budgets with 80% and 100% alerts · dashboard with income, expense, net cash flow and category breakdown · analytics with forecast and backtest evaluation · safe CSV export.
 
-class LedgerEntryContract(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+## 6. Scope & Status
 
-    entry_id: UUID
-    timestamp: datetime
-    debit_amount: Decimal = Field(..., ge=Decimal("0.00"), decimal_places=2)
-    credit_amount: Decimal = Field(..., ge=Decimal("0.00"), decimal_places=2)
-    currency: str = Field(..., pattern=r"^[A-Z]{3}$")
-    category: str
-
-    @model_validator(mode="after")
-    def verify_entry_symmetry(self) -> "LedgerEntryContract":
-        if self.debit_amount == Decimal("0.00") and self.credit_amount == Decimal("0.00"):
-            raise ValueError("Transaction entry cannot have both zero debit and credit.")
-        return self
-```
-
----
-
-## 4. Benchmark & Integrity Matrix
-
-| Operational Metric | Traditional Script Baseline | Finance Tracker Engine | Result |
-| :--- | :--- | :--- | :--- |
-| **Numeric Representation** | Python `float` | `Decimal(Fixed-Point)` | **Zero floating point drift** |
-| **Balance Integrity** | Unchecked CSV imports | Double-entry invariant gate | **100% Balanced Ledger** |
-| **Import Speed (5k rows)** | 3.42s (row-by-row) | 0.28s (SQLite batch bulk transaction) | **12.2x faster** |
-| **Crash Safety** | Partial dirty commits | WAL mode atomic commit/rollback | **Zero orphaned records** |
-
----
-
-## 5. Architectural Trade-offs & Lessons Learned
-
-1. **SQLite WAL vs PostgreSQL for Local Finance:**
-   - *Choice:* SQLite in Write-Ahead Logging (WAL) mode for local deployments.
-   - *Rationale:* Zero external daemon dependency, instant local unit testing in under 15ms, and file-based backups without compromising transaction ACID guarantees.
-2. **Fixed-Point Decimal vs Float Performance:**
-   - *Choice:* `decimal.Decimal` with 4-place precision.
-   - *Rationale:* While Decimal incurs a minor ~2x CPU overhead relative to native floats, in financial accounting mathematical correctness always takes precedence over microsecond speed.
+Released as **v1.0.0**. Built for one owner on one machine. PostgreSQL migrations have been checked as offline DDL only and not yet on a live server, and full 64-bit id support in the UI is not available. No load benchmarks have been run, so no throughput or latency figures are claimed.

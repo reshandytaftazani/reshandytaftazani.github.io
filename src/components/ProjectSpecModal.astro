@@ -18,118 +18,118 @@ const projectSpecs: ProjectSpec[] = [
   {
     id: "modelarena",
     title: "ModelArena",
-    subtitle: "Dynamic Resource Allocation & Multi-Agent Training Framework",
-    status: "ACTIVE_R&D_71.4%",
+    subtitle: "Local-First ML Experimentation Platform with Leakage-Safe Evaluation",
+    status: "IN DEVELOPMENT // DAY 20 OF 28 // GATES G1–G2 PASSED",
     problem:
-      "Conventional machine learning trains models in static isolation. ModelArena creates a competitive multi-agent ecosystem that dynamically shifts shared memory and compute quotas to models demonstrating superior learning trajectories.",
+      "A local-first, CPU-only ML experimentation platform that eliminates evaluation leakage through fold-local preprocessing, isolated validation splits and single-use holdout tokens.",
     architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
-│                 GLOBAL RESOURCE CONTROLLER                  │
-│       [Dynamic VRAM Arbiter] ──> [Relative Trajectory Eval] │
+│                 EXPERIMENT ORCHESTRATOR                     │
+│    [Fold-Local Preprocessing] ──> [Isolated Validation]     │
 └──────────────────────────────┬──────────────────────────────┘
                                │
-       ┌───────────────────────┼───────────────────────┐
-       ▼                       ▼                       ▼
-┌──────────────┐        ┌──────────────┐        ┌──────────────┐
-│   AGENT 01   │        │   AGENT 02   │        │   AGENT 03   │
-│  Transformer │        │  Transformer │        │  Transformer │
-│ (+40% Memory)│        │ (Stagnating) │        │ (Promising)  │
-└──────────────┘        └──────────────┘        └──────────────┘
-       │                       │                       │
-       └───────────────────────┼───────────────────────┘
+        ┌──────────────────────┼──────────────────────┐
+        ▼                      ▼                      ▼
+┌──────────────┐       ┌──────────────┐       ┌──────────────┐
+│  WORKER 01   │       │  WORKER 02   │       │  WORKER 03   │
+│ Child Process│       │ Child Process│       │ Child Process│
+│ (SQLite Job) │       │ (SQLite Job) │       │ (SQLite Job) │
+└──────────────┘       └──────────────┘       └──────────────┘
+        │                      │                      │
+        └──────────────────────┼──────────────────────┘
                                ▼
-               [Shared Memory IPC Ring-Buffer]`,
+               [Single-Use Holdout Token Guard]`,
     benchmarks: [
-      { label: "Tasks Done", value: "20 / 28", detail: "71.4% milestone completion across framework modules" },
-      { label: "Memory Reallocation", value: "Dynamic", detail: "Shared memory sliding pool across active agents" },
-      { label: "Agent Evaluation", value: "Relative ΔL", detail: "Contrast loss curvature gradient against population" },
-      { label: "Topology", value: "Heterogeneous", detail: "Supports simultaneous transformer variations" },
+      { label: "Milestones", value: "20 / 28", detail: "Day 20 of 28 // Gates G1–G2 passed locally" },
+      { label: "Reproducibility", value: "max dev 0.0", detail: "Repeated 5-fold CV matched within abs 1e-6 / rel 1e-5" },
+      { label: "Evaluation", value: "Leakage-Safe", detail: "Fold-local preprocessing & isolated validation splits" },
+      { label: "Worker Host", value: "Supervised", detail: "Spawned CPU child processes with SQLite job queue" },
     ],
     invariants: [
-      "Loss trajectory evaluates across a rolling window before triggering resource reallocations.",
-      "Degenerate candidate culling occurs only after exceeding 3x patience thresholds.",
-      "Shared memory ring-buffer offsets maintain zero CUDA allocation fragmentation.",
+      "Fold-local preprocessing and isolated early-stopping validation prevent lookahead contamination.",
+      "One-time holdout evaluation is strictly guarded by single-use capability tokens.",
+      "Worker architecture uses durable SQLite job queue with orphan blocking and process reconciliation.",
     ],
-    cliCommand: "python main.py --arena --agents 4 --reallocate-interval 50",
+    cliCommand: "uv run --locked python -m apps.api.server",
     githubUrl: "https://github.com/reshandytaftazani/modelarena",
-    techStack: ["PyTorch", "Transformers", "CUDA", "Multi-Agent Systems", "Python 3.12"],
+    techStack: ["Python 3.12", "scikit-learn", "PyTorch (CPU)", "MLflow", "FastAPI", "SQLite", "pandas", "NumPy", "uv"],
   },
   {
     id: "finance-tracker",
     title: "Finance Tracker",
-    subtitle: "Defensive Personal Accounting Engine & Transaction Ledger",
-    status: "STABLE_ACID_VERIFIED",
+    subtitle: "Single-Owner Personal Finance Application with Integer-Rupiah Accounting",
+    status: "v1.0.0 // SELF-HOSTED // CI-VERIFIED",
     problem:
-      "Personal finance software often suffers from silent balance drift due to IEEE 754 float approximations and non-atomic bulk imports. Finance Tracker guarantees double-entry integrity through strict fixed-point arithmetic and SQLite WAL transactions.",
+      "A single-owner personal finance web application with integer-rupiah accounting, host-scoped cookies, automated pre-migration SQLite backups and spending forecasts evaluated against actuals.",
     architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
-│                   INGESTION & VALIDATION                    │
-│    [Pydantic v2 Contract Gate] ──> [Fixed Decimal Parser]   │
+│                   INGESTION & ROUTING                       │
+│    [FastAPI Router Gate] ──> [Pydantic Contract Validation] │
 └──────────────────────────────┬──────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                 DOUBLE-ENTRY ATOMIC ENGINE                  │
-│        [Debit == Credit] ──> [Audit Assertion Gate]         │
+│                 INTEGER-RUPIAH SERVICE CORE                 │
+│    [CHECK typeof = 'integer'] ──> [Pre-Migration Backup]    │
 └──────────────────────────────┬──────────────────────────────┘
                                │
                                ▼
-            [SQLite WAL Journal (Atomic Commit)]`,
+                 [SQLite Database & Storage]`,
     benchmarks: [
-      { label: "Ledger Balance", value: "100.00%", detail: "Zero floating-point discrepancy across ledger history" },
-      { label: "Query Speed", value: "4.12ms", detail: "Fast analytical query response on 50,000 transactions" },
-      { label: "Batch Ingest", value: "0.28s", detail: "Atomic commit for 5,000 imported transaction rows" },
-      { label: "Transaction Safety", value: "ACID", detail: "Zero orphaned records during unexpected runtime aborts" },
+      { label: "Currency Unit", value: "Integer IDR", detail: "Integer rupiah eliminating floating-point rounding" },
+      { label: "Data Safety", value: "Pre-Migration", detail: "Integrity-checked SQLite backup snapshot before upgrades" },
+      { label: "Authentication", value: "Argon2id", detail: "HttpOnly session cookies with hashed session tokens" },
+      { label: "Verification", value: "CI-Verified", detail: "Automated linting and test suite in GitHub Actions" },
     ],
     invariants: [
-      "Debit and credit entries must balance precisely to zero difference on every transaction.",
-      "All monetary values are strictly represented as 4-place fixed Decimal instances.",
-      "Batch migrations execute within single atomic transactions with automatic rollback.",
+      "Money modeled as integer rupiah enforced by database CHECK constraints.",
+      "Alembic migration workflow takes integrity-checked SQLite backup before upgrades.",
+      "Host and origin checks enforced on all mutating HTTP requests.",
     ],
-    cliCommand: "python -m ledger.cli sync --audit --verify-invariants",
+    cliCommand: "cd backend && python -m scripts.migrate && python -m app",
     githubUrl: "https://github.com/reshandytaftazani/finance-tracker",
-    techStack: ["Python", "FastAPI", "SQLite", "Pydantic v2", "Docker", "Pytest"],
+    techStack: ["Python", "FastAPI", "SQLModel", "SQLite", "Alembic", "React", "TypeScript", "TanStack Query", "Docker"],
   },
   {
     id: "savebite",
     title: "SaveBite",
-    subtitle: "Surplus Food Rescue & Distribution Platform",
-    status: "PBP_CS_UI_COMPLETED",
+    subtitle: "Food Waste Reduction Platform — Team Project, Universitas Indonesia",
+    status: "COMPLETED // DEPLOYED // COURSEWORK",
     problem:
-      "Commercial food establishments routinely discard edible surplus meals due to lack of real-time coordination with beneficiaries. SaveBite provides an end-to-end platform for food donors, charities, and distribution couriers.",
+      "A collaborative web platform connecting food donors, beneficiaries and volunteers to reduce food waste through structured rescue requests and offers.",
     architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
 │                    CLIENT PRESENTATION LAYER                │
-│    [Flutter Mobile Application] ──> [Web Management Portal] │
+│    [HTML / CSS / JavaScript] ──> [Web Management Portal]    │
 └──────────────────────────────┬──────────────────────────────┘
-                               │ (REST JSON + CSRF / Token)
+                               │ (Django Sessions + CSRF)
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   DJANGO REST BACKEND CORE                  │
-│   [Auth & RBAC] ──> [Food Claim Gate] ──> [Deadline Check]  │
+│                     DJANGO APPLICATION CORE                 │
+│   [Auth & RBAC] ──> [Request Board Service Layer] ──> [PWS] │
 └──────────────────────────────┬──────────────────────────────┘
                                │
                                ▼
-            [PostgreSQL Database (Food Manifests)]`,
+             [PostgreSQL Database (Production Host)]`,
     benchmarks: [
-      { label: "Coursework", value: "PBP UI", detail: "Pemrograman Berbasis Platform capstone at Universitas Indonesia" },
-      { label: "API Latency", value: "48ms p95", detail: "Fast response times on mobile listing endpoints" },
-      { label: "Multi-Client", value: "Synchronized", detail: "Seamless state sharing between Flutter mobile and web" },
-      { label: "Claim Integrity", value: "Defensive", detail: "Zero expired food items allowed through checkout gates" },
+      { label: "Coursework", value: "PBP UI", detail: "Pemrograman Berbasis Platform team project at Fasilkom UI" },
+      { label: "Module Contribution", value: "88 / 212", detail: "Owned Food Rescue Request Board (88 commits)" },
+      { label: "Deployment", value: "Faculty PWS", detail: "Deployed on faculty PWS platform with PostgreSQL" },
+      { label: "Integrity", value: "Idempotent", detail: "Per-owner UUID keys and payload digests for request creation" },
     ],
     invariants: [
-      "Pickup deadlines must be strictly in the future at the time of donor listing submission.",
-      "Concurrent claim requests on identical food portions resolve with strict database atomicity.",
-      "Session tokens and CSRF validations guard all mutating state operations.",
+      "Idempotent request creation using per-owner UUID keys and payload digests.",
+      "Database CHECK constraints on quantity > 0 and valid status and unit values.",
+      "Django session authentication with CSRF defense on all mutating requests.",
     ],
-    cliCommand: "python manage.py runserver --settings=savebite.settings",
+    cliCommand: "python manage.py runserver",
     githubUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite",
-    techStack: ["Django", "Python", "Flutter", "PostgreSQL", "REST API"],
+    techStack: ["Django", "Python", "PostgreSQL", "SQLite", "HTML/CSS/JavaScript", "GitHub Actions"],
   },
   {
     id: "leakguard-ml",
     title: "LeakGuard ML",
     subtitle: "Point-in-Time Feature Store & Lookahead Leakage Prevention Harness",
-    status: "100% TEMPORAL ISOLATION",
+    status: "CONCEPT / PLANNED",
     problem:
-      "In predictive machine learning pipelines, lookahead data leakage occurs when target information or future statistics contaminate the training horizon. LeakGuard enforces strict point-in-time cross-validation boundaries and temporal as-of joins with mathematical guarantees.",
+      "Conceptual point-in-time cross-validation and feature evaluation architecture designed to prevent lookahead data leakage in predictive ML pipelines.",
     architectureDiagram: `┌─────────────────────────────────────────────────────────────┐
 │                 EVENT STREAM INGESTION & AUDIT              │
 │    [Timestamp Ingestion] ──> [Point-in-Time Boundary Check] │
@@ -137,26 +137,24 @@ const projectSpecs: ProjectSpec[] = [
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                 POLARS AS-OF TEMPORAL ENGINE                │
-│    [Zero Future Data] ──> [Chaos Timestamp Scrambler Gate]  │
+│                 TEMPORAL EVALUATION ENGINE                  │
+│    [Temporal Isolation] ──> [Timestamp Validation Gate]     │
 └──────────────────────────────┬──────────────────────────────┘
                                │
                                ▼
-             [DuckDB / Parquet Columnar Storage]`,
+              [Columnar Storage Specification]`,
     benchmarks: [
-      { label: "Throughput", value: "14.2M rows/sec", detail: "Vectorized as-of temporal joins via Polars Rust core" },
-      { label: "Peak RAM", value: "412 MB", detail: "Streaming lazy evaluation memory footprint under 50k events" },
-      { label: "Violations", value: "0 / 50,000", detail: "Strict temporal boundary assertions barring future leakage" },
-      { label: "Query Speedup", value: "6.4x", detail: "Vectorized temporal joins computed over Pandas baseline" },
+      { label: "Status", value: "CONCEPT", detail: "Planned architectural design and specification" },
+      { label: "Target", value: "Zero Leakage", detail: "Temporal isolation in training and feature evaluation" },
     ],
     invariants: [
       "No feature row may reference a timestamp greater than the assigned evaluation cutoff.",
       "Target encoders and standardizers evaluate strictly within the past-sliding partition.",
-      "Chaos fuzzing fixture verifies 0 / 50,000 boundary violation detection rate across random shuffles.",
+      "Validation suites verify temporal boundary separation across splits.",
     ],
-    cliCommand: "pytest -v tests/test_leakage_bounds.py --strict-time-split",
-    githubUrl: "https://github.com/reshandytaftazani/leakguard-ml",
-    techStack: ["Python 3.12", "Polars", "Pytest", "DuckDB", "Temporal Joins", "Data Integrity"],
+    cliCommand: "N/A (concept, no public implementation)",
+    githubUrl: "https://github.com/reshandytaftazani",
+    techStack: ["Python 3.12", "Pytest", "Temporal Splits", "Data Integrity"],
   },
 ];
 ---

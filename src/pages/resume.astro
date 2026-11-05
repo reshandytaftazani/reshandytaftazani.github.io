@@ -37,50 +37,52 @@ const education = {
 const projects = [
   {
     title: "ModelArena",
-    subtitle: "Dynamic Resource Allocation & Evolutionary Multi-Agent Training Framework",
-    role: "Lead ML & Systems Researcher",
-    timeline: "2025 — Active R&D",
-    status: "ACTIVE R&D // 20/28 TASKS (71.4%)",
+    subtitle: "Local-First ML Experimentation Platform with Leakage-Safe Evaluation",
+    role: "Solo Developer",
+    timeline: "Oct 2026 — Present",
+    status: "IN DEVELOPMENT // DAY 20 OF 28 // GATES G1–G2 PASSED",
     category: "MACHINE LEARNING & SYSTEMS",
-    techStack: ["Python 3.12", "PyTorch", "Hugging Face Transformers", "CUDA", "Multi-Agent Systems", "Evolutionary Search"],
+    techStack: ["Python 3.12", "scikit-learn", "PyTorch (CPU)", "MLflow", "FastAPI", "SQLite", "pandas", "NumPy", "uv"],
     repoUrl: "https://github.com/reshandytaftazani/modelarena",
     caseStudyUrl: "/projects/modelarena",
     highlights: [
-      "Conceived and implemented an evolutionary multi-agent tournament runtime that dynamically reallocates GPU shared memory (Shm) buffers and compute quotas based on real-time loss delta trajectories instead of static training allocations.",
-      "Architected decoupled agent workers and central tournament arbiter communicating over shared IPC memory, accelerating high-learning-trajectory models with up to +40% memory quota while gracefully throttling stagnating topologies.",
-      "Engineered benchmarking harness for simultaneous multi-model evaluation across transformer and GPT-2 architectural variants with automated telemetry logging.",
+      "Developing a local-first, CPU-only ML experimentation platform that enforces leakage-safe evaluation through fold-local preprocessing, isolated early-stopping validation and a one-time holdout evaluation guarded by single-use capability tokens.",
+      "Built a supervised worker architecture with a durable SQLite job queue, spawned CPU child processes, cancellation, orphan blocking and restart reconciliation, tested with real child processes on Windows.",
+      "Verified reproducibility: repeated 5-fold CV under fixed seeds matched within abs 1e-6 / rel 1e-5 (observed max deviation 0.0), with a three-seed study separating model-seed from split-seed variance.",
+      "Integrated local MLflow tracking and generated offline ZIP reports that exclude raw rows and model binaries; maintain a per-day validation log (docs/VALIDATION.md) with acceptance tests per work package.",
     ],
   },
   {
     title: "Finance Tracker",
-    subtitle: "Defensive Personal Accounting Engine & Transaction Ledger",
-    role: "Fullstack Systems & Data Engineer",
-    timeline: "2025 — Stable Production",
-    status: "STABLE // PRODUCTION_VERIFIED",
+    subtitle: "Single-Owner Personal Finance Application with Integer-Rupiah Accounting",
+    role: "Solo Developer (Full-Stack)",
+    timeline: "Oct 2026",
+    status: "v1.0.0 // SELF-HOSTED // CI-VERIFIED",
     category: "SYSTEMS & DATA ENGINEERING",
-    techStack: ["FastAPI", "Python 3.12", "SQLite (WAL Mode)", "PostgreSQL", "Pydantic v2", "Docker", "Pytest"],
+    techStack: ["Python", "FastAPI", "SQLModel", "SQLite", "Alembic", "React", "TypeScript", "TanStack Query", "Docker"],
     repoUrl: "https://github.com/reshandytaftazani/finance-tracker",
     caseStudyUrl: "/projects/finance-tracker",
     highlights: [
-      "Enforced strict double-entry ledger invariants ($0.00 discrepancy guarantee) using fixed-point integer/decimal arithmetic, completely defending against IEEE 754 floating-point rounding errors and fractional cent drift.",
-      "Architected clean hexagonal service boundaries with atomic transaction rollback hooks and SQLite Write-Ahead Logging (WAL), sustaining sub-5ms indexed analytical queries across 50,000+ transactions with 100% ACID test validation.",
-      "Engineered automated ingestion CLI and defensive Pydantic v2 runtime contracts validating multi-currency transaction streams against malformed or asymmetric entries.",
+      "Built a single-owner finance application (FastAPI, SQLModel, SQLite, React/TypeScript) covering transactions, wallets, transfers, monthly budgets with 80%/100% alerts and spending analytics with forecast evaluation.",
+      "Modeled money as integer rupiah, enforced by database CHECK constraints and string-encoded API amounts, eliminating floating-point rounding.",
+      "Implemented Argon2id password hashing, HttpOnly session cookies with hashed tokens, server-side owner scoping and host/origin checks on mutating requests.",
+      "Designed an Alembic migration workflow that takes an integrity-checked SQLite backup before upgrades; shipped with a multi-stage Docker build and GitHub Actions CI (Ruff, pytest, frontend checks).",
     ],
   },
   {
     title: "SaveBite",
-    subtitle: "Surplus Food Rescue & Distribution Platform",
-    role: "Backend & Systems Contributor (Team Capstone)",
-    timeline: "2025 — Coursework Capstone",
-    status: "COMPLETED // PBP FASILKOM UI 2025",
+    subtitle: "Food Waste Reduction Platform — Team Project, Universitas Indonesia",
+    role: "Developer, Module 4: Food Rescue Request Board (Team of 5)",
+    timeline: "Sep — Oct 2026",
+    status: "COMPLETED // DEPLOYED // COURSEWORK",
     category: "DISTRIBUTED PLATFORM & WEB",
-    techStack: ["Django REST Framework", "Python 3.12", "Flutter", "PostgreSQL", "JSON Web Tokens", "CSRF Defense"],
+    techStack: ["Django", "Python", "PostgreSQL", "SQLite (local)", "HTML/CSS/JavaScript", "GitHub Actions"],
     repoUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite",
     caseStudyUrl: "/projects/savebite",
     highlights: [
-      "Engineered reliable REST backend services coordinating commercial food donors, NGOs, and volunteer couriers to eliminate urban food waste with real-time expiration window tracking.",
-      "Architected role-based access control (RBAC), CSRF protection, and session verification separating food donors, beneficiaries, and volunteer logistics across mobile and web clients.",
-      "Optimized relational database queries and food manifest distribution endpoints, enabling low-latency multi-platform synchronization with Flutter mobile applications.",
+      "Owned the Food Rescue Request Board module of a Django team project at Fasilkom UI (88 of 212 commits), delivering request creation, offers, helper selection, fulfillment and deletion with role-based access.",
+      "Implemented idempotent request creation using per-owner UUID keys and payload digests, and enforced integrity with unique and CHECK constraints at the database level.",
+      "Structured business logic into a service layer and documented the module (usage guide, operations guide, AI-use disclosure); deployed on the faculty PWS platform with PostgreSQL in production.",
     ],
   },
 ];
@@ -89,22 +91,22 @@ const skillMatrix = [
   {
     group: "Languages & Runtimes",
     code: "LANG",
-    skills: "Python 3.12 (AsyncIO, Typing, C-Extensions), C / C++ (Memory safety, pointer semantics, high-perf routines), TypeScript, JavaScript, SQL (PostgreSQL, SQLite WAL), Bash / Shell Scripting.",
+    skills: "Python 3.12 (AsyncIO, Typing), TypeScript, JavaScript, SQL (PostgreSQL, SQLite), Bash / Shell Scripting.",
   },
   {
     group: "ML & Distributed Systems",
     code: "MLE",
-    skills: "PyTorch, Hugging Face Transformers, CUDA fundamentals, scikit-learn, NumPy, Pandas (Vectorized compute), ONNX Runtime, Multi-Agent Systems, Dynamic Resource Allocation.",
+    skills: "PyTorch (CPU), scikit-learn, pandas, NumPy, MLflow, Leakage-Safe Evaluation, Cross-Validation.",
   },
   {
     group: "Systems & Infrastructure",
     code: "SYS",
-    skills: "FastAPI, Django REST Framework, Linux / Unix (Signals SIGINT/TERM, IPC, Sockets, Process Management), Docker (Multi-stage builds, Distroless), Git (Trunk-based workflow), CI/CD (GitHub Actions).",
+    skills: "FastAPI, Django, Pydantic, Linux / Unix (Process Supervision, Signals, IPC), Docker (Multi-stage builds), Git, CI/CD (GitHub Actions).",
   },
   {
     group: "Architecture & Verification",
     code: "ARCH",
-    skills: "Hexagonal Architecture (Ports & Adapters), Double-Entry Accounting Invariants, Zero Data Leakage Pipelines, Defensive Programming, Test-Driven Development (Pytest, Fixture Isolation, Chaos Injections), Pydantic v2 Schema Contracts.",
+    skills: "Layered Architecture, Integer Rupiah Accounting, Zero Data Leakage Pipelines, Defensive Invariants, Test-Driven Development (pytest), Database-Level Constraints.",
   },
 ];
 
@@ -121,11 +123,9 @@ Portfolio: https://reshandytaftazani.github.io
 EXECUTIVE SUMMARY
 ================================================================================
 Computer Science undergraduate at Universitas Indonesia (Fasilkom UI, Class of 2025)
-specializing in Machine Learning Engineering (MLE) and Software Systems. Engineering
-philosophy is centered on zero data leakage in training pipelines, defensive software
-invariants, clean hexagonal architectures, atomic database invariants, and deterministic
-verification harnesses. Active builder across multi-agent training runtimes, double-entry
-transaction engines, and high-throughput Python/C++ pipelines.
+specializing in Machine Learning Engineering (MLE) and Software Systems. Builder
+of local-first ML experimentation platforms with leakage-safe evaluation,
+single-owner personal finance applications, and a team-built Django web platform.
 
 ================================================================================
 EDUCATION
@@ -145,70 +145,76 @@ Core Coursework:
 ================================================================================
 FLAGSHIP SYSTEMS & ENGINEERING PROJECTS
 ================================================================================
-1. ModelArena: Dynamic Resource Allocation & Multi-Agent Training Framework
-   Role: Lead ML & Systems Researcher | 2025 — Active R&D
-   Status: 20/28 Tasks Completed (71.4% milestone progress)
-   Tech Stack: Python 3.12, PyTorch, Hugging Face Transformers, CUDA, Multi-Agent Systems, Evolutionary Search
+1. ModelArena: Local-First ML Experimentation Platform with Leakage-Safe Evaluation
+   Role: Solo Developer | Oct 2026 — Present
+   Status: In Development // Day 20 of 28 // Gates G1–G2 Passed
+   Tech Stack: Python 3.12, scikit-learn, PyTorch (CPU), MLflow, FastAPI, SQLite, pandas, NumPy, uv
    Repository: https://github.com/reshandytaftazani/modelarena
    Case Study: https://reshandytaftazani.github.io/projects/modelarena
-   - Conceived and implemented an evolutionary multi-agent tournament runtime that
-     dynamically reallocates GPU shared memory (Shm) and compute quotas based on
-     real-time loss delta trajectory instead of static allocations.
-   - Designed decoupled worker-arbiter architecture using inter-process communication
-     (IPC) memory buffers, rewarding high-trajectory agents with up to +40% memory
-     quota while gracefully throttling stagnating topologies.
-   - Built evaluation harnesses for simultaneous multi-model benchmarks across
-     transformer and GPT-2 architectural variants with automated telemetry logging.
+   - Developing a local-first, CPU-only ML experimentation platform that enforces
+     leakage-safe evaluation through fold-local preprocessing, isolated early-stopping
+     validation and a one-time holdout evaluation guarded by single-use capability tokens.
+   - Built a supervised worker architecture with a durable SQLite job queue, spawned
+     CPU child processes, cancellation, orphan blocking and restart reconciliation,
+     tested with real child processes on Windows.
+   - Verified reproducibility: repeated 5-fold CV under fixed seeds matched within
+     abs 1e-6 / rel 1e-5 (observed max deviation 0.0), with a three-seed study
+     separating model-seed from split-seed variance.
+   - Integrated local MLflow tracking and generated offline ZIP reports that exclude
+     raw rows and model binaries; maintain a per-day validation log (docs/VALIDATION.md)
+     with acceptance tests per work package.
 
-2. Finance Tracker: Defensive Personal Accounting Engine & Transaction Ledger
-   Role: Fullstack Systems & Data Engineer | 2025 — Stable Production Verified
-   Status: Stable // Production Verified (100% ACID test pass)
-   Tech Stack: FastAPI, Python 3.12, SQLite (WAL Mode), PostgreSQL, Pydantic v2, Docker, Pytest
+2. Finance Tracker: Single-Owner Personal Finance Application with Integer-Rupiah Accounting
+   Role: Solo Developer (Full-Stack) | Oct 2026
+   Status: v1.0.0 // Self-Hosted // CI-Verified
+   Tech Stack: Python, FastAPI, SQLModel, SQLite, Alembic, React, TypeScript, TanStack Query, Docker
    Repository: https://github.com/reshandytaftazani/finance-tracker
    Case Study: https://reshandytaftazani.github.io/projects/finance-tracker
-   - Enforced strict double-entry ledger invariants ($0.00 balance discrepancy)
-     using fixed-point integer/decimal arithmetic, defending against IEEE 754
-     floating-point rounding errors and fractional cent drift.
-   - Architected hexagonal service boundaries with atomic transaction rollback
-     hooks and SQLite Write-Ahead Logging (WAL), achieving sub-5ms indexed
-     analytical queries across 50,000+ transactions with 100% ACID test validation.
-   - Built defensive CLI ingestion pipelines enforcing strict Pydantic v2 runtime
-     contracts against malformed multi-currency data streams.
+   - Built a single-owner finance application (FastAPI, SQLModel, SQLite, React/TypeScript)
+     covering transactions, wallets, transfers, monthly budgets with 80%/100% alerts
+     and spending analytics with forecast evaluation.
+   - Modeled money as integer rupiah, enforced by database CHECK constraints and
+     string-encoded API amounts, eliminating floating-point rounding.
+   - Implemented Argon2id password hashing, HttpOnly session cookies with hashed
+     tokens, server-side owner scoping and host/origin checks on mutating requests.
+   - Designed an Alembic migration workflow that takes an integrity-checked SQLite
+     backup before upgrades; shipped with a multi-stage Docker build and GitHub Actions
+     CI (Ruff, pytest, frontend checks).
 
-3. SaveBite: Surplus Food Rescue & Distribution Platform
-   Role: Backend & Systems Contributor | 2025 (PBP Fasilkom UI Coursework Capstone)
-   Status: Completed // PBP Fasilkom UI Coursework Capstone 2025
-   Tech Stack: Django REST Framework, Python 3.12, Flutter, PostgreSQL, JSON Web Tokens
+3. SaveBite: Food Waste Reduction Platform — Team Project, Universitas Indonesia
+   Role: Developer, Module 4: Food Rescue Request Board (Team of 5) | Sep — Oct 2026
+   Status: Completed // Deployed // Coursework
+   Tech Stack: Django, Python, PostgreSQL, SQLite (local), HTML/CSS/JavaScript, GitHub Actions
    Repository: https://github.com/PBP-D-Kelompok-8/SaveBite
    Case Study: https://reshandytaftazani.github.io/projects/savebite
-   - Engineered backend REST services coordinating commercial food donors, NGOs,
-     and couriers to eliminate urban food waste with real-time expiration window tracking.
-   - Implemented role-based access control (RBAC), CSRF protection, and session
-     verification separating food donors, beneficiaries, and volunteer logistics.
-   - Optimized relational queries and manifest distribution endpoints, enabling
-     low-latency mobile and web synchronization across Flutter clients.
+   - Owned the Food Rescue Request Board module of a Django team project at Fasilkom UI
+     (88 of 212 commits), delivering request creation, offers, helper selection,
+     fulfillment and deletion with role-based access.
+   - Implemented idempotent request creation using per-owner UUID keys and payload digests,
+     and enforced integrity with unique and CHECK constraints at the database level.
+   - Structured business logic into a service layer and documented the module (usage guide,
+     operations guide, AI-use disclosure); deployed on the faculty PWS platform with
+     PostgreSQL in production.
 
 ================================================================================
 TECHNICAL SKILLS MATRIX
 ================================================================================
 Languages & Runtimes:
-  Python 3.12 (AsyncIO, Typing, C-Extensions), C / C++ (Memory safety, pointer
-  semantics), TypeScript, JavaScript, SQL (PostgreSQL, SQLite WAL), Bash / Shell.
+  Python 3.12 (AsyncIO, Typing), TypeScript, JavaScript, SQL (PostgreSQL,
+  SQLite), Bash / Shell Scripting.
 
 Machine Learning & Distributed Systems:
-  PyTorch, Hugging Face Transformers, CUDA fundamentals, scikit-learn, NumPy,
-  Pandas (Vectorized Compute), ONNX Runtime, Multi-Agent Systems, Dynamic
-  Resource Allocation.
+  PyTorch (CPU), scikit-learn, pandas, NumPy, MLflow, Leakage-Safe
+  Evaluation, Cross-Validation.
 
 Systems & Infrastructure:
-  FastAPI, Django REST Framework, Linux / Unix (Signals SIGINT/TERM, IPC, Sockets,
-  Process Management), Docker (Multi-stage builds, Distroless), Git (Trunk-based
-  workflow, Atomic commits), CI/CD (GitHub Actions), REST API Architecture.
+  FastAPI, Django, Pydantic, Linux / Unix (Process Supervision, Signals,
+  IPC), Docker (Multi-stage builds), Git, CI/CD (GitHub Actions).
 
 Architecture & Methodology:
-  Hexagonal Architecture (Ports & Adapters), Double-Entry Accounting Invariants,
-  Zero Data Leakage Pipelines, Defensive Programming, Test-Driven Development
-  (Pytest, Fixture Isolation, Chaos Injections), Pydantic v2 Schema Contracts.`;
+  Layered Architecture, Integer Rupiah Accounting, Zero Data Leakage
+  Pipelines, Defensive Invariants, Test-Driven Development (pytest),
+  Database-Level Constraints.`;
 ---
 
 <Layout 
@@ -373,7 +379,7 @@ Architecture & Methodology:
           <span class="text-[10px] text-accent print:text-black font-semibold">ZERO_DATA_LEAKAGE</span>
         </div>
         <p class="text-[13px] sm:text-sm text-neutral-800 leading-relaxed font-normal">
-          Computer Science undergraduate at <strong class="text-black font-semibold">Universitas Indonesia (Fasilkom UI, Class of 2025)</strong> specializing in Machine Learning Engineering (MLE) and high-throughput Software Systems. Engineering philosophy is centered on zero data leakage in training pipelines, defensive software invariants, clean hexagonal architectures, atomic database invariants, and deterministic verification harnesses. Active builder across multi-agent training runtimes, double-entry transaction engines, and high-performance Python/C++ pipelines.
+          Computer Science undergraduate at <strong class="text-black font-semibold">Universitas Indonesia (Fasilkom UI, Class of 2025)</strong> specializing in Machine Learning Engineering (MLE) and Software Systems. Builder of local-first ML experimentation platforms with leakage-safe evaluation, single-owner personal finance applications, and a team-built Django web platform.
         </p>
       </section>
 
@@ -542,7 +548,7 @@ Architecture & Methodology:
         <div class="cv-principles-grid grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-mono text-xs text-neutral-800">
           <div class="cv-principle-card border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
             <span class="font-bold text-black block text-[10.5px] uppercase tracking-wider mb-1">INVARIANT VERIFICATION</span>
-            <span class="text-neutral-700 text-[11px] leading-relaxed block">Strict double-entry accounting invariants and atomic rollback hooks defending against floating-point drift.</span>
+            <span class="text-neutral-700 text-[11px] leading-relaxed block">Integer rupiah accounting with database CHECK constraints eliminating floating-point rounding.</span>
           </div>
           <div class="cv-principle-card border border-neutral-200 print:border-neutral-300 p-2.5 rounded-xs bg-neutral-50/50 print:bg-transparent">
             <span class="font-bold text-black block text-[10.5px] uppercase tracking-wider mb-1">ZERO DATA LEAKAGE</span>

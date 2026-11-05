@@ -1,7 +1,7 @@
 ---
 // TerminalDrawer.astro
 // UNIX Monospaced Interactive Terminal Drawer (Client-Side Pure TypeScript REPL Shell)
-// High-precision Swiss Brutalist design, live IPC status, multi-agent training simulation & verified invariants
+// High-precision Swiss Brutalist design, live kernel status & verified architecture manifests
 ---
 
 <!-- Scrim Backdrop -->
@@ -40,7 +40,7 @@
       <!-- Live Status Badge -->
       <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 font-bold text-[10px] shrink-0">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="tracking-widest">IPC: POSIX_RING_ACTIVE</span>
+        <span class="tracking-widest">SUPERVISOR: ACTIVE</span>
       </div>
     </div>
 
@@ -135,10 +135,7 @@
       <span class="text-neutral-600 font-bold hidden sm:inline">QUICK:</span>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="help">help</button>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-[#38bdf8] font-bold transition-colors cursor-pointer" data-cmd="whoami">whoami</button>
-      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-emerald-400 font-bold transition-colors cursor-pointer" data-cmd="run modelarena --train">run modelarena --train</button>
-      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-amber-300 font-bold transition-colors cursor-pointer" data-cmd="eval --split test">eval --split test</button>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="cat modelarena">cat modelarena</button>
-      <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="cat leakguard-ml">cat leakguard-ml</button>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="cat finance-tracker">cat finance-tracker</button>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="roofline">roofline</button>
       <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#121619] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="curl /contact">curl /contact</button>
@@ -340,95 +337,72 @@
     modelarena: {
       id: "modelarena",
       name: "ModelArena",
-      title: "Dynamic Resource Allocation & Multi-Agent Training Framework",
-      status: "ACTIVE_R&D_71.4%",
+      title: "Local-First ML Experimentation Platform with Leakage-Safe Evaluation",
+      status: "IN DEVELOPMENT // DAY 20 OF 28 // GATES G1–G2 PASSED",
       architecture: {
-        controller: "Global Resource Controller (Dynamic VRAM Arbiter)",
-        evaluation: "Relative Loss Curvature Gradient vs Population",
-        topology: "Heterogeneous Multi-Transformer Ring",
-        ipc: "POSIX Shared Memory Ring-Buffer (Zero CUDA fragmentation)"
+        orchestrator: "Fold-Local Preprocessing and Validation Pipeline",
+        evaluation: "Isolated Validation Splits and Single-Use Holdout Tokens",
+        worker_model: "Supervised CPU Child Processes with SQLite Job Queue",
+        reproducibility: "Repeated 5-fold CV matched within abs 1e-6 / rel 1e-5"
       },
       verified_metrics: {
-        milestone_tasks: "20 / 28 completed (71.4%)",
-        memory_reallocation: "Dynamic sliding shared pool",
-        cuda_fragmentation: "0.00% zero fragmentation across all runs",
-        relative_delta_loss: "Evaluated across rolling 50-step window"
+        milestone_tasks: "Day 20 of 28 // Gates G1–G2 passed",
+        max_seed_deviation: "0.0 (identical 5-fold CV under fixed seeds)",
+        acceptance_tests: "Validation log documented per work package",
+        worker_supervision: "Tested with real child processes on Windows"
       },
       invariants: [
-        "Loss trajectory evaluates across rolling window before quota reallocation",
-        "Degenerate candidate culling occurs only after exceeding 3x patience threshold",
-        "Shared memory ring-buffer offsets maintain zero CUDA allocation fragmentation"
+        "Fold-local preprocessing ensures no feature transformation statistics cross folds",
+        "Isolated early-stopping validation prevents leakage into holdout evaluation",
+        "One-time holdout evaluation guarded by single-use capability tokens"
       ],
       source_repo: "https://github.com/reshandytaftazani/modelarena"
-    },
-    "leakguard-ml": {
-      id: "leakguard-ml",
-      name: "LeakGuard ML",
-      title: "Point-in-Time Feature Store & Lookahead Leakage Prevention",
-      status: "100% TEMPORAL ISOLATION",
-      architecture: {
-        temporal_join: "Polars Rust Vectorized As-Of Joins",
-        cross_validation: "Purged & Embargoed Rolling Splits",
-        audit_harness: "Chaos Timestamp Scrambler with Invariant Assertions",
-        columnar_store: "DuckDB & Apache Parquet"
-      },
-      verified_metrics: {
-        throughput: "14.2M rows/sec temporal join throughput",
-        peak_memory: "412 MB streaming footprint on 50k events",
-        leakage_violations: "0 / 50,000 verified against future information",
-        vectorized_speedup: "6.4x vs standard Pandas temporal joins"
-      },
-      invariants: [
-        "Query timestamp strictly upper-bounds feature availability horizon",
-        "Purge window strips lookahead overlap on overlapping trade/signal labels"
-      ],
-      source_repo: "https://github.com/reshandytaftazani/leakguard-ml"
     },
     "finance-tracker": {
       id: "finance-tracker",
       name: "Finance Tracker",
-      title: "Defensive Personal Accounting Engine & Transaction Ledger",
-      status: "STABLE_ACID_VERIFIED",
+      title: "Single-Owner Personal Finance Application with Integer-Rupiah Accounting",
+      status: "v1.0.0 // SELF-HOSTED // CI-VERIFIED",
       architecture: {
-        validation: "Pydantic v2 Contract Gate",
-        arithmetic: "Fixed-Point Decimal (4 places, zero IEEE 754 drift)",
-        engine: "Double-Entry Bookkeeping Ledger (Debit == Credit)",
-        storage: "SQLite WAL Journal with Atomic Commit Gates"
+        validation: "Pydantic Request Contracts at API Boundaries",
+        arithmetic: "Integer Rupiah with Database CHECK Constraints",
+        security: "Argon2id Hash & HttpOnly SameSite=Lax Session Cookies",
+        storage: "Pre-Migration SQLite Backups with Automated Verification"
       },
       verified_metrics: {
-        ledger_balance_integrity: "100.00% across all historical entries",
-        query_latency: "4.12 ms on 50,000 transaction dataset",
-        batch_ingest_time: "0.28s atomic commit for 5,000 rows",
-        acid_guarantee: "Zero orphaned records during unexpected runtime aborts"
+        accounting_model: "Integer rupiah eliminating floating-point rounding",
+        auth_protection: "Host/origin checks on all mutating HTTP requests",
+        backup_workflow: "Integrity-checked SQLite backup before upgrades",
+        ci_verification: "GitHub Actions CI (Ruff, pytest, frontend checks)"
       },
       invariants: [
-        "Debit and credit entries must balance precisely to zero difference on every transaction",
-        "All monetary values are strictly represented as 4-place fixed Decimal instances",
-        "Batch migrations execute within single atomic transactions with automatic rollback"
+        "Money modeled as integer rupiah enforced by database CHECK constraints",
+        "Alembic migration workflow takes integrity-checked SQLite backup before upgrades",
+        "Server-side owner scoping and host/origin checks guard all mutating requests"
       ],
       source_repo: "https://github.com/reshandytaftazani/finance-tracker"
     },
     savebite: {
       id: "savebite",
       name: "SaveBite",
-      title: "Surplus Food Rescue & Distribution Platform",
-      status: "PBP_CS_UI_COMPLETED",
+      title: "Food Waste Reduction Platform — Team Project, Universitas Indonesia",
+      status: "COMPLETED // DEPLOYED // COURSEWORK",
       architecture: {
-        presentation: "Flutter Mobile Application + Web Responsive Portal",
-        api_layer: "Django REST Framework (JWT Auth + CSRF Guard)",
-        concurrency: "Row-level lock on food claim transactions",
-        database: "PostgreSQL 16 Enterprise Relational Storage"
+        presentation: "Web Management Interface with Django Templates",
+        service_layer: "Dedicated Service Layer for Food Rescue Request Board",
+        authentication: "Django Session Authentication with CSRF Defense",
+        database: "PostgreSQL in Production (Faculty PWS Platform)"
       },
       verified_metrics: {
-        coursework: "Pemrograman Berbasis Platform (FASILKOM UI)",
-        api_latency_p95: "48 ms on listing & claim endpoints",
-        claim_integrity: "100% verified (Zero expired food claims)",
-        synchronization: "Real-time state parity across Mobile & Web"
+        coursework: "Pemrograman Berbasis Platform (Fasilkom UI)",
+        module_contribution: "Food Rescue Request Board (88 of 212 commits)",
+        request_idempotency: "Per-owner UUID keys and payload digests",
+        database_integrity: "CHECK constraints on quantity > 0 and valid units"
       },
       invariants: [
-        "Pickup deadlines must be strictly in the future at submission time",
-        "Concurrent claim requests resolve with strict database row atomicity",
-        "Session tokens and CSRF validations guard all mutating state operations"
+        "Idempotent request creation using per-owner UUID keys and payload digests",
+        "Database CHECK constraints on quantity > 0 and valid status and unit values",
+        "Django session authentication and CSRF defense guard all mutating state operations"
       ],
       source_repo: "https://github.com/PBP-D-Kelompok-8/SaveBite"
     }
@@ -542,9 +516,9 @@
               <span class="text-neutral-500 font-mono">(x86_64-pc-linux-gnu)</span>
             </div>
             <div class="flex items-center gap-2 text-neutral-500 font-mono text-[10px]">
-              <span class="text-emerald-400 font-bold">POSIX_IPC: READY</span>
+              <span class="text-emerald-400 font-bold">SQLITE_QUEUE: READY</span>
               <span>•</span>
-              <span>CUDA_ARBITER: ONLINE</span>
+              <span>CPU_WORKER: READY</span>
               <span>•</span>
               <span>DEPOK, ID // UTC+07</span>
             </div>
@@ -557,15 +531,15 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10.5px] pt-0.5">
             <div class="p-2 rounded-xs bg-[#101419] border border-[#1d2630]">
               <span class="text-accent font-bold">SYSTEMS:</span>
-              <span class="text-neutral-300"> POSIX Signals, Zero CUDA Frag, Ring Buffers</span>
+              <span class="text-neutral-300"> Worker Supervision, SQLite Queue</span>
             </div>
             <div class="p-2 rounded-xs bg-[#101419] border border-[#1d2630]">
               <span class="text-accent font-bold">ML / DATA:</span>
-              <span class="text-neutral-300"> Purged CV, Zero Lookahead Leakage, Polars</span>
+              <span class="text-neutral-300"> Zero Leakage, Fold-Local Preprocessing, MLflow</span>
             </div>
             <div class="p-2 rounded-xs bg-[#101419] border border-[#1d2630]">
               <span class="text-accent font-bold">FINTECH:</span>
-              <span class="text-neutral-300"> Double-Entry ACID, 4-Place Fixed Decimal</span>
+              <span class="text-neutral-300"> Integer Rupiah, Database Constraints, Backups</span>
             </div>
           </div>
 
@@ -573,8 +547,7 @@
             <span class="text-neutral-500">Quick start:</span>
             <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-neutral-300 font-bold transition-colors cursor-pointer" data-cmd="help">help</button>
             <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-[#38bdf8] font-bold transition-colors cursor-pointer" data-cmd="whoami">whoami</button>
-            <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-emerald-400 font-bold transition-colors cursor-pointer" data-cmd="run modelarena --train">run modelarena --train</button>
-            <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-amber-300 font-bold transition-colors cursor-pointer" data-cmd="eval --split test">eval --split test</button>
+            <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-emerald-400 font-bold transition-colors cursor-pointer" data-cmd="cat modelarena">cat modelarena</button>
             <button type="button" class="term-quick-cmd px-1.5 py-0.5 rounded-xs bg-[#151b22] hover:bg-accent hover:text-black text-neutral-400 font-bold transition-colors cursor-pointer" data-cmd="roofline">roofline</button>
           </div>
         `;
@@ -759,7 +732,7 @@
             <div class="overflow-x-auto space-y-2.5 text-[11px] sm:text-xs">
               <div class="flex items-center justify-between pb-1.5 border-b border-[#222a32] text-[10px] text-neutral-400 font-mono">
                 <span class="text-accent font-bold tracking-wider">[KERNEL SUBSYSTEMS &amp; COMMAND REGISTRY]</span>
-                <span class="text-emerald-400 font-bold">POSIX x86_64 ABI</span>
+                <span class="text-emerald-400 font-bold">x86_64 ARCHITECTURE</span>
               </div>
               <table class="w-full text-left border-collapse font-mono text-[11px]">
                 <thead>
@@ -783,29 +756,18 @@
                     <td class="p-2 text-[#38bdf8] text-[10px] hidden sm:table-cell">[IDENTITY]</td>
                     <td class="p-2 text-neutral-300">Candidate profile, university degree, and systems engineering invariants</td>
                   </tr>
-                  <tr>
-                    <td class="p-2 text-accent font-bold">run</td>
-                    <td class="p-2 text-emerald-400">modelarena --train</td>
-                    <td class="p-2 text-emerald-400 text-[10px] hidden sm:table-cell">[ML/SYS]</td>
-                    <td class="p-2 text-neutral-300">Execute multi-agent RL simulation with 100ms streaming stdout logs</td>
-                  </tr>
-                  <tr>
-                    <td class="p-2 text-accent font-bold">eval</td>
-                    <td class="p-2 text-[#a7f3d0]">--split test</td>
-                    <td class="p-2 text-[#a7f3d0] text-[10px] hidden sm:table-cell">[QUANT]</td>
-                    <td class="p-2 text-neutral-300">Display quantitative table (Sharpe, MDD, p50/p95 latency, zero-leakage)</td>
-                  </tr>
+
                   <tr>
                     <td class="p-2 text-accent font-bold">cat</td>
                     <td class="p-2 text-[#38bdf8]">[project]</td>
                     <td class="p-2 text-[#38bdf8] text-[10px] hidden sm:table-cell">[MANIFEST]</td>
-                    <td class="p-2 text-neutral-300">Display JSON architecture spec (modelarena, leakguard-ml, finance-tracker, savebite)</td>
+                    <td class="p-2 text-neutral-300">Display JSON architecture spec (modelarena, finance-tracker, savebite)</td>
                   </tr>
                   <tr>
                     <td class="p-2 text-accent font-bold">roofline</td>
                     <td class="p-2 text-neutral-500">—</td>
                     <td class="p-2 text-amber-300 text-[10px] hidden sm:table-cell">[HARDWARE]</td>
-                    <td class="p-2 text-neutral-300">Display attainable performance for NVIDIA A100, RTX 4090, and T4</td>
+                    <td class="p-2 text-neutral-300">Conceptual roofline reference for NVIDIA A100, RTX 4090, and T4 (not a ModelArena measurement)</td>
                   </tr>
                   <tr>
                     <td class="p-2 text-accent font-bold">curl</td>
@@ -850,7 +812,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded-xs bg-emerald-950/70 border border-emerald-500/40 text-emerald-400 font-bold text-[10px]">
-                    ● CANDIDATE_VERIFIED
+                    ● PROFILE
                   </span>
                   <span class="text-[10px] text-neutral-500 font-mono">DEPOK, ID</span>
                 </div>
@@ -867,39 +829,39 @@
                 </div>
                 <div class="space-y-1">
                   <div class="text-neutral-500 text-[10px] uppercase tracking-wider">Kernel Environment:</div>
-                  <div class="text-foreground font-mono">Linux 6.8.0-reshandy-kernel (x86_64, POSIX Compliant)</div>
+                  <div class="text-foreground font-mono">Linux 6.8.0-reshandy-kernel (x86_64)</div>
                 </div>
                 <div class="space-y-1">
                   <div class="text-neutral-500 text-[10px] uppercase tracking-wider">Toolchain &amp; Runtimes:</div>
-                  <div class="text-foreground font-mono">Python 3.12, C++20, PyTorch 2.5, Polars, DuckDB, Astro</div>
+                  <div class="text-foreground font-mono">Python 3.12, TypeScript, PyTorch (CPU), FastAPI, Django, Astro</div>
                 </div>
               </div>
 
               <div class="pt-2 border-t border-[#222c36] space-y-2">
                 <div class="text-neutral-400 font-bold text-[10.5px] uppercase tracking-wider flex items-center justify-between">
                   <span>Core Engineering Invariants:</span>
-                  <span class="text-emerald-400 text-[10px]">3 / 3 PASS</span>
+                  <span class="text-emerald-400 text-[10px]">3 PRINCIPLES</span>
                 </div>
                 <div class="space-y-1.5 text-[11px]">
                   <div class="flex items-start gap-2 bg-[#10151a] p-2 rounded-xs border border-[#1d2630]">
                     <span class="text-emerald-400 font-bold">✔</span>
                     <div>
                       <strong class="text-foreground">Zero Data Leakage:</strong>
-                      <span class="text-neutral-300"> Mathematically verified temporal joins with purged cross-validation in Polars &amp; DuckDB.</span>
+                      <span class="text-neutral-300"> Fold-local preprocessing, isolated validation splits, and single-use holdout tokens.</span>
                     </div>
                   </div>
                   <div class="flex items-start gap-2 bg-[#10151a] p-2 rounded-xs border border-[#1d2630]">
                     <span class="text-emerald-400 font-bold">✔</span>
                     <div>
                       <strong class="text-foreground">Defensive Architecture:</strong>
-                      <span class="text-neutral-300"> Fixed-point decimal arithmetic barring IEEE 754 float drift in financial ledgers.</span>
+                      <span class="text-neutral-300"> Integer rupiah accounting with database CHECK constraints eliminating float drift.</span>
                     </div>
                   </div>
                   <div class="flex items-start gap-2 bg-[#10151a] p-2 rounded-xs border border-[#1d2630]">
                     <span class="text-emerald-400 font-bold">✔</span>
                     <div>
-                      <strong class="text-foreground">Systems Throughput:</strong>
-                      <span class="text-neutral-300"> Multi-agent dynamic memory allocation with zero CUDA ring fragmentation.</span>
+                      <strong class="text-foreground">Worker Supervision:</strong>
+                      <span class="text-neutral-300"> Supervised worker architecture with durable SQLite job queue and restart recovery.</span>
                     </div>
                   </div>
                 </div>
@@ -920,7 +882,7 @@
               <div class="space-y-1 text-amber-400 font-bold">
                 <div>cat: missing project manifest operand.</div>
                 <div class="text-neutral-400 font-normal text-[11px]">
-                  Usage: <span class="text-accent font-bold">cat [modelarena | leakguard-ml | finance-tracker | savebite]</span>
+                  Usage: <span class="text-accent font-bold">cat [modelarena | finance-tracker | savebite]</span>
                 </div>
               </div>
             `;
@@ -934,7 +896,7 @@
           if (normalized === "finance" || normalized === "financetracker") specKey = "finance-tracker";
           if (normalized === "model-arena") specKey = "modelarena";
           if (normalized === "save-bite") specKey = "savebite";
-          if (normalized === "leakguard") specKey = "leakguard-ml";
+          // leakguard removed from terminal catalog
 
           const spec = PROJECT_CAT_DATA[specKey];
           if (!spec) {
@@ -963,7 +925,7 @@
                   <span class="text-foreground">${spec.name.toUpperCase()} // SPEC_v1.0.json</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span class="text-emerald-400 font-bold">[100% INVARIANTS PASS]</span>
+                  <span class="text-emerald-400 font-bold">[SPEC MANIFEST]</span>
                   <span>•</span>
                   <span class="text-accent">${spec.status}</span>
                 </div>
@@ -971,7 +933,7 @@
               <pre class="bg-[#0b0e11] p-3 rounded-xs border border-[#1b2228] overflow-x-auto text-[11px] leading-relaxed select-text">${highlighted}</pre>
               <div class="flex items-center justify-between text-[10px] text-neutral-500 pt-0.5">
                 <span>Repository: <a href="${spec.source_repo}" target="_blank" rel="noopener noreferrer" class="text-[#38bdf8] underline hover:text-accent">${spec.source_repo} ↗</a></span>
-                <span>Architecture verified under POSIX invariants</span>
+                <span>Architecture manifest from audited specifications</span>
               </div>
             </div>
           `;
@@ -981,216 +943,17 @@
         }
 
         case "run": {
-          const subTarget = args[0]?.toLowerCase();
-          const isTrain = args.includes("--train");
-
-          if (subTarget !== "modelarena" || !isTrain) {
-            playViolation();
-            const tookMs = Math.round(performance.now() - startTime) || 8;
-            const html = `
-              <div class="space-y-1 text-amber-400 font-bold">
-                <div>run: invalid command syntax.</div>
-                <div class="text-neutral-400 font-normal text-[11px]">
-                  Usage: <span class="text-emerald-400 font-bold">run modelarena --train</span>
-                </div>
-              </div>
-            `;
-            appendLogEntry(trimmed, html, "400 BAD_SYNTAX", "warning", tookMs);
-            setKernelStatus("idle");
-            break;
-          }
-
-          // Multi-agent training simulation with streaming stdout ASCII log
-          playSuccess();
-          isStreaming = true;
-          input.disabled = true;
-          setKernelStatus("exec");
-
-          const streamContainer = document.createElement("div");
-          streamContainer.className = "space-y-1.5 my-2.5 term-card-entrance";
-          streamContainer.innerHTML = `
-            <div class="flex items-center justify-between text-[10.5px] px-2.5 py-1.5 bg-[#0e1215] border border-accent/40 rounded-xs select-none">
-              <div class="flex items-center gap-2 font-mono">
-                <span class="text-accent font-bold">⚡</span>
-                <span class="text-neutral-400 font-medium hidden sm:inline">guest@reshandy-kernel:~$</span>
-                <span class="text-foreground font-bold">${escapeHtml(trimmed)}</span>
-              </div>
-              <div class="flex items-center gap-2 text-neutral-500 text-[10px] font-mono">
-                <span id="train-status-pill" class="px-1.5 py-0.5 rounded-xs border border-accent/50 bg-accent/20 text-accent font-bold font-mono text-[9px] tracking-wider animate-pulse">[RUNNING]</span>
-                <span class="hidden sm:inline text-neutral-600">•</span>
-                <span class="text-neutral-400 font-mono hidden sm:inline">Ctrl+C to abort</span>
-              </div>
-            </div>
-            <div class="term-stdout p-3 bg-[#0a0d0f]/95 border border-[#1b2228] rounded-xs font-mono text-[11px] sm:text-xs leading-relaxed space-y-2">
-              <div class="flex items-center justify-between pb-1.5 border-b border-[#1f2832] text-[10px] text-neutral-500">
-                <span class="text-accent font-bold">[PYTORCH 2.5 CUDA ALLOCATION HARNESS // MODELARENA]</span>
-                <span class="text-emerald-400 font-mono">SHARED BUFFER: 24.0 GB</span>
-              </div>
-              <div id="train-stream-target" class="space-y-1"></div>
-            </div>
-          `;
-          log.appendChild(streamContainer);
-          scrollScreenToBottom();
-
-          const targetDiv = streamContainer.querySelector("#train-stream-target");
-          const statusPill = streamContainer.querySelector("#train-status-pill");
-          if (!targetDiv) break;
-
-          const logLines: { text: string; color?: string }[] = [
-            { text: "● [01/04] [INIT] Allocating 4 Heterogeneous Agents in POSIX Shared Memory Ring...", color: "text-neutral-300 font-semibold" },
-            { text: "  ↳ AGENT POOL: 01: Dense-12L | 02: MoE-8x2 | 03: LinearAttn | 04: StateSpace", color: "text-[#38bdf8]" },
-            { text: "  ↳ VRAM ARBITER: Total Sliding Buffer: 24.0 GB | Reallocation Patience: 50 steps", color: "text-neutral-400" },
-            { text: "● [02/04] [EPOCH STREAM] Commencing Multi-Transformer Gradient Exchange...", color: "text-neutral-300 font-semibold" },
-            { text: "  [EPOCH 01/05] Loss: 2.418 | Speed: 1,320 tok/s [==>                 ] 15%", color: "text-neutral-300" },
-            { text: "  [EPOCH 01/05] Loss: 1.842 | Speed: 1,380 tok/s [=====>              ] 30%", color: "text-neutral-300" },
-            { text: "  [EPOCH 01/05] Loss: 1.412 | Speed: 1,410 tok/s [=========>          ] 50%", color: "text-neutral-300" },
-            { text: "  [EPOCH 01/05] Loss: 1.105 | Speed: 1,425 tok/s [==============>     ] 75%", color: "text-neutral-300" },
-            { text: "  [EPOCH 01/05] Loss: 0.942 | Speed: 1,430 tok/s [===================>] 100%", color: "text-emerald-400" },
-            { text: "● [03/04] [ARBITER] Reallocating memory: Agent 01 (+25% quota, ΔL=-1.476 curvature)", color: "text-accent font-bold" },
-            { text: "  [EPOCH 02/05] Loss: 0.892 | Speed: 1,415 tok/s [===>                ] 20%", color: "text-neutral-300" },
-            { text: "  [EPOCH 02/05] Loss: 0.761 | Speed: 1,420 tok/s [========>           ] 45%", color: "text-neutral-300" },
-            { text: "  [EPOCH 02/05] Loss: 0.684 | Speed: 1,435 tok/s [============>       ] 65%", color: "text-neutral-300" },
-            { text: "  [EPOCH 02/05] Loss: 0.598 | Speed: 1,440 tok/s [================>   ] 85%", color: "text-neutral-300" },
-            { text: "  [EPOCH 02/05] Loss: 0.521 | Speed: 1,445 tok/s [===================>] 100%", color: "text-emerald-400" },
-            { text: "  ↳ [AUDIT] Ring-Buffer offsets intact. CUDA memory fragmentation: 0.00%", color: "text-accent" },
-            { text: "  [EPOCH 03/05] Loss: 0.495 | Speed: 1,420 tok/s [===>                ] 20%", color: "text-neutral-300" },
-            { text: "  [EPOCH 03/05] Loss: 0.442 | Speed: 1,430 tok/s [========>           ] 45%", color: "text-neutral-300" },
-            { text: "  [EPOCH 03/05] Loss: 0.384 | Speed: 1,420 tok/s [=========>          ] 62%", color: "text-amber-300 font-bold" },
-            { text: "  [EPOCH 03/05] Loss: 0.341 | Speed: 1,440 tok/s [===============>    ] 80%", color: "text-neutral-300" },
-            { text: "  [EPOCH 03/05] Loss: 0.298 | Speed: 1,450 tok/s [===================>] 100%", color: "text-emerald-400" },
-            { text: "  ↳ [RANKING] Relative gradient: Agent 01 rank #1, Agent 02 rank #2, Agent 04 rank #3", color: "text-[#38bdf8]" },
-            { text: "  [EPOCH 04/05] Loss: 0.285 | Speed: 1,430 tok/s [===>                ] 20%", color: "text-neutral-300" },
-            { text: "  [EPOCH 04/05] Loss: 0.262 | Speed: 1,440 tok/s [========>           ] 45%", color: "text-neutral-300" },
-            { text: "  [EPOCH 04/05] Loss: 0.241 | Speed: 1,445 tok/s [============>       ] 65%", color: "text-neutral-300" },
-            { text: "  [EPOCH 04/05] Loss: 0.224 | Speed: 1,455 tok/s [================>   ] 85%", color: "text-neutral-300" },
-            { text: "  [EPOCH 04/05] Loss: 0.209 | Speed: 1,460 tok/s [===================>] 100%", color: "text-emerald-400" },
-            { text: "  [EPOCH 05/05] Loss: 0.198 | Speed: 1,450 tok/s [===>                ] 20%", color: "text-neutral-300" },
-            { text: "  [EPOCH 05/05] Loss: 0.189 | Speed: 1,455 tok/s [========>           ] 45%", color: "text-neutral-300" },
-            { text: "  [EPOCH 05/05] Loss: 0.182 | Speed: 1,460 tok/s [=============>      ] 70%", color: "text-neutral-300" },
-            { text: "  [EPOCH 05/05] Loss: 0.178 | Speed: 1,465 tok/s [===================>] 100%", color: "text-emerald-400 font-bold" },
-            { text: "────────────────────────────────────────────────────────────────────────", color: "text-neutral-700" },
-            { text: "● [04/04] [TRAINING COMPLETE] 5 Epochs in 2.8s | Final Loss: 0.178 (-92.6% ΔL)", color: "text-emerald-400 font-bold" },
-            { text: "  ✔ INVARIANT AUDIT: Zero CUDA fragmentation (0.00%) | Zero NaN/Inf anomalies", color: "text-accent font-bold" }
-          ];
-
-          let lineIdx = 0;
-          activeTrainingInterval = setInterval(() => {
-            if (lineIdx >= logLines.length) {
-              if (activeTrainingInterval) {
-                clearInterval(activeTrainingInterval);
-                activeTrainingInterval = null;
-              }
-              isStreaming = false;
-              input.disabled = false;
-              input.focus();
-              setKernelStatus("idle");
-              if (statusPill) {
-                statusPill.className = "px-1.5 py-0.5 rounded-xs border border-emerald-500/50 bg-emerald-950/60 text-emerald-400 font-bold font-mono text-[9px] tracking-wider";
-                statusPill.textContent = "[COMPLETED // 0.00% FRAG]";
-              }
-              playSuccess();
-              scrollScreenToBottom();
-              return;
-            }
-
-            const item = logLines[lineIdx];
-            const p = document.createElement("div");
-            p.className = (item.color || "text-neutral-300") + " term-line-entrance";
-            p.textContent = item.text;
-            targetDiv.appendChild(p);
-            scrollScreenToBottom();
-            lineIdx++;
-          }, 90);
-
-          break;
-        }
-
-        case "eval": {
-          let splitArg = "test";
-          const splitIdx = args.indexOf("--split");
-          if (splitIdx !== -1 && args[splitIdx + 1]) {
-            splitArg = args[splitIdx + 1].toLowerCase();
-          } else if (args[0]?.startsWith("--split=")) {
-            splitArg = args[0].split("=")[1]?.toLowerCase() || "test";
-          } else if (args[0] && !args[0].startsWith("-")) {
-            splitArg = args[0].toLowerCase();
-          }
-          playSuccess();
-          const tookMs = Math.round(performance.now() - startTime) || 16;
+          playViolation();
+          const tookMs = Math.round(performance.now() - startTime) || 6;
           const html = `
-            <div class="space-y-2.5 text-[11px] sm:text-xs">
-              <div class="flex flex-wrap items-center justify-between border-b border-[#222a32] pb-1.5 text-[10px] text-neutral-400 font-mono gap-1">
-                <span class="text-accent font-bold tracking-wider">QUANTITATIVE BENCHMARK EVALUATION (SPLIT: ${(splitArg || "test").toUpperCase()})</span>
-                <span class="text-emerald-400 font-bold">100% INVARIANTS PASS</span>
-              </div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse border border-[#1e2630] font-mono text-[11px]">
-                  <thead>
-                    <tr class="bg-[#12171c] text-neutral-400 border-b border-[#1e2630] text-[10px] uppercase tracking-wider">
-                      <th class="p-2">METRIC</th>
-                      <th class="p-2">BENCHMARK SPEC</th>
-                      <th class="p-2">EVAL RESULT</th>
-                      <th class="p-2">STATUS</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-[#1b222a]">
-                    <tr>
-                      <td class="p-2 font-bold text-foreground">Sharpe Ratio (Annualized)</td>
-                      <td class="p-2 text-neutral-500">&gt; 1.80</td>
-                      <td class="p-2 text-emerald-400 font-bold">2.41</td>
-                      <td class="p-2 text-emerald-400 font-bold">[VERIFIED]</td>
-                    </tr>
-                    <tr>
-                      <td class="p-2 font-bold text-foreground">Maximum Drawdown (MDD)</td>
-                      <td class="p-2 text-neutral-500">&lt; -10.00%</td>
-                      <td class="p-2 text-emerald-400 font-bold">-4.82%</td>
-                      <td class="p-2 text-emerald-400 font-bold">[VERIFIED]</td>
-                    </tr>
-                    <tr>
-                      <td class="p-2 font-bold text-foreground">Sortino Ratio</td>
-                      <td class="p-2 text-neutral-500">&gt; 2.50</td>
-                      <td class="p-2 text-emerald-400 font-bold">3.18</td>
-                      <td class="p-2 text-emerald-400 font-bold">[VERIFIED]</td>
-                    </tr>
-                    <tr>
-                      <td class="p-2 font-bold text-foreground">Inference Latency (p50)</td>
-                      <td class="p-2 text-neutral-500">&lt; 2.00 ms</td>
-                      <td class="p-2 text-[#38bdf8] font-mono">1.14 ms</td>
-                      <td class="p-2 text-emerald-400 font-bold">[PASS]</td>
-                    </tr>
-                    <tr>
-                      <td class="p-2 font-bold text-foreground">Inference Latency (p95)</td>
-                      <td class="p-2 text-neutral-500">&lt; 5.00 ms</td>
-                      <td class="p-2 text-[#38bdf8] font-mono">3.82 ms</td>
-                      <td class="p-2 text-emerald-400 font-bold">[PASS]</td>
-                    </tr>
-                    <tr>
-                      <td class="p-2 font-bold text-foreground">Inference Latency (p99)</td>
-                      <td class="p-2 text-neutral-500">&lt; 10.00 ms</td>
-                      <td class="p-2 text-[#38bdf8] font-mono">6.15 ms</td>
-                      <td class="p-2 text-emerald-400 font-bold">[PASS]</td>
-                    </tr>
-                    <tr>
-                      <td class="p-2 font-bold text-foreground">Lookahead Data Leakage</td>
-                      <td class="p-2 text-neutral-500">0.0000 (0.00%)</td>
-                      <td class="p-2 text-accent font-bold">0.0000 (0.00%)</td>
-                      <td class="p-2 text-accent font-bold">[ZERO LEAK]</td>
-                    </tr>
-                    <tr>
-                      <td class="p-2 font-bold text-foreground">Temporal Join Invariants</td>
-                      <td class="p-2 text-neutral-500">10,000 / 10,000</td>
-                      <td class="p-2 text-emerald-400">10,000 PASS</td>
-                      <td class="p-2 text-emerald-400 font-bold">[PASS]</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="text-[10px] text-neutral-500 pt-0.5">
-                Evaluation performed on out-of-sample temporal partition with 72-hour purge embargo horizon.
+            <div class="space-y-1 text-amber-400 font-bold">
+              <div>run: interactive execution runner disabled in audited kernel.</div>
+              <div class="text-neutral-400 font-normal text-[11px]">
+                Use <span class="text-accent font-bold">cat [project]</span> to inspect verified architecture specifications.
               </div>
             </div>
           `;
-          appendLogEntry(trimmed, html, "200 OK", "success", tookMs);
+          appendLogEntry(trimmed, html, "403 DISABLED", "warning", tookMs);
           setKernelStatus("idle");
           break;
         }
@@ -1240,7 +1003,7 @@
           const html = `
             <div class="space-y-2.5 text-[11px] sm:text-xs">
               <div class="flex items-center justify-between border-b border-[#222a32] pb-1.5 text-[10px]">
-                <span class="text-accent font-bold tracking-wider">[HARDWARE ROOFLINE MODEL TELEMETRY]</span>
+                <span class="text-accent font-bold tracking-wider">[HARDWARE ROOFLINE MODEL // CONCEPTUAL REFERENCE, NOT A MODELARENA MEASUREMENT]</span>
                 <span class="text-neutral-400 font-mono">P_attainable = min( Peak_FLOPS, Bandwidth &times; Intensity )</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-[10.5px]">
@@ -1395,10 +1158,7 @@
         const candidates = [
           "help", 
           "whoami", 
-          "run modelarena --train", 
-          "eval --split test", 
           "cat modelarena", 
-          "cat leakguard-ml",
           "cat finance-tracker", 
           "cat savebite", 
           "roofline",

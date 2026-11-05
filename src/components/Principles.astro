@@ -10,27 +10,27 @@ const principlesData = [
     tag: "TEMPORAL_INTEGRITY",
     title: "Zero Data Leakage by Design",
     description:
-      "Cross-validation leakage and lookahead bias produce deceptively high metrics that collapse in production. We enforce explicit temporal partition boundaries before executing any feature transformations.",
+      "Evaluation leakage produces deceptively high metrics that fail to generalize. We enforce fold-local preprocessing, isolated early-stopping validation, and single-use holdout tokens guarded at the boundary.",
     bullets: [
-      "Point-in-time joins preventing target signal contamination in time-series data.",
-      "Deterministic hashing strategies for reproducible train-validation splits.",
-      "Automated boundary assertions that fail immediately upon partition violations.",
+      "Fold-local preprocessing ensuring no transformation statistics spill across evaluation folds.",
+      "Isolated validation splits preventing early-stopping leakage into test evaluations.",
+      "Single-use capability tokens barring multiple access attempts to holdout test sets.",
     ],
     noteUrl: "/notes/eliminating-lookahead-bias",
     noteLabel: "NOTE #02: ELIMINATING LOOKAHEAD BIAS",
-    projectUrl: "/projects/leakguard-ml",
-    projectLabel: "LEAKGUARD-ML ↗",
+    projectUrl: "/projects/modelarena",
+    projectLabel: "MODELARENA ↗",
   },
   {
     step: "02",
-    tag: "DEFENSIVE_CHAOS",
-    title: "Defensive Verification & Chaos",
+    tag: "PROCESS_SUPERVISION",
+    title: "Defensive Verification & Process Supervision",
     description:
-      "Testing should go beyond typical happy paths. We verify system resilience under unexpected OS process signals, interrupted workloads, and edge-case inputs through property-based tests.",
+      "Workload execution must withstand abrupt runtime interruption. We verify system resilience under unexpected child process termination, signal cancellation, and worker recovery.",
     bullets: [
-      "Property-based testing against degenerate tensors and irregular distributions.",
       "Clean process supervision with signal traps on SIGINT and SIGTERM.",
-      "Defensive assertions against unexpected input shapes and null embeddings.",
+      "Durable SQLite job queue enabling cancellation, orphan blocking, and restart reconciliation.",
+      "Supervised child worker recovery tested with real child processes on Windows.",
     ],
     noteUrl: "/notes/posix-signals-async-python",
     noteLabel: "NOTE #01: POSIX SIGNAL TRAPS",
@@ -40,18 +40,18 @@ const principlesData = [
   {
     step: "03",
     tag: "DOMAIN_ISOLATION",
-    title: "Clean Architecture & Contracts",
+    title: "Clean Architecture & Boundary Isolation",
     description:
-      "By decoupling core machine learning algorithms from web frameworks and cloud SDKs, the codebase remains modular, easily testable locally, and resilient to third-party breaking changes.",
+      "API and ML code live in separate packages (apps/api, ml). By decoupling core machine learning routines from API routers, each layer remains independently testable and modular.",
     bullets: [
-      "Strict data validation contracts enforced via Pydantic at API boundaries.",
-      "Hexagonal architecture separating inference routines from network adapters.",
-      "Dependency inversion enabling fast, reproducible local test suites.",
+      "API and ML code live in separate packages (apps/api, ml).",
+      "Strict request validation contracts enforced at API router boundaries.",
+      "Independent service layers preventing business logic from leaking into network views.",
     ],
     noteUrl: "/notes/hexagonal-architecture-feature-stores",
     noteLabel: "NOTE #03: HEXAGONAL ML STORES",
-    projectUrl: "/projects/savebite",
-    projectLabel: "SAVEBITE ↗",
+    projectUrl: "/projects/modelarena",
+    projectLabel: "MODELARENA ↗",
   },
 ];
 ---
@@ -258,7 +258,7 @@ const principlesData = [
                   <!-- Control Header -->
                   <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
                     <span class="font-mono text-xs uppercase text-neutral-400 font-semibold tracking-wider">
-                      INTERACTIVE_CANVAS // PURGE_EMBARGO_SPLITTER
+                      INTERACTIVE_CANVAS // PURGE_EMBARGO_SPLITTER [CONCEPTUAL SIMULATION]
                     </span>
                     <span 
                       id="p1-status-badge" 
@@ -351,7 +351,7 @@ const principlesData = [
                     <div id="p1-callout" class="flex items-center justify-between text-xs sm:text-[13px] text-emerald-400 pt-1 font-semibold transition-colors duration-150">
                       <span class="flex items-center gap-1.5 font-mono">
                         <span id="p1-callout-icon">✓</span>
-                        <span id="p1-callout-text">1,420 / 1,420 samples uncontaminated. Point-in-time verified.</span>
+                        <span id="p1-callout-text">1,420 / 1,420 samples uncontaminated. (simulated demo data).</span>
                       </span>
                     </div>
                   </div>
@@ -377,7 +377,7 @@ const principlesData = [
                   <!-- Control Header -->
                   <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
                     <span class="font-mono text-xs uppercase text-neutral-400 font-semibold tracking-wider">
-                      INTERACTIVE_CANVAS // POSIX_SIGNAL_SUPERVISOR
+                      INTERACTIVE_CANVAS // POSIX_SIGNAL_SUPERVISOR [CONCEPTUAL SIMULATION]
                     </span>
                     <span 
                       id="p2-status-badge" 
@@ -462,7 +462,7 @@ const principlesData = [
                   <!-- Control Header -->
                   <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-grid-line-dark/80">
                     <span class="font-mono text-xs uppercase text-neutral-400 font-semibold tracking-wider">
-                      INTERACTIVE_CANVAS // PYDANTIC_V2_STRICT_CORE
+                      INTERACTIVE_CANVAS // PYDANTIC_V2_STRICT_CORE [CONCEPTUAL SIMULATION]
                     </span>
                     <span 
                       id="p3-status-badge" 
@@ -534,7 +534,7 @@ const principlesData = [
                       <span id="p3-eval-latency" class="text-accent text-xs font-bold font-mono">LATENCY: 0.04ms</span>
                     </div>
                     <code id="p3-response-code" class="text-emerald-400 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed">InferenceRequest(embeddings=[128 items])
-Status: 200 OK — Strict schema verified via Rust core ✓</code>
+Status: 200 OK — Strict schema check passed (simulated demo) ✓</code>
                   </div>
                 </div>
               )}
@@ -1073,7 +1073,7 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
 
         if (p1Callout) p1Callout.className = 'flex items-center justify-between text-xs sm:text-[13px] text-emerald-400 pt-1 font-semibold transition-colors duration-150';
         if (p1CalloutIcon) p1CalloutIcon.textContent = '✓';
-        if (p1CalloutText) p1CalloutText.textContent = '1,420 / 1,420 samples uncontaminated. Point-in-time verified.';
+        if (p1CalloutText) p1CalloutText.textContent = '1,420 / 1,420 samples uncontaminated. (simulated demo data).';
 
         if (p1AssertStatus) {
           p1AssertStatus.textContent = 'ASSERT_PASS ✓';
@@ -1350,7 +1350,7 @@ Status: 200 OK — Strict schema verified via Rust core ✓</code>
       if (p3ResponseCode) {
         p3ResponseCode.className = 'text-emerald-400 text-xs sm:text-[13px] block select-all whitespace-pre font-mono leading-relaxed';
         p3ResponseCode.textContent = `InferenceRequest(embeddings=[128 items])
-Status: 200 OK — Strict schema verified via Rust core ✓`;
+Status: 200 OK — Strict schema check passed (simulated demo) ✓`;
       }
     }
 

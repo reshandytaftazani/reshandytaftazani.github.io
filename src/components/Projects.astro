@@ -5,63 +5,63 @@ const projects = [
     id: "modelarena",
     category: "MACHINE LEARNING",
     title: "ModelArena",
-    subtitle: "Dynamic Resource Allocation & Multi-Agent Training Framework",
+    subtitle: "Local-First ML Experimentation Platform with Leakage-Safe Evaluation",
     summary:
-      "Competitive multi-agent learning ecosystem that dynamically allocates compute and memory quotas across heterogeneous models based on real-time loss trajectory.",
+      "A local-first, CPU-only ML experimentation platform that eliminates evaluation leakage through fold-local preprocessing, isolated validation splits and single-use holdout tokens.",
     isWip: true,
-    progressText: "20/28 TASKS // 71%",
+    progressText: "DAY 20 OF 28 // GATES G1–G2 PASSED",
     progressBar: "[███████░░░]",
-    runCommand: "python main.py --arena --agents 4",
-    previewCode: `$ python main.py --arena --agents 4
-[ARENA] initializing 4 heterogeneous agent workers
-[EVAL] step 120: Agent_A relative loss gradient: +0.42
-[ALLOC] reallocating +40% shared memory pool -> Agent_A
-[STATUS] 20/28 milestone tasks verified [███████░░░] 71%`,
-    techStack: ["PyTorch", "Transformers", "CUDA", "Multi-Agent", "Python"],
-    metric: "20/28 Tasks Completed",
-    secondaryMetric: "Dynamic Memory Alloc",
+    runCommand: "uv run --locked python -m apps.api.server",
+    previewCode: `$ uv run --locked python -m apps.api.server
+[GATE] Gates G1 (data correctness) and G2 passed locally
+[EVAL] repeated 5-fold CV matched within abs 1e-6 / rel 1e-5
+[SUPERVISOR] child worker spawned with SQLite job queue
+[STATUS] Day 20 of 28 // Gates G1–G2 passed [███████░░░]`,
+    techStack: ["Python 3.12", "scikit-learn", "PyTorch (CPU)", "MLflow", "FastAPI"],
+    metric: "Gates G1–G2 Passed",
+    secondaryMetric: "Zero Leakage Pipeline",
     githubUrl: "https://github.com/reshandytaftazani/modelarena",
   },
   {
     id: "finance-tracker",
     category: "SYSTEMS & DATA",
     title: "Finance Tracker",
-    subtitle: "Defensive Personal Accounting Engine & Transaction Ledger",
+    subtitle: "Single-Owner Personal Finance Application with Integer-Rupiah Accounting",
     summary:
-      "Double-entry accounting engine built with fixed-point decimal arithmetic and SQLite WAL transactions to guarantee balance integrity and zero floating-point drift.",
+      "A single-owner personal finance web application with integer-rupiah accounting, host-scoped cookies, automated pre-migration SQLite backups and spending forecasts evaluated against actuals.",
     isWip: false,
-    progressText: "PRODUCTION // VERIFIED",
+    progressText: "v1.0.0 // CI-VERIFIED",
     progressBar: "[██████████] 100%",
-    runCommand: "python -m ledger.cli sync --audit",
-    previewCode: `$ python -m ledger.cli sync --audit
-[INGEST] 50,000 transaction records scanned
-[ASSERT] debit_sum == credit_sum: $0.00 drift
-[ACID] atomic WAL journal commit: 4.12ms
-[STATUS] 100% ledger invariant verified`,
-    techStack: ["Python", "FastAPI", "SQLite", "Pydantic v2", "Docker"],
-    metric: "100% Balanced Ledger",
-    secondaryMetric: "Zero Float Drift",
+    runCommand: "cd backend && python -m scripts.migrate && python -m app",
+    previewCode: `$ cd backend && python -m scripts.migrate && python -m app
+[BACKUP] pre-migration SQLite backup snapshot verified
+[SCHEMA] integer rupiah with CHECK typeof(amount_rupiah) = 'integer'
+[SECURITY] Argon2id hash & HttpOnly SameSite=Lax cookie verified
+[STATUS] v1.0.0 self-hosted // CI-verified`,
+    techStack: ["Python", "FastAPI", "SQLModel", "SQLite", "React"],
+    metric: "Integer Rupiah Accounting",
+    secondaryMetric: "Pre-Migration Backups",
     githubUrl: "https://github.com/reshandytaftazani/finance-tracker",
   },
   {
     id: "savebite",
     category: "PLATFORM & WEB",
     title: "SaveBite",
-    subtitle: "Surplus Food Rescue & Distribution Platform",
+    subtitle: "Food Waste Reduction Platform — Team Project, Universitas Indonesia",
     summary:
-      "Coursework platform developed for Pemrograman Berbasis Platform (PBP CS UI) coordinating surplus food rescue between commercial donors and beneficiaries.",
+      "A collaborative web platform connecting food donors, beneficiaries and volunteers to reduce food waste through structured rescue requests and offers.",
     isWip: false,
-    progressText: "COURSEWORK // COMPLETED",
+    progressText: "COMPLETED // DEPLOYED",
     progressBar: "[██████████] 100%",
     runCommand: "python manage.py runserver",
     previewCode: `$ python manage.py runserver
-[PBP-UI] SaveBite core cluster active on :8000
-[AUTH] session token & CSRF security verified
-[API] food listing claim endpoint: 48ms p95
-[STATUS] PBP CS UI capstone evaluated`,
-    techStack: ["Django", "Python", "Flutter", "PostgreSQL", "REST API"],
-    metric: "PBP Fasilkom UI '25",
-    secondaryMetric: "RESTful Architecture",
+[DEPLOY] faculty PWS platform with PostgreSQL in production
+[AUTH] Django session authentication with CSRF protection
+[INTEGRITY] idempotent requests via UUID keys and CHECK constraints
+[STATUS] module completed // 88 of 212 commits`,
+    techStack: ["Django", "Python", "PostgreSQL", "SQLite", "JavaScript"],
+    metric: "Module 4: Request Board",
+    secondaryMetric: "Role-Based Access",
     githubUrl: "https://github.com/PBP-D-Kelompok-8/SaveBite",
   },
 ];
