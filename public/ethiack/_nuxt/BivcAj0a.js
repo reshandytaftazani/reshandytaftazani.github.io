@@ -1,0 +1,2 @@
+import{f as l,j as o,k as e}from"./D78AaF3G.js";const n={xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 32 32"};function a(r,t){return o(),l("svg",n,t[0]||(t[0]=[e("g",{"clip-path":"url(#a)"},[e("path",{fill:"#000",d:"M5 13.5V12h22v1.5zm0 5.725v-1.5h22v1.5z"})],-1),e("defs",null,[e("clipPath",{id:"a"},[e("path",{fill:"#fff",d:"M5 12h22v8H5z"})])],-1)]))}const f={render:a};export{f as default,a as render};
+//# sourceMappingURL=BivcAj0a.js.map

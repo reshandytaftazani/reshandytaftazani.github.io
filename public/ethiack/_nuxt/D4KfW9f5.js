@@ -1,0 +1,2 @@
+import{_ as a,f as t,j as n,J as o,l as r,a9 as s}from"./D78AaF3G.js";const c=["aria-label"],l={__name:"ButtonIcon",props:{slug:{type:String,default:"right-arrow-3"},size:{type:String,default:"m"},ariaLabel:{type:String,default:"Learn more"}},setup(e){return(i,u)=>(n(),t("button",{"data-component":"button-icon","aria-label":e.ariaLabel},[o(r(s),{slug:e.slug,size:e.size},null,8,["slug","size"])],8,c))}},_=a(l,[["__scopeId","data-v-ec6ade9e"]]);export{_ as B};
+//# sourceMappingURL=D4KfW9f5.js.map

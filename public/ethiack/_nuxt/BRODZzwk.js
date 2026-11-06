@@ -1,0 +1,2 @@
+import{f as t,j as n,k as o}from"./D78AaF3G.js";const v={xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 32 32"};function h(r,e){return n(),t("svg",v,e[0]||(e[0]=[o("path",{fill:"#000",d:"M16.75 4v8.25h3v3h8.22v1.5h-8.22v3h-3V28h-1.5v-8.25h-3v-3H4v-1.5h8.25v-3h3V4zm-3 9.75v4.5h4.5v-4.5z"},null,-1)]))}const s={render:h};export{s as default,h as render};
+//# sourceMappingURL=BRODZzwk.js.map

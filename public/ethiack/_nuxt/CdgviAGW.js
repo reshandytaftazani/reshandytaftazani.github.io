@@ -1,0 +1,2 @@
+import{f as t,j as l,k as n}from"./Bodbplh8.js";const o={xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 9 8"};function r(s,e){return l(),t("svg",o,e[0]||(e[0]=[n("path",{fill:"#000",d:"m1.05 7.76-.54-.54 3.28-3.3L.51.62l.54-.54 3.28 3.3L7.59.08l.54.54-3.28 3.3 3.28 3.3-.54.54-3.26-3.28z"},null,-1)]))}const i={render:r};export{i as default,r as render};
+//# sourceMappingURL=CdgviAGW.js.map

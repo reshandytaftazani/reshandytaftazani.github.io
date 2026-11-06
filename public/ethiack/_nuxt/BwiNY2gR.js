@@ -1,0 +1,2 @@
+import{_ as t,f as s,j as a,D as o,E as r,l as n,a2 as c,q as l}from"./D78AaF3G.js";const i={__name:"PersonPicture",props:{photo:{type:Object,default:void 0},size:{type:String,default:"small",validator(e){return["xxl","xl","large","medium","small","xs","xxs"].includes(e)}}},setup(e){return(u,m)=>(a(),s("div",{"data-component":"person-picture",class:l(`${e.size}`)},[e.photo?(a(),o(n(c),{key:0,asset:e.photo},null,8,["asset"])):r("",!0)],2))}},p=t(i,[["__scopeId","data-v-578e265a"]]);export{p as P};
+//# sourceMappingURL=BwiNY2gR.js.map

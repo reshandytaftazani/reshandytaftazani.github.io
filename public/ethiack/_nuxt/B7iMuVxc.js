@@ -1,0 +1,2 @@
+import{_ as s,r as a,o as l,e as r,f as p,j as c,k as e,t as u}from"./Bodbplh8.js";const _={class:"-mono-1 label"},f={__name:"ButtonSimple",props:{label:{type:String,default:"Button"}},setup(o){const n=a(null);return l(()=>{}),r(()=>{}),(m,t)=>(c(),p("button",{ref_key:"el",ref:n,"data-component":"button-simple"},[t[0]||(t[0]=e("span",{class:"bg"},null,-1)),e("span",_,u(o.label),1)],512))}},i=s(f,[["__scopeId","data-v-2afdd1fb"]]);export{i as B};
+//# sourceMappingURL=B7iMuVxc.js.map
